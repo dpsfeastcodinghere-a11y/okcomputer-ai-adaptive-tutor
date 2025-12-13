@@ -31,9 +31,13 @@ def send_static(path):
 @app.route('/api/generate-question', methods=['POST'])
 def generate_question():
     try:
-        data = request.json
-        topic = data.get('topic', 'General')
-        problems_solved = data.get('problemsSolved', 0)
+        data = request.get_json(silent=True) or {}
+        topic = str(data.get('topic', 'General'))
+        raw_ps = data.get('problemsSolved', data.get('problems_solved', 0))
+        try:
+            problems_solved = int(raw_ps) if raw_ps is not None else 0
+        except Exception:
+            problems_solved = 0
         
         response = ai_model.generate_ai_question(topic, problems_solved=problems_solved)
         return jsonify(response)
@@ -44,8 +48,8 @@ def generate_question():
 @app.route('/api/solve-doubt', methods=['POST'])
 def solve_doubt():
     try:
-        data = request.json
-        doubt = data.get('doubt', '')
+        data = request.get_json(silent=True) or {}
+        doubt = str(data.get('doubt', data.get('question', '')))
         
         response = ai_model.solve_doubt(doubt)
         return jsonify({"answer": response})

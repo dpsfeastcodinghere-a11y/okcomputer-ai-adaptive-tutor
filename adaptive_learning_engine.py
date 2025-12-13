@@ -7,6 +7,7 @@ Implements intelligent tutoring system with real-time difficulty adjustment
 import json
 import random
 import math
+import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, field
