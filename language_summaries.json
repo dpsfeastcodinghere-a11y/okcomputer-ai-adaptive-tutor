@@ -1,0 +1,464 @@
+[
+    {
+        "subject": "English",
+        "classes": [
+            {
+                "class": 6,
+                "book": "Honeysuckle (Prose)",
+                "chapters": [
+                    {
+                        "title": "Who Did Patrick’s Homework?",
+                        "summary": "Boy gets help from an elf → learns responsibility."
+                    },
+                    {
+                        "title": "How the Dog Found Himself a New Master?",
+                        "summary": "Dog searches strongest master → finally human."
+                    },
+                    {
+                        "title": "Taro’s Reward",
+                        "summary": "Honest boy gets reward → moral: kindness."
+                    },
+                    {
+                        "title": "An Indian American Woman in Space",
+                        "summary": "Kalpana Chawla’s journey + space science."
+                    },
+                    {
+                        "title": "A Different Kind of School",
+                        "summary": "School teaches kindness to disabled."
+                    },
+                    {
+                        "title": "Who I Am",
+                        "summary": "Self-awareness, different abilities."
+                    },
+                    {
+                        "title": "Fair Play",
+                        "summary": "Friendship vs justice; Panchayat judgment."
+                    },
+                    {
+                        "title": "A Game of Chance",
+                        "summary": "Lucky draw scam; message: avoid greed."
+                    },
+                    {
+                        "title": "Desert Animals",
+                        "summary": "Adaptation of desert animals."
+                    },
+                    {
+                        "title": "The Banyan Tree",
+                        "summary": "Fight between mongoose & snake; bravery."
+                    }
+                ]
+            },
+            {
+                "class": 7,
+                "book": "Honeycomb (Prose)",
+                "chapters": [
+                    {
+                        "title": "Three Questions",
+                        "summary": "Wisdom: right time, right people, right action."
+                    },
+                    {
+                        "title": "A Gift of Chappals",
+                        "summary": "Kindness; helping others."
+                    },
+                    {
+                        "title": "Gopal & Hilsa Fish",
+                        "summary": "Humor; cleverness."
+                    },
+                    {
+                        "title": "The Ashes That Made Trees Bloom",
+                        "summary": "Honesty rewarded."
+                    },
+                    {
+                        "title": "Quality",
+                        "summary": "Shoemaker’s sincerity."
+                    },
+                    {
+                        "title": "Expert Detectives",
+                        "summary": "Children investigating neighbour."
+                    },
+                    {
+                        "title": "The Invention of Vita-Wonk",
+                        "summary": "Magic medicine; imagination."
+                    },
+                    {
+                        "title": "Fire: Friend & Foe",
+                        "summary": "Fire is useful but dangerous."
+                    },
+                    {
+                        "title": "A Bicycle in Good Repair",
+                        "summary": "Humor; repairing bicycle."
+                    },
+                    {
+                        "title": "The Story of Cricket",
+                        "summary": "History of cricket."
+                    }
+                ]
+            },
+            {
+                "class": 8,
+                "book": "Honeydew (Prose)",
+                "chapters": [
+                    {
+                        "title": "The Best Christmas Present",
+                        "summary": "War story; peace message."
+                    },
+                    {
+                        "title": "The Tsunami",
+                        "summary": "Survival stories."
+                    },
+                    {
+                        "title": "Glimpses of the Past",
+                        "summary": "Indian freedom struggle."
+                    },
+                    {
+                        "title": "Bepin Choudhury’s Lapse of Memory",
+                        "summary": "Mystery; memory trick."
+                    },
+                    {
+                        "title": "The Summit Within",
+                        "summary": "Mountaineering + inner strength."
+                    },
+                    {
+                        "title": "This is Jody’s Fawn",
+                        "summary": "Compassion and responsibility."
+                    },
+                    {
+                        "title": "A Visit to Cambridge",
+                        "summary": "Interview with Stephen Hawking."
+                    },
+                    {
+                        "title": "A Short Monsoon Diary",
+                        "summary": "Ruskin Bond’s nature diary."
+                    },
+                    {
+                        "title": "The Great Stone Face Parts I & II",
+                        "summary": "Character resemblance prophecy."
+                    }
+                ]
+            },
+            {
+                "class": 9,
+                "book": "Beehive (Prose)",
+                "chapters": [
+                    {
+                        "title": "The Fun They Had",
+                        "summary": "Set in future (2157), Margie & Tommy find a real book. Contrasts mechanical teacher with old schools."
+                    },
+                    {
+                        "title": "The Road Not Taken",
+                        "summary": "Poem by Robert Frost. About choices in life. 'Two roads diverged in a yellow wood'."
+                    },
+                    {
+                        "title": "The Sound of Music",
+                        "summary": "Evelyn Glennie (deaf percussionist) and Bismillah Khan (Shehnai maestro). Inspiration stories."
+                    },
+                    {
+                        "title": "The Little Girl",
+                        "summary": "About Kezia who was afraid of her strict father but later realized his love."
+                    },
+                    {
+                        "title": "A Truly Beautiful Mind",
+                        "summary": "Biography of Albert Einstein focusing on his humanitarian side."
+                    },
+                    {
+                        "title": "The Snake and the Mirror",
+                        "summary": "Humorous story about a doctor's encounter with a snake."
+                    },
+                    {
+                        "title": "My Childhood",
+                        "summary": "Excerpts from APJ Abdul Kalam's autobiography 'Wings of Fire'."
+                    },
+                    {
+                        "title": "Reach for the Top",
+                        "summary": "Biographies of Santosh Yadav and Maria Sharapova."
+                    },
+                    {
+                        "title": "Wind",
+                        "summary": "Poem about the destructive and constructive power of wind."
+                    },
+                    {
+                        "title": "Rain on the Roof",
+                        "summary": "Poem describing the cozy feeling of listening to rain."
+                    },
+                    {
+                        "title": "The Lake Isle of Innisfree",
+                        "summary": "Poem about longing for peace and nature."
+                    },
+                    {
+                        "title": "A Legend of the Northland",
+                        "summary": "Ballad about a greedy woman turned into a woodpecker."
+                    }
+                ]
+            },
+            {
+                "class": 10,
+                "book": "First Flight (Prose)",
+                "chapters": [
+                    {
+                        "title": "A Letter to God",
+                        "summary": "Faith → misunderstanding."
+                    },
+                    {
+                        "title": "Nelson Mandela: Long Walk to Freedom",
+                        "summary": "Freedom struggle."
+                    },
+                    {
+                        "title": "Two Stories About Flying",
+                        "summary": "Pilot fear + seagull flight."
+                    },
+                    {
+                        "title": "From the Diary of Anne Frank",
+                        "summary": "Life in hiding."
+                    },
+                    {
+                        "title": "The Hundred Dresses I & II",
+                        "summary": "Bullying + regret."
+                    },
+                    {
+                        "title": "Animals",
+                        "summary": "Simplicity of animals."
+                    },
+                    {
+                        "title": "Glimpses of India",
+                        "summary": "Coorg, Tea, Goa."
+                    },
+                    {
+                        "title": "Mijbil the Otter",
+                        "summary": "Pet otter."
+                    },
+                    {
+                        "title": "Madam Rides the Bus",
+                        "summary": "Adventure of a small girl."
+                    },
+                    {
+                        "title": "The Sermon at Benares",
+                        "summary": "Buddha’s message."
+                    },
+                    {
+                        "title": "The Proposal",
+                        "summary": "Russian comedy drama."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "subject": "Hindi",
+        "classes": [
+            {
+                "class": 6,
+                "book": "Vasant",
+                "chapters": [
+                    {
+                        "title": "वह चिड़िया जो (Vah Chidiya Jo)",
+                        "summary": "पर्यावरण, satisfaction."
+                    },
+                    {
+                        "title": "बचपन (Bachpan)",
+                        "summary": "Memories of childhood."
+                    },
+                    {
+                        "title": "नादान दोस्त (Nadan Dost)",
+                        "summary": "Innocence of children."
+                    },
+                    {
+                        "title": "चाँद से थोड़ी सी गप्पे (Chand Se Thodi Si Gappe)",
+                        "summary": "Fantasy interaction with Moon."
+                    },
+                    {
+                        "title": "अक्षरों का महत्व (Aksharon Ka Mahatva)",
+                        "summary": "History of letters."
+                    },
+                    {
+                        "title": "पार नज़र के (Paar Nazar Ke)",
+                        "summary": "Mars mission fiction."
+                    },
+                    {
+                        "title": "साथी हाथ बढ़ाना (Saathi Haath Badhana)",
+                        "summary": "Unity represents strength."
+                    },
+                    {
+                        "title": "ऐसे-ऐसे (Aise-Aise)",
+                        "summary": "Child making excuses for stomach ache."
+                    },
+                    {
+                        "title": "टिकट एल्बम (Ticket Album)",
+                        "summary": "Jealousy and guilt."
+                    },
+                    {
+                        "title": "झांसी की रानी (Jhansi Ki Rani)",
+                        "summary": "Bravery of Rani Lakshmibai."
+                    }
+                ]
+            },
+            {
+                "class": 7,
+                "book": "Vasant",
+                "chapters": [
+                    {
+                        "title": "हम पंछी उन्मुक्त गगन के (Hum Panchi Unmukt Gagan Ke)",
+                        "summary": "Love for freedom."
+                    },
+                    {
+                        "title": "दादी माँ (Dadi Maa)",
+                        "summary": "Love and bond with grandmother."
+                    },
+                    {
+                        "title": "हिमालय की बेटियाँ (Himalaya Ki Betiyan)",
+                        "summary": "Rivers described as daughters of Himalayas."
+                    },
+                    {
+                        "title": "कठपुतली (Kathputli)",
+                        "summary": "Desire for freedom."
+                    },
+                    {
+                        "title": "मिठाईवाला (Mithaiwala)",
+                        "summary": "Love for children."
+                    },
+                    {
+                        "title": "रक्त और हमारा शरीर (Rakt Aur Humara Sharir)",
+                        "summary": "Science of blood."
+                    },
+                    {
+                        "title": "पापा खो गए (Papa Kho Gaye)",
+                        "summary": "Play about inanimate objects talking."
+                    },
+                    {
+                        "title": "शाम-एक किसान (Sham-Ek Kisan)",
+                        "summary": "Nature poem."
+                    },
+                    {
+                        "title": "चिड़िया की बच्ची (Chidiya Ki Bacchi)",
+                        "summary": "Freedom vs Cage."
+                    },
+                    {
+                        "title": "अपूर्व अनुभव (Apoorva Anubhav)",
+                        "summary": "Friendship and courage."
+                    }
+                ]
+            },
+            {
+                "class": 8,
+                "book": "Vasant",
+                "chapters": [
+                    {
+                        "title": "ध्वनि (Dhwani)",
+                        "summary": "Optimism and nature."
+                    },
+                    {
+                        "title": "लाख की चूड़ियाँ (Laakh Ki Chudiyan)",
+                        "summary": "Handicrafts vs Industrialization."
+                    },
+                    {
+                        "title": "बस की यात्रा (Bus Ki Yatra)",
+                        "summary": "Humorous travelogue."
+                    },
+                    {
+                        "title": "दीवानों की हस्ती (Diwanon Ki Hasti)",
+                        "summary": "Carefree and patriotic spirit."
+                    },
+                    {
+                        "title": "चिट्ठियों की अनूठी दुनिया (Chitthiyon Ki Anuthi Duniya)",
+                        "summary": "Importance of letters."
+                    },
+                    {
+                        "title": "भगवान के डाकिए (Bhagwan Ke Dakiye)",
+                        "summary": "Clouds and birds as messengers."
+                    },
+                    {
+                        "title": "क्या निराश हुआ जाए (Kya Nirash Hua Jaye)",
+                        "summary": "Positivity in society."
+                    },
+                    {
+                        "title": "यह सबसे कठिन समय नहीं (Yeh Sabse Kathin Samay Nahin)",
+                        "summary": "Hope."
+                    },
+                    {
+                        "title": "कबीर की साखियाँ (Kabir Ki Sakhiyan)",
+                        "summary": "Moral teachings."
+                    },
+                    {
+                        "title": "कामचोर (Kaamchor)",
+                        "summary": "Humor about lazy children."
+                    }
+                ]
+            },
+            {
+                "class": 9,
+                "book": "Sparsh",
+                "chapters": [
+                    {
+                        "title": "दुख का अधिकार (Dukh Ka Adhikar)",
+                        "summary": "Difference between rich and poor in grief."
+                    },
+                    {
+                        "title": "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)",
+                        "summary": "Bachendri Pal's journey."
+                    },
+                    {
+                        "title": "तुम कब जाओगे, अतिथि (Tum Kab Jaoge, Atithi)",
+                        "summary": "Humor about unwanted guests."
+                    },
+                    {
+                        "title": "वैज्ञानिक चेतना के वाहक (Vaigyanik Chetna)",
+                        "summary": "Biography of C.V. Raman."
+                    },
+                    {
+                        "title": "साकी (Saaki)",
+                        "summary": "Moral couplets."
+                    },
+                    {
+                        "title": "पद (Pad - Raidas)",
+                        "summary": "Devotion."
+                    },
+                    {
+                        "title": "दोहे (Dohe - Rahim)",
+                        "summary": "Wisdom and ethics."
+                    },
+                    {
+                        "title": "गीत अगीत (Geet Ageet)",
+                        "summary": "Nature's song."
+                    }
+                ]
+            },
+            {
+                "class": 10,
+                "book": "Sparsh",
+                "chapters": [
+                    {
+                        "title": "बड़े भाई साहब (Bade Bhai Sahab)",
+                        "summary": "Education vs Wisdom."
+                    },
+                    {
+                        "title": "डायरी का एक पन्ना (Diary Ka Ek Panna)",
+                        "summary": "Freedom struggle."
+                    },
+                    {
+                        "title": "तताँरा-वामीरो कथा (Tatara-Vamiro Katha)",
+                        "summary": "Love story and sacrifice."
+                    },
+                    {
+                        "title": "तीसरी कसम के शिल्पकार (Teesri Kasam Ke Shilpkar)",
+                        "summary": "Raj Kapoor and Shailendra."
+                    },
+                    {
+                        "title": "गिरगिट (Girgit)",
+                        "summary": "Satire on changing colors of people."
+                    },
+                    {
+                        "title": "अब कहाँ दूसरे के दुख से दुखी होने वाले (Ab Kahan Doosre Ke Dukh Se)",
+                        "summary": "Environment and empathy."
+                    },
+                    {
+                        "title": "पतझड़ में टूटी पत्तियाँ (Patjhar Mein Tooti Pattiyan)",
+                        "summary": "Zen budgeting and Ginnni ka Sona."
+                    },
+                    {
+                        "title": "कारतूस (Kartoos)",
+                        "summary": "Wazir Ali's bravery."
+                    }
+                ]
+            }
+        ]
+    }
+]

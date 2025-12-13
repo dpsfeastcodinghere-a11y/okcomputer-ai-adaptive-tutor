@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Session - EduAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/splitting@1.0.6/dist/splitting.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --sage-green: #2D5A3D;
+            --terracotta: #C4704A;
+            --cream: #F8F6F0;
+            --gold: #D4A574;
+            --slate-blue: #4A5568;
+            --coral: #E8A598;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, #F0EDE6 100%);
+            min-height: 100vh;
+        }
+
+        .problem-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .answer-input {
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .answer-input:focus {
+            border-color: var(--sage-green);
+            box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+        }
+
+        .answer-input.correct {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+        }
+
+        .answer-input.incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sage-green), #3A6B4A);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(45, 90, 61, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--terracotta), #D4805A);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(196, 112, 74, 0.3);
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+
+        .hint-panel {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left: 4px solid #f59e0b;
+            transition: all 0.3s ease;
+        }
+
+        .solution-panel {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border-left: 4px solid #10b981;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .feedback-error {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .topic-badge {
+            background: linear-gradient(135deg, var(--sage-green), #3A6B4A);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .difficulty-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e5e7eb;
+        }
+
+        .difficulty-dot.active {
+            background: var(--sage-green);
+        }
+
+        .streak-counter {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timer {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f59e0b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Session Setup Modal -->
+    <div id="sessionSetupModal"
+        class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl transform transition-all scale-100">
+            <div class="text-center mb-8">
+                <div
+                    class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span class="text-3xl">🚀</span>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800">Start Your Session</h3>
+                <p class="text-gray-600 mt-2">What would you like to focus on today?</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Topic Selection -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Select
+                        Topic</label>
+                    <div class="relative">
+                        <select id="topicSelector"
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none appearance-none font-medium text-gray-700 transition-all hover:bg-white">
+                            <option value="">Loading topics...</option>
+                        </select>
+                        <div
+                            class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="startSessionAction('quiz')"
+                        class="group relative flex items-center justify-center gap-3 w-full bg-white border-2 border-indigo-100 p-4 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all">
+                        <span
+                            class="text-2xl bg-indigo-100 p-2 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">📝</span>
+                        <div class="text-left flex-1">
+                            <h4 class="font-bold text-gray-800 group-hover:text-indigo-700">Take a Quiz</h4>
+                            <p class="text-xs text-gray-500">Practice questions & essays</p>
+                        </div>
+                        <span class="text-gray-300 group-hover:text-indigo-500">→</span>
+                    </button>
+
+                    <button onclick="startSessionAction('notes')"
+                        class="group relative flex items-center justify-center gap-3 w-full bg-white border-2 border-green-100 p-4 rounded-xl hover:border-green-500 hover:shadow-md transition-all">
+                        <span
+                            class="text-2xl bg-green-100 p-2 rounded-lg group-hover:bg-green-600 group-hover:text-white transition-colors">📖</span>
+                        <div class="text-left flex-1">
+                            <h4 class="font-bold text-gray-800 group-hover:text-green-700">Read Concept Note</h4>
+                            <p class="text-xs text-gray-500">Revise summaries & key points</p>
+                        </div>
+                        <span class="text-gray-300 group-hover:text-green-500">→</span>
+                    </button>
+
+                    <button onclick="startSessionAction('doubt')"
+                        class="group relative flex items-center justify-center gap-3 w-full bg-white border-2 border-orange-100 p-4 rounded-xl hover:border-orange-500 hover:shadow-md transition-all">
+                        <span
+                            class="text-2xl bg-orange-100 p-2 rounded-lg group-hover:bg-orange-600 group-hover:text-white transition-colors">🤔</span>
+                        <div class="text-left flex-1">
+                            <h4 class="font-bold text-gray-800 group-hover:text-orange-700">Ask a Doubt</h4>
+                            <p class="text-xs text-gray-500">Get instant help from Edu AI</p>
+                        </div>
+                        <span class="text-gray-300 group-hover:text-orange-500">→</span>
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="document.getElementById('sessionSetupModal').classList.add('hidden')"
+                class="mt-6 w-full text-center text-gray-400 hover:text-gray-600 text-sm">Dismiss</button>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-sage-green to-terracotta rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">E</span>
+                    </div>
+                    <span class="text-2xl font-bold" style="color: var(--sage-green);">EduAI</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="timer bg-blue-100 text-blue-800 border border-blue-200" id="currentQuestionTimer">Curr:
+                        0s</div>
+                    <div class="timer bg-purple-100 text-purple-800 border border-purple-200" id="avgTimer">Avg: 0s
+                    </div>
+                    <div class="timer" id="sessionTimer">Total: 00:00</div>
+                    <button onclick="toggleDarkMode()"
+                        class="text-gray-600 hover:text-gray-800 p-2 rounded-full hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700 transition-colors"
+                        title="Toggle Dark Mode">
+                        <span id="darkModeIcon">🌙</span>
+                    </button>
+                    <button onclick="pauseSession()" class="text-gray-600 hover:text-gray-800 p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6">
+                            </path>
+                        </svg>
+                    </button>
+                    <button onclick="endSession()" class="text-gray-600 hover:text-red-600 p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Learning Interface -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Mode Switcher -->
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+            <button onclick="switchMode('quiz')" id="btn-mode-quiz"
+                class="mode-btn active flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold transition-all shadow-md bg-white border-2 border-indigo-500 text-indigo-700 transform scale-105">
+                <span>📝</span> Quiz Zone
+            </button>
+            <button onclick="switchMode('notes')" id="btn-mode-notes"
+                class="mode-btn flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold transition-all shadow-sm bg-white border border-gray-200 text-gray-500 hover:bg-green-50 hover:text-green-600 hover:border-green-200">
+                <span>📖</span> Concept Notes
+            </button>
+            <button onclick="switchMode('doubt')" id="btn-mode-doubt"
+                class="mode-btn flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold transition-all shadow-sm bg-white border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200">
+                <span>🤔</span> Ask EduAI
+            </button>
+        </div>
+
+        <div class="grid lg:grid-cols-4 gap-8">
+            <!-- Progress Sidebar -->
+            <div class="lg:col-span-1" id="sidebarContainer">
+                <div class="bg-white rounded-2xl p-6 shadow-lg sticky top-24">
+                    <h3 class="text-lg font-bold mb-6 text-gray-800">Your Progress</h3>
+
+                    <!-- Progress Ring -->
+                    <div class="flex justify-center mb-6">
+                        <div class="relative">
+                            <svg class="progress-ring w-24 h-24">
+                                <circle cx="48" cy="48" r="40" stroke="#e5e7eb" stroke-width="8" fill="transparent" />
+                                <circle id="progressCircle" cx="48" cy="48" r="40" stroke="var(--sage-green)"
+                                    stroke-width="8" fill="transparent" stroke-dasharray="251.2"
+                                    stroke-dashoffset="251.2" class="progress-ring-circle" />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span id="progressPercent" class="text-2xl font-bold"
+                                    style="color: var(--sage-green);">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Problems Solved</span>
+                            <span id="problemsSolved" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Accuracy</span>
+                            <span id="accuracyPercent" class="font-bold">0%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Current Streak</span>
+                            <div class="streak-counter">
+                                <span>🔥</span>
+                                <span id="streakCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Topic Mastery -->
+                    <div class="mt-8">
+                        <h4 class="text-md font-semibold mb-4 text-gray-800">Topic Mastery</h4>
+                        <div class="space-y-3" id="topicMastery">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="mt-8 space-y-3">
+                        <button onclick="showHint()" class="w-full btn-secondary py-2 px-4 rounded-lg font-medium">
+                            💡 Get Hint
+                        </button>
+                        <button onclick="showNotes()"
+                            class="w-full bg-indigo-50 text-indigo-700 py-2 px-4 rounded-lg font-medium hover:bg-indigo-100 transition-colors">
+                            📖 Concept Note
+                        </button>
+                        <button onclick="skipProblem()"
+                            class="w-full border-2 border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+                            ⏭️ Skip Problem
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-3 transition-all" id="mainContentArea">
+
+                <!-- QUIZ MODE CONTAINER -->
+                <div id="quizContainer" class="mode-container">
+                    <!-- Problem Card -->
+                    <div class="problem-card rounded-2xl p-8 mb-6 bg-white shadow-xl relative overflow-hidden">
+
+                        <!-- Problem Header -->
+                        <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="topic-badge" id="topicBadge">General</div>
+                                <div class="difficulty-indicator" id="difficultyIndicator">
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot"></div>
+                                    <div class="difficulty-dot"></div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500 font-mono">
+                                Q <span id="problemNumber">1</span> / 5
+                            </div>
+                        </div>
+
+                        <!-- Problem Question -->
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4 leading-relaxed" id="problemQuestion">
+                                Loading question...
+                            </h2>
+                            <div id="problemImage" class="mb-6 hidden">
+                                <img src="" alt="Problem diagram" class="max-w-full h-auto rounded-lg shadow-sm">
+                            </div>
+                        </div>
+
+                        <!-- Answer Input -->
+                        <div class="mb-6">
+                            <input type="text" id="answerInput"
+                                class="answer-input w-full px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg"
+                                placeholder="Type your answer here..." autocomplete="off">
+
+                            <textarea id="essayInput"
+                                class="answer-input w-full px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg hidden"
+                                rows="6" placeholder="Write your detailed answer here..."></textarea>
+
+                            <div id="essayFeedback"
+                                class="hidden mt-3 p-4 rounded-lg bg-gray-50 border border-gray-200 text-sm"></div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col gap-3">
+                            <div class="flex gap-4">
+                                <button onclick="checkAnswer()"
+                                    class="btn-primary px-8 py-3 rounded-xl font-bold flex-1 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                    Check Answer
+                                </button>
+                                <button onclick="showSolution()"
+                                    class="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 hover:border-gray-300 transition-colors">
+                                    Solution
+                                </button>
+                            </div>
+                            <button onclick="window.generateAIQuestion()"
+                                class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 mt-2 hover:-translate-y-1">
+                                <span>✨</span> Generate New Question with Edu AI
+                            </button>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div id="feedbackMessage" class="feedback-message hidden mt-4"></div>
+                    </div>
+
+                    <!-- Hint Panel -->
+                    <div id="hintPanel" class="hint-panel rounded-2xl p-6 mb-6 hidden shadow-md">
+                        <div class="flex items-start space-x-3">
+                            <div
+                                class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                                💡</div>
+                            <div>
+                                <h4 class="font-bold text-yellow-800 mb-2">Hint</h4>
+                                <p id="hintText" class="text-yellow-900 leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Solution Panel -->
+                    <div id="solutionPanel" class="solution-panel rounded-2xl p-6 mb-6 hidden shadow-md">
+                        <div class="flex items-start space-x-3">
+                            <div
+                                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                                ✓</div>
+                            <div>
+                                <h4 class="font-bold text-green-800 mb-2">Solution</h4>
+                                <div id="solutionSteps" class="space-y-2 text-green-900 leading-relaxed"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Problem Button -->
+                    <div class="text-center pb-12">
+                        <button onclick="nextProblem()" id="nextButton"
+                            class="btn-primary px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all hidden">
+                            Next Problem →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- NOTES MODE CONTAINER -->
+                <div id="notesContainer" class="mode-container hidden">
+                    <div class="bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-8 shadow-lg min-h-[500px]">
+                        <div class="flex items-center gap-4 mb-8 border-b border-indigo-200 pb-4">
+                            <span class="text-4xl bg-white p-3 rounded-full shadow-sm">📖</span>
+                            <div>
+                                <h2 class="text-2xl font-bold text-indigo-900">Topic Notes</h2>
+                                <p class="text-indigo-600">Summary & Key Concepts</p>
+                            </div>
+                        </div>
+                        <div class="prose prose-indigo max-w-none">
+                            <p id="noteText" class="text-lg text-indigo-900 leading-8 whitespace-pre-line">
+                                Select a topic to view its notes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOUBT MODE CONTAINER -->
+                <div id="doubtContainer" class="mode-container hidden">
+                    <div
+                        class="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-100 rounded-2xl p-8 shadow-lg min-h-[500px]">
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-4xl bg-white p-3 rounded-full shadow-sm">🤖</span>
+                            <div>
+                                <h2 class="text-2xl font-bold text-orange-900">Edu AI Tutor</h2>
+                                <p class="text-orange-700">Ask any doubt and get instant help</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-100 mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Your Question</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="doubtInput"
+                                    class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
+                                    placeholder="e.g. Why is the sky blue?">
+                                <button onclick="window.solveDoubt()"
+                                    class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-md">
+                                    Ask
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="doubtAnswer"
+                            class="hidden p-6 bg-white rounded-xl border border-orange-200 text-gray-800 text-lg leading-relaxed shadow-sm">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Achievement Popup -->
+    <div id="achievementPopup" class="achievement-popup">
+        <div class="text-center">
+            <div
+                class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-white text-2xl">🏆</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Achievement Unlocked!</h3>
+            <p id="achievementText" class="text-gray-600 mb-4">You've solved 5 problems in a row!</p>
+            <button onclick="closeAchievement()" class="btn-primary px-6 py-2 rounded-lg font-semibold">
+                Continue Learning
+            </button>
+        </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="pauseModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center">
+            <div
+                class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="text-white text-2xl">⏸️</span>
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Session Paused</h3>
+            <p class="text-gray-600 mb-6">Take a break! Your progress has been saved.</p>
+            <div class="flex gap-4">
+                <button onclick="resumeSession()" class="flex-1 btn-primary px-6 py-3 rounded-lg font-semibold">
+                    Resume Learning
+                </button>
+                <button onclick="endSession()"
+                    class="flex-1 border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                    End Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database of problems
+        // Database of problems for all subjects
+        window.CONTENT_DATABASE = {
+            "mathematics": {
+                "class_6": {
+                    "topics": [
+                        "Knowing Our Numbers", "Whole Numbers", "Playing With Numbers", "Basic Geometrical Ideas",
+                        "Understanding Elementary Shapes", "Integers", "Fractions", "Decimals", "Data Handling",
+                        "Mensuration", "Algebra", "Ratio & Proportion", "Symmetry", "Practical Geometry"
+                    ],
+                    "notes": {
+                        "Knowing Our Numbers": "Large numbers, Indian/International place value, estimation, rounding, Roman numerals.",
+                        "Whole Numbers": "Natural & whole numbers, number line, properties (closure, commutative, associative, identity).",
+                        "Playing With Numbers": "Factors, multiples, primes, composite, divisibility rules, HCF/LCM, prime factorisation.",
+                        "Basic Geometrical Ideas": "Points, lines, segments, rays, triangles, quadrilaterals, polygons, circle parts.",
+                        "Understanding Elementary Shapes": "Angles, types of triangles, polygons, 3D shapes basics.",
+                        "Integers": "Positive & negative numbers, number line, addition/subtraction.",
+                        "Fractions": "Proper/improper, mixed, equivalent fractions, comparing, addition/subtraction.",
+                        "Decimals": "Place value, conversion, addition, subtraction, measurement applications.",
+                        "Data Handling": "Data, tally, bar graphs, pictographs.",
+                        "Mensuration": "Perimeter and area of square & rectangle.",
+                        "Algebra": "Variables, expressions, patterns, simple equations.",
+                        "Ratio & Proportion": "Ratios, equivalent ratios, proportion, unitary method.",
+                        "Symmetry": "Lines of symmetry.",
+                        "Practical Geometry": "Line segments, perpendiculars, angles construction."
+                    },
+                    "problems": [
+                        { "id": "m6_1", "topic": "Integers", "difficulty": 1, "question": "Calculate: -5 + 8", "answer": "3", "solution": ["-5 + 8 = 3"], "hint": "Subtract 5 from 8." },
+                        { "id": "m6_2", "topic": "Fractions", "difficulty": 2, "question": "What is 3/4 + 1/4?", "answer": "1", "solution": ["(3+1)/4 = 4/4 = 1"], "hint": "Add the numerators." },
+                        { "id": "m6_3", "topic": "Decimals", "difficulty": 2, "question": "Write 0.5 as a fraction in simplest form.", "answer": "1/2", "solution": ["0.5 = 5/10 = 1/2"], "hint": "0.5 is 5 tenths." },
+                        { "id": "m6_4", "topic": "Mensuration", "difficulty": 2, "question": "Find perimeter of square with side 5cm.", "answer": "20", "solution": ["4 * 5 = 20 cm"], "hint": "Length of boundary." },
+                        { "id": "m6_5", "topic": "Algebra", "difficulty": 2, "question": "If x = 3, find 2x + 1.", "answer": "7", "solution": ["2(3) + 1 = 6 + 1 = 7"], "hint": "Substitute x with 3." }
+                    ]
+                },
+                "class_7": {
+                    "topics": [
+                        "Integers", "Fractions & Decimals", "Data Handling", "Simple Equations", "Lines & Angles",
+                        "Triangle Properties", "Congruence of Triangles", "Comparing Quantities", "Algebraic Expressions",
+                        "Exponents & Powers", "Symmetry", "Perimeter & Area", "Practical Geometry"
+                    ],
+                    "notes": {
+                        "Integers": "Addition & subtraction rules, number line.",
+                        "Fractions & Decimals": "Operations on fractions/decimals, conversions.",
+                        "Data Handling": "Mean, median, mode, bar graphs, pie charts intro.",
+                        "Simple Equations": "Forming & solving linear equations.",
+                        "Lines & Angles": "Pair of angles, intersecting & transversal lines.",
+                        "Triangle Properties": "Median, altitude, angle sum property, inequality property.",
+                        "Congruence of Triangles": "SSS, SAS, ASA, RHS congruency rules.",
+                        "Comparing Quantities": "Percentage, profit/loss, simple interest.",
+                        "Algebraic Expressions": "Terms, factors, coefficients, addition/subtraction.",
+                        "Exponents & Powers": "Laws of exponents, scientific notation.",
+                        "Symmetry": "Rotational symmetry, lines of symmetry.",
+                        "Perimeter & Area": "Polygons, area of triangle, circle basics.",
+                        "Practical Geometry": "Constructing triangles using SSS, SAS, ASA, RHS."
+                    },
+                    "problems": [
+                        { "id": "m7_1", "topic": "Simple Equations", "difficulty": 2, "question": "Solve: 2x + 6 = 12", "answer": "3", "solution": ["2x = 6", "x = 3"], "hint": "Subtract 6 then divide by 2." },
+                        { "id": "m7_2", "topic": "Integers", "difficulty": 2, "question": "Product of (-2) and (-5)?", "answer": "10", "solution": ["Negative * Negative = Positive. 2*5=10"], "hint": "Signs are same." },
+                        { "id": "m7_3", "topic": "Fractions & Decimals", "difficulty": 2, "question": "2.5 x 4 = ?", "answer": "10", "solution": ["25 * 4 = 100, one decimal place -> 10.0"], "hint": "Ignore decimal, multiply, then place decimal." },
+                        { "id": "m7_4", "topic": "Lines & Angles", "difficulty": 2, "question": "Complement of 40 degrees?", "answer": "50", "solution": ["90 - 40 = 50"], "hint": "Sum is 90." },
+                        { "id": "m7_5", "topic": "Exponents & Powers", "difficulty": 3, "question": "Value of 2^3?", "answer": "8", "solution": ["2 * 2 * 2 = 8"], "hint": "2 multiplied by itself 3 times." }
+                    ]
+                },
+                "class_8": {
+                    "topics": [
+                        "Rational Numbers", "Linear Equations in One Variable", "Understanding Quadrilaterals", "Practical Geometry",
+                        "Data Handling", "Squares & Square Roots", "Cubes & Cube Roots", "Comparing Quantities",
+                        "Algebraic Expressions", "Visualising Solid Shapes", "Mensuration", "Exponents & Powers",
+                        "Direct & Inverse Proportions", "Factorisation", "Graphs", "Playing with Numbers"
+                    ],
+                    "notes": {
+                        "Rational Numbers": "Properties, representation on number line.",
+                        "Linear Equations in One Variable": "Solving multi-step equations.",
+                        "Understanding Quadrilaterals": "Polygons, angle sum, types of quadrilaterals.",
+                        "Practical Geometry": "Constructing quadrilaterals.",
+                        "Data Handling": "Probability, bar graph, pie chart.",
+                        "Squares & Square Roots": "Finding squares & roots using prime factorisation.",
+                        "Cubes & Cube Roots": "Cube properties & cube root methods.",
+                        "Comparing Quantities": "Discount, sales tax, compound interest.",
+                        "Algebraic Expressions": "Identities, factorisation.",
+                        "Visualising Solid Shapes": "3D views, nets.",
+                        "Mensuration": "Surface area & volume of cube, cuboid, cylinder.",
+                        "Exponents & Powers": "Laws, scientific notation.",
+                        "Direct & Inverse Proportions": "Concepts & applications.",
+                        "Factorisation": "Methods: common factor, grouping, identities.",
+                        "Graphs": "Linear graphs, Cartesian plane.",
+                        "Playing with Numbers": "Divisibility tests, number puzzles."
+                    },
+                    "problems": [
+                        { "id": "m8_1", "topic": "Square Roots", "difficulty": 2, "question": "What is the square root of 144?", "answer": "12", "solution": ["12 * 12 = 144"], "hint": "12 squared is?" },
+                        { "id": "m8_2", "topic": "Cube Roots", "difficulty": 2, "question": "Cube root of 27?", "answer": "3", "solution": ["3 * 3 * 3 = 27"], "hint": "Which number multiplies 3 times to 27?" },
+                        { "id": "m8_3", "topic": "Linear Equations", "difficulty": 2, "question": "Solve: 5x - 3 = 3x + 7", "answer": "5", "solution": ["2x = 10 -> x = 5"], "hint": "Bring x terms to one side." },
+                        { "id": "m8_4", "topic": "Mensuration", "difficulty": 3, "question": "Volume of cube with side 4cm?", "answer": "64", "solution": ["4 * 4 * 4 = 64"], "hint": "Side cubed." },
+                        { "id": "m8_5", "topic": "Factorisation", "difficulty": 3, "question": "Factorise: x^2 - 9", "answer": "(x+3)(x-3)", "solution": ["Difference of squares: a^2 - b^2 = (a+b)(a-b)"], "hint": "a squared minus b squared." }
+                    ]
+                },
+                "class_9": {
+                    "topics": [
+                        "Number Systems", "Polynomials", "Coordinate Geometry", "Linear Equations in Two Variables",
+                        "Euclid’s Geometry", "Lines & Angles", "Triangles", "Quadrilaterals", "Circles",
+                        "Constructions", "Heron’s Formula", "Surface Area & Volume", "Statistics", "Probability"
+                    ],
+                    "notes": {
+                        "Number Systems": "Rational/irrational numbers, real numbers, number line.",
+                        "Polynomials": "Types, degree, identities, remainder theorem.",
+                        "Coordinate Geometry": "Cartesian plane, plotting points.",
+                        "Linear Equations in Two Variables": "Graphing linear equations.",
+                        "Euclid’s Geometry": "Axioms & postulates.",
+                        "Lines & Angles": "Angle pairs, parallel lines, transversal.",
+                        "Triangles": "Congruence, inequalities, properties.",
+                        "Quadrilaterals": "Parallelogram & properties.",
+                        "Circles": "Chord properties, tangent basics.",
+                        "Constructions": "Bisectors, perpendiculars, angle constructions.",
+                        "Heron’s Formula": "Area of triangle using semi-perimeter.",
+                        "Surface Area & Volume": "Cube, cuboid, cylinder, cone, sphere.",
+                        "Statistics": "Mean, median, mode.",
+                        "Probability": "Simple probability."
+                    },
+                    "problems": [
+                        {
+                            "id": "m9_1", "topic": "Polynomials", "difficulty": 3,
+                            "question": "If x + 1 is a factor of x² + kx + 3, find k.", "answer": "4",
+                            "solution": ["p(-1) = 0 => 1 - k + 3 = 0 => k = 4"], "hint": "Use Factor Theorem."
+                        },
+                        {
+                            "id": "m9_2", "topic": "Linear Equations", "difficulty": 3,
+                            "question": "If x=2, y=1 is a solution of 2x + 3y = k, find k.", "answer": "7",
+                            "solution": ["2(2) + 3(1) = 7"], "hint": "Substitute values."
+                        },
+                        {
+                            "id": "m9_3", "topic": "Heron’s Formula", "difficulty": 3,
+                            "question": "Find area of triangle with sides 3, 4, 5.", "answer": "6",
+                            "solution": ["s=6, Area = sqrt(6*3*2*1) = 6"], "hint": "Use Heron's formula."
+                        },
+                        { "id": "m9_4", "topic": "Number Systems", "difficulty": 2, "question": "Value of (64)^(1/2)?", "answer": "8", "solution": ["Square root of 64 is 8."], "hint": "8 times 8 is 64." },
+                        { "id": "m9_5", "topic": "Circles", "difficulty": 3, "question": "Longest chord of a circle?", "answer": "Diameter", "solution": ["Diameter is the longest chord."], "hint": "Starts with D." }
+                    ]
+                },
+                "class_10": {
+                    "topics": [
+                        "Real Numbers", "Polynomials", "Pair of Linear Equations", "Quadratic Equations",
+                        "Arithmetic Progressions", "Triangles", "Coordinate Geometry", "Trigonometry",
+                        "Applications of Trigonometry", "Circles", "Constructions", "Areas Related to Circles",
+                        "Surface Areas & Volumes", "Statistics", "Probability"
+                    ],
+                    "notes": {
+                        "Real Numbers": "Euclid division lemma, HCF, LCM, irrational proofs.",
+                        "Polynomials": "Zeros of polynomials, relationship with coefficients, graph shapes.",
+                        "Pair of Linear Equations": "Graphical & algebraic methods (substitution, elimination).",
+                        "Quadratic Equations": "Roots, discriminant, nature of roots.",
+                        "Arithmetic Progressions": "Nth term, sum of n terms.",
+                        "Triangles": "Similarity (AAA, SSS, SAS), theorems, area ratios.",
+                        "Coordinate Geometry": "Distance, section, area of triangle formula.",
+                        "Trigonometry": "Ratios, identities.",
+                        "Applications of Trigonometry": "Height & distance problems.",
+                        "Circles": "Tangent properties.",
+                        "Constructions": "Similar triangles, tangents.",
+                        "Areas Related to Circles": "Sector & segment formulas.",
+                        "Surface Areas & Volumes": "Frustum, cone, sphere, cylinder, conversions.",
+                        "Statistics": "Mean (3 methods), median, ogives.",
+                        "Probability": "Theoretical probability."
+                    },
+                    "problems": [
+                        { "id": "m10_1", "topic": "Probability", "difficulty": 1, "question": "Prob. of getting a head in one coin toss?", "answer": "0.5", "solution": ["1/2 = 0.5"], "hint": "One favorable outcome out of two." },
+                        { "id": "m10_2", "topic": "Quadratic Equations", "difficulty": 3, "question": "Discriminant of x² + 2x + 1 = 0?", "answer": "0", "solution": ["b^2 - 4ac = 2^2 - 4(1)(1) = 4-4=0"], "hint": "b squared minus 4ac." },
+                        { "id": "m10_3", "topic": "Trigonometry", "difficulty": 2, "question": "Sin 30 degrees?", "answer": "0.5", "solution": ["From table, sin 30 is 1/2."], "hint": "Half." },
+                        { "id": "m10_4", "topic": "Arithmetic Progressions", "difficulty": 3, "question": "10th term of AP: 2, 4, 6...?", "answer": "20", "solution": ["a=2, d=2. a10 = a + 9d = 2 + 18 = 20"], "hint": "a plus (n-1)d" },
+                        { "id": "m10_5", "topic": "Coordinate Geometry", "difficulty": 2, "question": "Distance between (0,0) and (3,4)?", "answer": "5", "solution": ["sqrt(3^2 + 4^2) = sqrt(9+16) = 5"], "hint": "Pythagoras theorem." }
+                    ]
+                }
+            },
+            "science": {
+                "class_6": {
+                    "topics": [
+                        "The Wonderful World of Science", "Diversity in the Living World", "Mindful Eating", "Exploring Magnets",
+                        "Measurement of Length and Motion", "Materials Around Us", "Temperature and its Measurement", "A Journey through States of Water",
+                        "Methods of Separation", "Living Creatures", "Nature’s Treasures", "Beyond Earth"
+                    ],
+                    "problems": [
+                        {
+                            "id": "s6_1", "topic": "Measurement of Length and Motion", "difficulty": 2,
+                            "question": "Fill in the blanks: One metre is __________ cm.",
+                            "answer": "100",
+                            "solution": ["1 metre = 100 centimetres"],
+                            "hint": "Cent means 100."
+                        },
+                        {
+                            "id": "s6_2", "topic": "Mindful Eating", "difficulty": 2,
+                            "question": "Which nutrient mainly gives energy to our body?",
+                            "answer": "Carbohydrates",
+                            "solution": ["Carbohydrates and fats are the main energy-giving foods."],
+                            "hint": "Found in rice, wheat, and potatoes."
+                        },
+                        {
+                            "id": "s6_3", "topic": "Exploring Magnets", "difficulty": 2,
+                            "question": "Where are the poles of a bar magnet located?",
+                            "answer": "Ends",
+                            "solution": ["The poles are located near the two ends of the magnet."],
+                            "hint": "The strongest attraction is at the..."
+                        }
+                    ]
+                },
+                "class_7": {
+                    "topics": [
+                        "Nutrition in Plants", "Nutrition in Animals", "Heat", "Acids, Bases and Salts", "Physical and Chemical Changes",
+                        "Respiration in Organisms", "Transportation in Animals and Plants", "Reproduction in Plants", "Motion and Time",
+                        "Electric Current and its Effects", "Light", "Forests: Our Lifeline", "Wastewater Story"
+                    ],
+                    "problems": [
+                        {
+                            "id": "s7_1", "topic": "Nutrition in Plants", "difficulty": 2,
+                            "question": "Green plants are called ______ since they synthesise their own food.",
+                            "answer": "Autotrophs",
+                            "solution": ["Auto means self, trophos means nourishment."],
+                            "hint": "Starts with 'Auto'."
+                        },
+                        {
+                            "id": "s7_2", "topic": "Heat", "difficulty": 2,
+                            "question": "A solution turns red litmus blue. Is it Acidic or Basic?",
+                            "answer": "Basic",
+                            "solution": ["Bases turn red litmus blue. Acids turn blue litmus red."],
+                            "hint": "Bases are bitter and soapy."
+                        },
+                        {
+                            "id": "s7_3", "topic": "Electric Current", "difficulty": 3,
+                            "question": "Which effect of electric current is used in an electric iron?",
+                            "answer": "Heating",
+                            "solution": ["The heating effect of electric current causes the coil to get hot."],
+                            "hint": "It gets hot."
+                        }
+                    ]
+                },
+                "class_8": {
+                    "topics": [
+                        "Crop Production and Management", "Microorganisms", "Coal and Petroleum", "Combustion and Flame",
+                        "Conservation of Plants and Animals", "Reproduction in Animals", "Reaching the Age of Adolescence",
+                        "Force and Pressure", "Friction", "Sound", "Chemical Effects of Electric Current", "Some Natural Phenomena", "Light"
+                    ],
+                    "problems": [
+                        {
+                            "id": "s8_1", "topic": "Force and Pressure", "difficulty": 2,
+                            "question": "Fill in the blank: Friction opposes the ________ between surfaces in contact.",
+                            "answer": "Motion",
+                            "solution": ["Friction always acts opposite to the direction of motion."],
+                            "hint": "Movement."
+                        },
+                        {
+                            "id": "s8_2", "topic": "Sound", "difficulty": 2,
+                            "question": "Sound cannot travel through ________.",
+                            "answer": "Vacuum",
+                            "solution": ["Sound needs a medium (solid, liquid, gas) to travel."],
+                            "hint": "Empty space with no air."
+                        },
+                        {
+                            "id": "s8_3", "topic": "Coal and Petroleum", "difficulty": 2,
+                            "question": "Which gas is obtained during the processing of coal to get coke?",
+                            "answer": "Coal gas",
+                            "solution": ["Coal gas is obtained during the processing of coal to get coke."],
+                            "hint": "Gas from coal."
+                        }
+                    ]
+                },
+                "class_9": {
+                    "topics": [
+                        "Matter in Our Surroundings", "Is Matter Around Us Pure?", "Atoms and Molecules", "Structure of the Atom",
+                        "The Fundamental Unit of Life", "Tissues", "Motion", "Force and Laws of Motion", "Gravitation",
+                        "Work and Energy", "Sound", "Improvement in Food Resources"
+                    ],
+                    "notes": {
+                        "Matter in Our Surroundings": "• Matter is made of tiny particles with space between them.\n• 3 States: Solid (fixed shape/vol), Liquid (fixed vol, fluid), Gas (high compressibility).\n• Sublimation: Direct change from Solid to Gas (e.g., Camphor).",
+                        "Is Matter Around Us Pure?": "• Mixture: Two or more substances mixed (not chemically bonded).\n• Solution: Homogeneous mixture.\n• Suspension: Heterogeneous, particles settle.\n• Colloid: Heterogeneous, but particles don't settle (e.g., Milk).",
+                        "Atoms and Molecules": "• Law of Conservation of Mass: Mass isn't created/destroyed in reaction.\n• Atom: Smallest particle of element.\n• Molecule: Group of atoms bonded together.\n• Mole Concept: 1 mole = 6.022 × 10²³ particles.",
+                        "Structure of the Atom": "• Electrons (-ve), Protons (+ve), Neutrons (neutral).\n• Valency: Combining capacity of an atom.\n• Isotopes: Same atomic number, different mass number (e.g., C-12, C-14).",
+                        "The Fundamental Unit of Life": "• Cell is the basic unit of life.\n• Plasma Membrane: Selectively permeable.\n• Nucleus: Brain of the cell.\n• Mitochondria: Powerhouse (ATP).\n• Lysosomes: Suicide bags.",
+                        "Tissues": "• Plant Tissues: Meristematic (dividing) & Permanent.\n• Xylem: Transports water.\n• Phloem: Transports food.\n• Animal Tissues: Epithelial, Connective (Blood/Bone), Muscular, Nervous.",
+                        "Motion": "• Distance: Total path length.\n• Displacement: Shortest path (vector).\n• Velocity = Displacement / Time.\n• Acceleration = Change in velocity / Time.",
+                        "Force and Laws of Motion": "• 1st Law: Inertia (Object stays at rest/motion unless acted upon).\n• 2nd Law: F = ma (Force = mass × acceleration).\n• 3rd Law: Action and Reaction are equal and opposite.",
+                        "Gravitation": "• Universal Law: F = G(m1*m2)/d².\n• Weight (W) = m × g (g ≈ 9.8 m/s² on Earth).\n• Weight on Moon = 1/6th of weight on Earth.",
+                        "Work and Energy": "• Work = Force × Displacement (W = F × s).\n• Kinetic Energy: ½mv².\n• Potential Energy: mgh.\n• Power: Rate of doing work (Watts).",
+                        "Sound": "• Longitudinal mechanical waves.\n• Needs medium to travel (Solids > Liquids > Gases).\n• Frequency determines Pitch.\n• Amplitude determines Loudness.",
+                        "Improvement in Food Resources": "• Crop Rotation: Growing different crops sequentially.\n• Manure: Organic.\n• Fertilizer: Inorganic chemicals.\n• Animal Husbandry: Breeding of livestock."
+                    },
+                    "problems": [
+                        {
+                            "id": "s9_1", "topic": "Matter in Our Surroundings", "difficulty": 2,
+                            "question": "Convert 300 K to Celsius scale.",
+                            "answer": "27",
+                            "solution": ["C = K - 273", "300 - 273 = 27°C"],
+                            "hint": "Subtract 273."
+                        },
+                        {
+                            "id": "s9_2", "topic": "Atoms and Molecules", "difficulty": 3,
+                            "question": "What is the chemical formula of calcium oxide?",
+                            "answer": "CaO",
+                            "solution": ["Calcium (Ca) valency +2, Oxide (O) valency -2. Formula: CaO"],
+                            "hint": "Quick lime."
+                        },
+                        {
+                            "id": "s9_3", "topic": "The Fundamental Unit of Life", "difficulty": 2,
+                            "question": "Which organelle is known as the powerhouse of the cell?",
+                            "answer": "Mitochondria",
+                            "solution": ["Mitochondria release energy in the form of ATP."],
+                            "hint": "Starts with M."
+                        },
+                        {
+                            "id": "s9_4", "topic": "Gravitation", "difficulty": 3,
+                            "question": "If mass is 10kg, what is the weight on Earth (g=9.8 m/s²)?",
+                            "answer": "98",
+                            "solution": ["W = m × g", "W = 10 × 9.8 = 98 N"],
+                            "hint": "Multiply mass by gravity."
+                        },
+                        {
+                            "id": "s9_5", "topic": "Work and Energy", "difficulty": 3,
+                            "question": "What is the kinetic energy of an object of mass m moving with velocity v?",
+                            "answer": "1/2mv^2",
+                            "solution": ["Kinetic Energy formula is (1/2)mv²"],
+                            "hint": "Half m v squared."
+                        }
+                    ]
+                },
+                "class_10": {
+                    "topics": [
+                        "Chemical Reactions and Equations", "Acids, Bases and Salts", "Metals and Non-metals", "Carbon and its Compounds"
+                    ],
+                    "problems": [
+                        {
+                            "id": "s10_1", "topic": "Chemical Reactions", "difficulty": 2,
+                            "question": "Why is respiration considered an exothermic reaction?",
+                            "answer": "Releases energy",
+                            "solution": ["It releases energy along with CO2 and water."],
+                            "hint": "Exo means out/release."
+                        },
+                        {
+                            "id": "s10_2", "topic": "Acids, Bases and Salts", "difficulty": 3,
+                            "question": "What happens when an acid reacts with a metal?",
+                            "answer": "Hydrogen gas",
+                            "solution": ["Acid + Metal -> Salt + Hydrogen gas"],
+                            "hint": "A gas is evolved that burns with a pop sound."
+                        }
+                    ]
+                }
+            },
+            "english": {
+                "class_9": {
+                    "topics": [
+                        "The Fun They Had", "The Road Not Taken", "The Sound of Music", "The Little Girl",
+                        "A Truly Beautiful Mind", "The Snake and the Mirror", "My Childhood", "Reach for the Top",
+                        "Wind", "Rain on the Roof", "The Lake Isle of Innisfree", "A Legend of the Northland"
+                    ],
+                    "notes": {
+                        "The Fun They Had": "Set in future (2157), Margie & Tommy find a real book. Contrasts mechanical teacher with old schools.",
+                        "The Road Not Taken": "Poem by Robert Frost. About choices in life. 'Two roads diverged in a yellow wood'.",
+                        "The Sound of Music": "Evelyn Glennie (deaf percussionist) and Bismillah Khan (Shehnai maestro). Inspiration stories."
+                    },
+                    "problems": [
+                        {
+                            "id": "e9_1", "topic": "The Fun They Had", "difficulty": 2,
+                            "question": "What did Margie write in her diary?", "answer": "Tommy found a real book",
+                            "solution": ["On 17 May 2157, Margie wrote, 'Today Tommy found a real book!'"], "hint": "It was about an object Tommy found."
+                        },
+                        {
+                            "id": "e9_2", "topic": "The Road Not Taken", "difficulty": 2,
+                            "question": "Which road did the poet choose?", "answer": "The one less traveled by",
+                            "solution": ["He chose the road 'less traveled by', and that made all the difference."], "hint": "Not the popular one."
+                        },
+                        {
+                            "id": "e9_3", "topic": "The Sound of Music", "difficulty": 2,
+                            "question": "How does Evelyn Glennie listen to sound?", "answer": "Vibration",
+                            "solution": ["She feels sound through different parts of her body (vibrations)."], "hint": "Not through ears."
+                        },
+                        {
+                            "id": "e9_4", "topic": "The Little Girl", "difficulty": 3,
+                            "question": "Why was Kezia afraid of her father?", "answer": "He was strict",
+                            "solution": ["He appeared like a giant, was strict, and often scolded her."], "hint": "His behavior."
+                        }
+                    ]
+                }
+            },
+            "social_studies": {
+                "class_6": {
+                    "topics": ["Locating Places on Earth", "Oceans and Continents", "Landforms and Life", "Timeline and Sources of History", "Grassroots Democracy", "Economic Activities"],
+                    "notes": {
+                        "Locating Places on Earth": "Latitudes and Longitudes help locate places. The Globe is a model of Earth.",
+                        "Grassroots Democracy": "Panchayati Raj in rural areas and Municipalities in urban areas form the third tier of government."
+                    },
+                    "problems": [
+                        { "id": "sst6_1", "topic": "Locating Places on Earth", "difficulty": 2, "question": "What is the 0° Latitude called?", "answer": "Equator", "solution": ["The Equator is the 0° latitude that divides Earth into Northern and Southern Hemispheres."], "hint": "It divides the earth into two halves." },
+                        { "id": "sst6_2", "topic": "Grassroots Democracy", "difficulty": 2, "question": "Who is the head of the Gram Panchayat?", "answer": "Sarpanch", "solution": ["The Sarpanch is the elected head of the Village Panchayat."], "hint": "Starts with S." }
+                    ]
+                },
+                "class_7": {
+                    "topics": ["Delhi Sultanate", "Mughal Empire", "Environment", "Air and Water", "State Government", "Markets"],
+                    "notes": {
+                        "Delhi Sultanate": "Five dynasties ruled Delhi: Slave, Khalji, Tughlaq, Sayyid, and Lodi.",
+                        "Environment": "Our surroundings including biotic and abiotic components."
+                    },
+                    "problems": [
+                        { "id": "sst7_1", "topic": "Delhi Sultanate", "difficulty": 2, "question": "Who was the first woman ruler of Delhi?", "answer": "Razia Sultan", "solution": ["Razia Sultan was the daughter of Iltutmish and the only female ruler of Delhi Sultanate."], "hint": "Daughter of Iltutmish." },
+                        { "id": "sst7_2", "topic": "Environment", "difficulty": 1, "question": "Which gas is most abundant in the atmosphere?", "answer": "Nitrogen", "solution": ["Nitrogen makes up about 78% of the Earth's atmosphere."], "hint": "It starts with N." }
+                    ]
+                },
+                "class_8": {
+                    "topics": ["Colonialism and the City", "Revolt of 1857", "Resources", "Agriculture", "Indian Constitution", "Judiciary"],
+                    "notes": {
+                        "Revolt of 1857": "Also known as the First War of Independence. Started in Meerut.",
+                        "Indian Constitution": "The supreme law of India, adopted on 26 Jan 1950."
+                    },
+                    "problems": [
+                        { "id": "sst8_1", "topic": "Revolt of 1857", "difficulty": 2, "question": "Who was the last Mughal Emperor exiled after the 1857 revolt?", "answer": "Bahadur Shah Zafar", "solution": ["Bahadur Shah Zafar II was exiled to Rangoon."], "hint": "Last Mughal Emperor." },
+                        { "id": "sst8_2", "topic": "Resources", "difficulty": 2, "question": "Which resource is known as 'Black Gold'?", "answer": "Petroleum", "solution": ["Petroleum and its derivatives are called Black Gold due to their value."], "hint": "Used fuel." }
+                    ]
+                },
+                "class_9": {
+                    "topics": ["French Revolution", "Socialism in Europe", "India - Size and Location", "Drainage", "Constitutional Design", "People as Resource"],
+                    "notes": {
+                        "French Revolution": "Started in 1789. Storming of Bastille. Ideas of Liberty, Equality, Fraternity.",
+                        "India - Size and Location": "India is the 7th largest country. Tropic of Cancer passes through it."
+                    },
+                    "problems": [
+                        { "id": "sst9_1", "topic": "French Revolution", "difficulty": 3, "question": "When did the Storming of the Bastille take place?", "answer": "14 July 1789", "solution": ["On 14 July 1789, the people of Paris stormed the Bastille fortress-prison."], "hint": "Includes the year 1789." },
+                        { "id": "sst9_2", "topic": "India - Size and Location", "difficulty": 2, "question": "Which latitude line divides India into almost two equal parts?", "answer": "Tropic of Cancer", "solution": ["The Tropic of Cancer (23°30'N) passes through the middle of the country."], "hint": "Cancer." }
+                    ]
+                },
+                "class_10": {
+                    "topics": ["Rise of Nationalism in Europe", "Nationalism in India", "Resources and Development", "Agriculture", "Power Sharing", "Federalism", "Sectors of Indian Economy"],
+                    "notes": {
+                        "Rise of Nationalism in Europe": "Concept of Nation-state, French Revolution legacy, Unification of Italy and Germany.",
+                        "Nationalism in India": "Non-Cooperation Movement, Civil Disobedience, Role of Gandhi.",
+                        "Power Sharing": "Belgium and Sri Lanka models. Prudential and Moral reasons.",
+                        "Sectors of Indian Economy": "Primary (Agriculture), Secondary (Industry), Tertiary (Services)."
+                    },
+                    "problems": [
+                        { "id": "sst10_1", "topic": "Nationalism in India", "difficulty": 2, "question": "In which year was the Non-Cooperation Movement launched?", "answer": "1921", "solution": ["It was launched in 1921 under Mahatma Gandhi's leadership."], "hint": "Early 1920s." },
+                        { "id": "sst10_2", "topic": "Power Sharing", "difficulty": 3, "question": "Which country followed the policy of Majoritarianism?", "answer": "Sri Lanka", "solution": ["Sri Lanka adopted Majoritarianism favoring the Sinhala community."], "hint": "Island nation south of India." },
+                        { "id": "sst10_3", "topic": "Resources and Development", "difficulty": 2, "question": "Which soil is best for growing cotton?", "answer": "Black Soil", "solution": ["Black soil (Regur soil) is ideal for growing cotton."], "hint": "Color is black." },
+                        { "id": "sst10_4", "topic": "Sectors of Indian Economy", "difficulty": 2, "question": "Which sector contributes most to employment in India?", "answer": "Primary", "solution": ["The Primary sector (Agriculture) employs the largest workforce."], "hint": "Agriculture." }
+                    ]
+                }
+            },
+            "hindi": {
+                "class_9": {
+                    "topics": [
+                        "दुख का अधिकार (Dukh Ka Adhikar)", "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)",
+                        "तुम कब जाओगे, अतिथि (Tum Kab Jaoge, Atithi)", "वैज्ञानिक चेतना के वाहक (Vaigyanik Chetna)",
+                        "साकी (Saaki)", "पद (Pad - Raidas)", "दोहे (Dohe - Rahim)"
+                    ],
+                    "notes": {
+                        "दुख का अधिकार (Dukh Ka Adhikar)": "यशपाल द्वारा लिखित। अमीरी-गरीबी का भेद और समाज की संवेदनाहीनता। बुढ़िया का दुख.",
+                        "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)": "बचेंद्री पाल की एवरेस्ट विजय की कहानी। साहस और दृढ़ निश्चय।",
+                        "दोहे (Dohe - Rahim)": "रहीम के नीतिपरक दोहे। जीवन के अनुभव और नैतिकता।"
+                    },
+                    "problems": [
+                        {
+                            "id": "h9_1", "topic": "दुख का अधिकार (Dukh Ka Adhikar)", "difficulty": 2,
+                            "question": "बुढ़िया खरबूजे क्यों बेच रही थी?", "answer": "पेट भरने के लिए",
+                            "solution": ["अपने परिवार का पेट भरने और बेटे की मौत के बाद के खर्चों के लिए।"], "hint": "To feed family."
+                        },
+                        {
+                            "id": "h9_2", "topic": "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)", "difficulty": 2,
+                            "question": "बचेंद्री पाल कौन थीं?", "answer": "माउंट एवरेस्ट पर चढ़ने वाली पहली भारतीय महिला",
+                            "solution": ["First Indian woman to climb Mount Everest."], "hint": "First Indian woman..."
+                        },
+                        {
+                            "id": "h9_3", "topic": "दोहे (Dohe - Rahim)", "difficulty": 3,
+                            "question": "रहीम ने 'पानी' के कितने अर्थ बताए हैं?", "answer": "3",
+                            "solution": ["चमक (मोती), प्रतिष्ठा (मानुष), और जल (चून)।"], "hint": "Three meanings."
+                        }
+                    ]
+                }
+            }
+        };
+
+        // Learning Session Management
+        class LearningSession {
+            constructor() {
+                this.currentStudent = JSON.parse(localStorage.getItem('currentStudent') || '{}');
+                this.sessionStartTime = new Date();
+                this.currentProblem = 1;
+                this.totalProblems = 10;
+                this.problemsSolved = 0;
+                this.correctAnswers = 0;
+                this.currentStreak = 0;
+                this.sessionTimer = null;
+                this.questionTimer = null;
+                this.problemStartTime = new Date();
+                this.questionTimeSeconds = 0;
+                this.totalQuestionTime = 0;
+                this.questionsAnswered = 0;
+                this.hasAttempted = false;
+
+                this.problems = [];
+
+                // Determine subject (prioritize weakestSubject if set, else generic subject)
+                let targetSubject = this.currentStudent.subject;
+                if (!targetSubject || targetSubject === 'all') {
+                    targetSubject = this.currentStudent.weakestSubject || 'mathematics';
+                }
+
+                // Load problems based on student class and subject
+                const studentClass = this.currentStudent.class; // e.g., "9"
+                const classKey = `class_${studentClass}`;
+                this.currentSubjectName = targetSubject; // Store for UI usage
+
+                if (window.CONTENT_DATABASE && window.CONTENT_DATABASE[targetSubject] && window.CONTENT_DATABASE[targetSubject][classKey]) {
+                    this.problems = window.CONTENT_DATABASE[targetSubject][classKey].problems;
+                } else {
+                    // Fallback to Class 9 Math if specific combo not found
+                    if (window.CONTENT_DATABASE && window.CONTENT_DATABASE['mathematics'] && window.CONTENT_DATABASE['mathematics']['class_9']) {
+                        console.log("Fallback to Math Class 9");
+                        this.problems = window.CONTENT_DATABASE['mathematics']['class_9'].problems;
+                    }
+                }
+
+                // If still no problems (database missing), keep a minimal fallback
+                if (!this.problems || this.problems.length === 0) {
+                    this.problems = [
+                        {
+                            id: 1,
+                            topic: 'General',
+                            difficulty: 1,
+                            question: `Welcome! We are updating the ${targetSubject} database for Class ${studentClass}. Try this: 2 + 2 = ?`,
+                            answer: '4',
+                            hint: 'It is the sum of two and two.',
+                            solution: ['2 + 2 = 4']
+                        }
+                    ];
+                }
+
+                this.totalProblems = this.problems.length;
+
+                this.init();
+            }
+
+            init() {
+                this.loadProblem();
+                this.startTimer();
+                this.updateProgress();
+                this.initializeEventListeners();
+                this.switchMode('quiz');
+            }
+
+            switchMode(mode) {
+                this.currentMode = mode;
+
+                // Containers
+                const quiz = document.getElementById('quizContainer');
+                const notes = document.getElementById('notesContainer');
+                const doubt = document.getElementById('doubtContainer');
+                const sidebar = document.getElementById('sidebarContainer');
+                const mainArea = document.getElementById('mainContentArea');
+
+                // Buttons
+                const btnQuiz = document.getElementById('btn-mode-quiz');
+                const btnNotes = document.getElementById('btn-mode-notes');
+                const btnDoubt = document.getElementById('btn-mode-doubt');
+
+                // Reset all
+                if (quiz) quiz.classList.add('hidden');
+                if (notes) notes.classList.add('hidden');
+                if (doubt) doubt.classList.add('hidden');
+
+                [btnQuiz, btnNotes, btnDoubt].forEach(el => {
+                    if (el) {
+                        el.classList.remove('active', 'border-indigo-500', 'text-indigo-700', 'transform', 'scale-105');
+                        el.classList.add('border-gray-200', 'text-gray-500');
+                    }
+                });
+
+                // Activate selected
+                if (mode === 'quiz') {
+                    if (quiz) quiz.classList.remove('hidden');
+                    if (sidebar) sidebar.classList.remove('hidden');
+                    if (mainArea) {
+                        mainArea.classList.remove('col-span-4');
+                        mainArea.classList.add('lg:col-span-3');
+                    }
+
+                    if (btnQuiz) {
+                        btnQuiz.classList.add('active', 'border-indigo-500', 'text-indigo-700', 'transform', 'scale-105');
+                        btnQuiz.classList.remove('border-gray-200', 'text-gray-500');
+                    }
+                } else if (mode === 'notes') {
+                    if (notes) notes.classList.remove('hidden');
+                    if (sidebar) sidebar.classList.add('hidden');
+                    if (mainArea) {
+                        mainArea.classList.remove('lg:col-span-3');
+                        mainArea.classList.add('col-span-4');
+                    }
+
+                    if (btnNotes) {
+                        btnNotes.classList.add('active', 'border-green-500', 'text-green-700', 'transform', 'scale-105');
+                        btnNotes.classList.remove('border-gray-200', 'text-gray-500');
+                    }
+
+                    this.showNotes();
+
+                } else if (mode === 'doubt') {
+                    if (doubt) doubt.classList.remove('hidden');
+                    if (sidebar) sidebar.classList.add('hidden');
+                    if (mainArea) {
+                        mainArea.classList.remove('lg:col-span-3');
+                        mainArea.classList.add('col-span-4');
+                    }
+
+                    if (btnDoubt) {
+                        btnDoubt.classList.add('active', 'border-orange-500', 'text-orange-700', 'transform', 'scale-105');
+                        btnDoubt.classList.remove('border-gray-200', 'text-gray-500');
+                    }
+                }
+            }
+
+            initializeEventListeners() {
+                // Enter key to submit answer
+                const ansInput = document.getElementById('answerInput');
+                if (ansInput) {
+                    ansInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.checkAnswer();
+                        }
+                    });
+                }
+
+                // Prevent form submission
+                document.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                });
+            }
+
+            loadProblem() {
+                const problem = this.problems[this.currentProblem - 1];
+                if (!problem) {
+                    this.endSession();
+                    return;
+                }
+
+                // Reset per-problem state
+                this.hasAttempted = false;
+                this.startQuestionTimer();
+
+                // Update UI
+                const topicBadge = document.getElementById('topicBadge');
+                if (topicBadge) topicBadge.textContent = problem.topic;
+
+                const problemQuestion = document.getElementById('problemQuestion');
+                if (problemQuestion) problemQuestion.textContent = problem.question;
+
+                // If it's AI question (might not have ID in standard list), handle gracefully
+
+                const problemNumber = document.getElementById('problemNumber');
+                if (problemNumber) problemNumber.textContent = this.currentProblem;
+
+                const totalProblems = document.getElementById('totalProblems');
+                if (totalProblems) totalProblems.textContent = 5; // Fixed limit as per request
+
+                // Reset Inputs
+                const answerInput = document.getElementById('answerInput');
+                const essayInput = document.getElementById('essayInput');
+                const essayFeedback = document.getElementById('essayFeedback');
+
+                if (answerInput) {
+                    answerInput.value = '';
+                    // Reset styling to default
+                    answerInput.className = 'answer-input w-full px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg';
+                }
+
+                if (essayInput) essayInput.value = '';
+                if (essayFeedback) essayFeedback.classList.add('hidden');
+
+                if (problem.type === 'subjective') {
+                    if (answerInput) answerInput.classList.add('hidden');
+                    if (essayInput) essayInput.classList.remove('hidden');
+                } else {
+                    if (answerInput) answerInput.classList.remove('hidden');
+                    if (essayInput) essayInput.classList.add('hidden');
+                }
+
+                // Update difficulty indicator
+                this.updateDifficultyIndicator(problem.difficulty);
+
+                // Hide panels
+                const hintPanel = document.getElementById('hintPanel');
+                if (hintPanel) hintPanel.classList.add('hidden');
+
+                const solutionPanel = document.getElementById('solutionPanel');
+                if (solutionPanel) solutionPanel.classList.add('hidden');
+
+                const feedbackMessage = document.getElementById('feedbackMessage');
+                if (feedbackMessage) feedbackMessage.classList.add('hidden');
+
+                const nextButton = document.getElementById('nextButton');
+                if (nextButton) nextButton.classList.add('hidden');
+
+                // Clear AI Options if any (from ai_quiz.js injection)
+                const aiOpts = document.getElementById('aiOptions');
+                if (aiOpts) aiOpts.classList.add('hidden');
+
+                // Reset problem start time
+                this.problemStartTime = new Date();
+            }
+
+            updateDifficultyIndicator(difficulty) {
+                const dots = document.querySelectorAll('.difficulty-dot');
+                dots.forEach((dot, index) => {
+                    if (index < difficulty) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            checkAnswer() {
+                const problem = this.problems[this.currentProblem - 1];
+
+                if (problem.type === 'subjective') {
+                    this.gradeEssay(problem);
+                    return;
+                }
+
+                const userAnswer = document.getElementById('answerInput').value.trim();
+                const isCorrect = userAnswer.toLowerCase() === problem.answer.toLowerCase();
+
+                const responseTime = this.questionTimeSeconds;
+
+                // Mark as attempted
+                this.hasAttempted = true;
+
+                // Stop question timer (optional: keep running or stop? "how much is he taking" usually means until answer).
+                // Let's keep it running to show time spent even after answering, or maybe stop it.
+                // Usually stops on correct answer.
+                if (isCorrect) clearInterval(this.questionTimer);
+
+                // Update answer input styling
+                const answerInput = document.getElementById('answerInput');
+                answerInput.classList.remove('correct', 'incorrect');
+                answerInput.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                // Show feedback
+                this.showFeedback(isCorrect, userAnswer, problem.answer);
+
+                // Update statistics
+                if (!this.problemsSolved || this.currentProblem > this.problemsSolved) { // distinct problems solved
+                    this.problemsSolved++;
+                }
+
+                // Update average time calculations
+                // We only add time for the FIRST successful or final attempt log to avoid skewing average?
+                // For simplicity, let's just count total time spent vs questions answered.
+                // But tracking per-question is easier.
+                if (isCorrect && !problem.solved) {
+                    problem.solved = true;
+                    this.totalQuestionTime += responseTime;
+                    this.questionsAnswered++;
+                    this.updateAverageTime();
+                }
+                if (isCorrect) {
+                    this.correctAnswers++;
+                    this.currentStreak++;
+                    this.showAchievement();
+                } else {
+                    this.currentStreak = 0;
+                }
+
+                // Update progress
+                this.updateProgress();
+
+                // Show next button
+                document.getElementById('nextButton').classList.remove('hidden');
+
+                // Log performance data
+                this.logPerformance({
+                    problemId: problem.id,
+                    correct: isCorrect,
+                    responseTime: responseTime,
+                    answer: userAnswer,
+                    expectedAnswer: problem.answer
+                });
+            }
+
+            showFeedback(isCorrect, userAnswer, correctAnswer) {
+                const feedbackDiv = document.getElementById('feedbackMessage');
+                feedbackDiv.classList.remove('hidden', 'feedback-success', 'feedback-error');
+
+                if (isCorrect) {
+                    feedbackDiv.classList.add('feedback-success');
+                    feedbackDiv.innerHTML = `
+                        <div class="flex items-center justify-center space-x-2">
+                            <span>🎉</span>
+                            <span>Excellent! That's correct!</span>
+                        </div>
+                    `;
+                } else {
+                    feedbackDiv.classList.add('feedback-error');
+                    feedbackDiv.innerHTML = `
+                        <div class="flex items-center justify-center space-x-2">
+                            <span>🤔</span>
+                            <span>Not quite right. The correct answer is: <strong>${correctAnswer}</strong></span>
+                        </div>
+                    `;
+                }
+
+                // Animate feedback
+                anime({
+                    targets: feedbackDiv,
+                    scale: [0.8, 1],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+            }
+
+            showHint() {
+                const problem = this.problems[this.currentProblem - 1];
+                const hintPanel = document.getElementById('hintPanel');
+                document.getElementById('hintText').textContent = problem.hint;
+
+                hintPanel.classList.remove('hidden');
+
+                // Animate hint panel
+                anime({
+                    targets: hintPanel,
+                    translateY: [-20, 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+            }
+
+            showNotes() {
+                const problem = this.problems[this.currentProblem - 1];
+                const noteText = document.getElementById('noteText');
+
+                if (!noteText) return;
+
+                const studentClass = this.currentStudent.class;
+                const classKey = `class_${studentClass}`;
+                const subject = this.currentSubjectName || 'mathematics';
+                // Fallback to problem topic, or currently selected topic from setup
+                const topic = problem ? problem.topic : (document.getElementById('topicBadge') ? document.getElementById('topicBadge').textContent : "General");
+
+                let noteContent = "No specific notes available for this topic.";
+
+                if (window.CONTENT_DATABASE &&
+                    window.CONTENT_DATABASE[subject] &&
+                    window.CONTENT_DATABASE[subject][classKey] &&
+                    window.CONTENT_DATABASE[subject][classKey].notes &&
+                    window.CONTENT_DATABASE[subject][classKey].notes[topic]) {
+
+                    noteContent = window.CONTENT_DATABASE[subject][classKey].notes[topic];
+                }
+
+                noteText.textContent = noteContent;
+
+                // No animation needed here as tab switch handles it
+            }
+
+            showSolution() {
+                if (!this.hasAttempted) {
+                    if (!confirm("⚠️ Warning: You haven't attempted this question yet!\n\nIt's best to try solving it yourself first. Are you sure you want to see the solution?")) {
+                        return;
+                    }
+                }
+
+                const problem = this.problems[this.currentProblem - 1];
+                const solutionPanel = document.getElementById('solutionPanel');
+                const solutionSteps = document.getElementById('solutionSteps');
+
+                solutionSteps.innerHTML = problem.solution.map((step, index) => `
+                    <div class="flex items-center space-x-3">
+                        <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            ${index + 1}
+                        </span>
+                        <span>${step}</span>
+                    </div>
+                `).join('');
+
+                solutionPanel.classList.remove('hidden');
+
+                // Animate solution panel
+                anime({
+                    targets: solutionPanel,
+                    translateY: [-20, 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+
+                // Log solution view
+                this.logPerformance({
+                    action: 'solution_viewed',
+                    problemId: problem.id
+                });
+            }
+
+            nextProblem() {
+                if (this.currentProblem < this.totalProblems) {
+                    this.currentProblem++;
+                    this.loadProblem();
+                } else {
+                    this.endSession();
+                }
+            }
+
+            skipProblem() {
+                this.logPerformance({
+                    action: 'problem_skipped',
+                    problemId: this.problems[this.currentProblem - 1].id
+                });
+                this.nextProblem();
+            }
+
+            updateProgress() {
+                const progressPercent = Math.round((this.currentProblem / this.totalProblems) * 100);
+                const accuracy = this.problemsSolved > 0 ? Math.round((this.correctAnswers / this.problemsSolved) * 100) : 0;
+
+                // Update progress ring
+                const circle = document.getElementById('progressCircle');
+                const circumference = 2 * Math.PI * 40;
+                const offset = circumference - (progressPercent / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+
+                // Update text
+                document.getElementById('progressPercent').textContent = `${progressPercent}%`;
+                document.getElementById('problemsSolved').textContent = this.problemsSolved;
+                document.getElementById('accuracyPercent').textContent = `${accuracy}%`;
+                document.getElementById('streakCount').textContent = this.currentStreak;
+
+                // Update topic mastery (simplified)
+                this.updateTopicMastery();
+            }
+
+            updateTopicMastery() {
+                // Get topics for the current class and subject
+                let topics = ['Topic 1', 'Topic 2', 'Topic 3']; // Fallback
+
+                const studentClass = this.currentStudent.class;
+                const classKey = `class_${studentClass}`;
+                const subject = this.currentSubjectName || 'mathematics';
+
+                if (window.CONTENT_DATABASE && window.CONTENT_DATABASE[subject] && window.CONTENT_DATABASE[subject][classKey]) {
+                    // Take first 5 topics
+                    topics = window.CONTENT_DATABASE[subject][classKey].topics.slice(0, 5);
+                }
+
+                const topicMasteryDiv = document.getElementById('topicMastery');
+
+                // Add subject header
+                let html = `<h4 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">${subject.replace('_', ' ')} MASTERY</h4>`;
+
+                html += topics.map(topic => `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-gray-600 truncate mr-2" style="max-width: 120px;">${topic}</span>
+                        <div class="w-16 bg-gray-200 rounded-full h-2 flex-shrink-0">
+                            <div class="bg-gradient-to-r from-sage-green to-green-500 h-2 rounded-full" 
+                                 style="width: ${Math.floor(Math.random() * 40) + 60}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+
+                topicMasteryDiv.innerHTML = html;
+            }
+
+            showAchievement() {
+                if (this.currentStreak === 3 || this.currentStreak === 5 || this.currentStreak === 10) {
+                    const popup = document.getElementById('achievementPopup');
+                    document.getElementById('achievementText').textContent =
+                        `You've solved ${this.currentStreak} problems in a row! Keep it up!`;
+
+                    popup.classList.add('show');
+                    this.createConfetti();
+
+                    setTimeout(() => {
+                        this.closeAchievement();
+                    }, 3000);
+                }
+            }
+
+            closeAchievement() {
+                document.getElementById('achievementPopup').classList.remove('show');
+            }
+
+            createConfetti() {
+                const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'];
+
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }
+            }
+
+            startTimer() {
+                let seconds = 0;
+                this.sessionTimer = setInterval(() => {
+                    seconds++;
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    document.getElementById('sessionTimer').textContent =
+                        `Total: ${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            startQuestionTimer() {
+                clearInterval(this.questionTimer);
+                this.questionTimeSeconds = 0;
+                document.getElementById('currentQuestionTimer').textContent = 'Curr: 0s';
+
+                this.questionTimer = setInterval(() => {
+                    this.questionTimeSeconds++;
+                    document.getElementById('currentQuestionTimer').textContent = `Curr: ${this.questionTimeSeconds}s`;
+                }, 1000);
+            }
+
+            updateAverageTime() {
+                if (this.questionsAnswered > 0) {
+                    const avg = Math.round(this.totalQuestionTime / this.questionsAnswered);
+                    document.getElementById('avgTimer').textContent = `Avg: ${avg}s`;
+                }
+            }
+
+            pauseSession() {
+                clearInterval(this.sessionTimer);
+                document.getElementById('pauseModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            resumeSession() {
+                this.startTimer();
+                document.getElementById('pauseModal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            endSession() {
+                clearInterval(this.sessionTimer);
+
+                // Save session data
+                const sessionData = {
+                    student: this.currentStudent,
+                    startTime: this.sessionStartTime,
+                    endTime: new Date(),
+                    problemsSolved: this.problemsSolved,
+                    correctAnswers: this.correctAnswers,
+                    accuracy: this.problemsSolved > 0 ? (this.correctAnswers / this.problemsSolved) * 100 : 0,
+                    currentStreak: this.currentStreak
+                };
+
+                localStorage.setItem('lastSession', JSON.stringify(sessionData));
+
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+
+            logPerformance(data) {
+                const performanceLog = JSON.parse(localStorage.getItem('performanceLog') || '[]');
+                performanceLog.push({
+                    ...data,
+                    timestamp: new Date().toISOString(),
+                    student: this.currentStudent
+                });
+                localStorage.setItem('performanceLog', JSON.stringify(performanceLog));
+            }
+            gradeEssay(problem) {
+                const userEssay = document.getElementById('essayInput').value.trim();
+                const feedbackPanel = document.getElementById('essayFeedback');
+                const keywords = problem.keywords || [];
+
+                if (userEssay.length < 20) {
+                    feedbackPanel.innerHTML = `<span class="text-red-600 font-bold">Too short!</span> Please write at least one complete sentence.`;
+                    feedbackPanel.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-yellow-50', 'border-yellow-200');
+                    feedbackPanel.classList.add('bg-red-50', 'border-red-200');
+                    feedbackPanel.classList.remove('hidden');
+                    return;
+                }
+
+                let matches = 0;
+                const matchedKeywords = [];
+                const lowerEssay = userEssay.toLowerCase();
+
+                keywords.forEach(kw => {
+                    if (lowerEssay.includes(kw.toLowerCase())) {
+                        matches++;
+                        matchedKeywords.push(kw);
+                    }
+                });
+
+                const score = Math.round((matches / keywords.length) * 100);
+                let review = "";
+                let colorClass = "";
+
+                if (score >= 80) {
+                    review = "🌟 Excellent! You covered most key points.";
+                    colorClass = "text-green-700 bg-green-50 border-green-200";
+                } else if (score >= 50) {
+                    review = "👍 Good effort. Try to include more specific terms.";
+                    colorClass = "text-yellow-700 bg-yellow-50 border-yellow-200";
+                } else {
+                    review = "🤔 You might be missing some key concepts.";
+                    colorClass = "text-red-700 bg-red-50 border-red-200";
+                }
+
+                const feedbackHTML = `
+                    <div class="${colorClass} p-3 rounded-lg mb-2">
+                        <strong>AI Grade: ${score}/100</strong> - ${review}
+                    </div>
+                    <div class="text-gray-600">
+                        <p class="mb-1"><strong>Keywords found:</strong> ${matchedKeywords.length > 0 ? matchedKeywords.join(', ') : 'None'}</p>
+                        <p><strong>Rubric:</strong> ${problem.rubric || 'N/A'}</p>
+                    </div>
+                `;
+
+                feedbackPanel.innerHTML = feedbackHTML;
+                feedbackPanel.classList.remove('hidden');
+
+                // Mark as solved if score is decent
+                if (score >= 50) {
+                    this.correctAnswers++; // Treat as correct for stats
+                    this.currentStreak++;
+                    this.showAchievement();
+                } else {
+                    this.currentStreak = 0;
+                }
+
+                this.problemsSolved++;
+                this.hasAttempted = true;
+                this.updateProgress();
+
+                // Stop timer
+                clearInterval(this.questionTimer);
+            }
+        }
+
+        // Global functions
+        function switchMode(mode) {
+            learningSession.switchMode(mode);
+        }
+
+        function checkAnswer() {
+            learningSession.checkAnswer();
+        }
+
+        function showHint() {
+            learningSession.showHint();
+        }
+
+        function showSolution() {
+            learningSession.showSolution();
+        }
+
+        function showNotes() {
+            // Updated to switch mode instead of just calling method if we want full tab switch
+            // But for now, let's keep it as is or redirect to switchMode('notes')?
+            // User might click "Concept Note" button which calls showNotes()
+            // If that button is still there (in Sidebar), we might want it to switch mode.
+            // Only Sidebar has "Concept Note" button now.
+            learningSession.switchMode('notes');
+        }
+
+        function nextProblem() {
+            learningSession.nextProblem();
+        }
+
+        function skipProblem() {
+            learningSession.skipProblem();
+        }
+
+        function pauseSession() {
+            learningSession.pauseSession();
+        }
+
+        function resumeSession() {
+            learningSession.resumeSession();
+        }
+
+        function endSession() {
+            if (confirm('Are you sure you want to end this session? Your progress will be saved.')) {
+                learningSession.endSession();
+            }
+        }
+
+        function closeAchievement() {
+            learningSession.closeAchievement();
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            const icon = document.getElementById('darkModeIcon');
+
+            icon.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDark);
+
+            // Toggle generic bg classes if they aren't fully tailwind 'dark:' compatible
+            if (isDark) {
+                document.body.classList.remove('bg-gray-50');
+                document.body.classList.add('bg-gray-900', 'text-white');
+            } else {
+                document.body.classList.add('bg-gray-50');
+                document.body.classList.remove('bg-gray-900', 'text-white');
+            }
+
+            // Update cards background
+            const cards = document.querySelectorAll('.bg-white, .problem-card');
+            cards.forEach(card => {
+                if (isDark) {
+                    card.classList.remove('bg-white');
+                    card.classList.add('bg-gray-800', 'text-white');
+                    card.classList.add('bg-white');
+                    card.classList.remove('bg-gray-800', 'text-white');
+                }
+            });
+        }
+
+        // Initialize learning session
+        let learningSession;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add some subjective questions for testing
+            if (window.CONTENT_DATABASE && window.CONTENT_DATABASE.science && window.CONTENT_DATABASE.science.class_9) {
+                window.CONTENT_DATABASE.science.class_9.problems.push({
+                    id: "s9_essay_1",
+                    topic: "Matter in Our Surroundings",
+                    type: "subjective",
+                    difficulty: 4,
+                    question: "Explain why evaporation causes cooling in about 30-50 words.",
+                    keywords: ["energy", "absorb", "surroundings", "particles", "liquid", "gas", "latent heat"],
+                    rubric: "Mention absorption of energy from surroundings and change of state.",
+                    solution: ["Particles of liquid absorb energy from the surroundings to regain the energy lost during evaporation. This absorption of energy makes the surroundings cold."],
+                    hint: "Think about where the particles get energy to escape."
+                });
+            }
+
+            learningSession = new LearningSession();
+
+            if (localStorage.getItem('darkMode') === 'true') {
+                toggleDarkMode(); // Reuse function to set initial state
+                document.getElementById('darkModeIcon').textContent = '☀️';
+            }
+
+            // Load Language Summaries and merge
+            fetch('language_summaries.json')
+                .then(response => response.json())
+                .then(data => {
+                    if (!window.CONTENT_DATABASE) window.CONTENT_DATABASE = {};
+
+                    data.forEach(subjectData => {
+                        const subjectName = subjectData.subject.toLowerCase(); // 'english' or 'hindi'
+                        if (!window.CONTENT_DATABASE[subjectName]) window.CONTENT_DATABASE[subjectName] = {};
+
+                        subjectData.classes.forEach(cls => {
+                            const classKey = `class_${cls.class}`;
+                            if (!window.CONTENT_DATABASE[subjectName][classKey]) {
+                                window.CONTENT_DATABASE[subjectName][classKey] = { topics: [], notes: {}, problems: [] };
+                            }
+
+                            // Merge Summaries into Notes
+                            cls.chapters.forEach(chapter => {
+                                const topicName = chapter.title;
+                                if (!window.CONTENT_DATABASE[subjectName][classKey].topics.includes(topicName)) {
+                                    window.CONTENT_DATABASE[subjectName][classKey].topics.push(topicName);
+                                }
+                                if (!window.CONTENT_DATABASE[subjectName][classKey].notes) window.CONTENT_DATABASE[subjectName][classKey].notes = {};
+                                window.CONTENT_DATABASE[subjectName][classKey].notes[topicName] = chapter.summary;
+                            });
+                        });
+                    });
+                    console.log('Language Summaries Loaded');
+
+                    // Trigger the Session Setup Modal now that data is loaded
+                    initSessionSetup();
+                })
+                .catch(err => {
+                    console.error('Error loading summaries:', err);
+                    // Even on error, we should try to init setup with what we have
+                    initSessionSetup();
+                });
+        });
+
+        // Session Setup Logic
+        function initSessionSetup() {
+            // 1. Fetch Parameters from URL (Deep Linking support)
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlSubject = urlParams.get('subject');
+            const urlClass = urlParams.get('class');
+            const urlTopic = urlParams.get('topic');
+            const urlAction = urlParams.get('action');
+
+            let student = JSON.parse(localStorage.getItem('currentStudent'));
+
+            // Override with URL params if present
+            if (urlSubject) {
+                if (!student) student = { name: "Guest", class: "9", subject: urlSubject }; // Fallback
+                student.subject = urlSubject;
+                if (urlClass) student.class = urlClass;
+                localStorage.setItem('currentStudent', JSON.stringify(student));
+            }
+
+            if (!student) return;
+
+            const subject = student.subject || 'mathematics';
+            const studentClass = student.class || '9';
+            const classKey = `class_${studentClass}`;
+
+            // Populate Topics
+            const topicSelector = document.getElementById('topicSelector');
+            topicSelector.innerHTML = '<option value="">All Topics</option>'; // Default
+
+            let topicsFound = false;
+            if (window.CONTENT_DATABASE[subject] && window.CONTENT_DATABASE[subject][classKey]) {
+                const topics = window.CONTENT_DATABASE[subject][classKey].topics || [];
+                topics.forEach(topic => {
+                    const option = document.createElement('option');
+                    option.value = topic;
+                    option.textContent = topic;
+                    topicSelector.appendChild(option);
+                });
+                topicsFound = true;
+            }
+
+            // Auto-Select Topic from URL
+            if (urlTopic && topicsFound) {
+                // simple fuzzy match or exact match
+                for (let i = 0; i < topicSelector.options.length; i++) {
+                    if (topicSelector.options[i].value.toLowerCase() === urlTopic.toLowerCase()) {
+                        topicSelector.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Auto-Start Action from URL if topic is selected/valid
+            if (urlAction && topicSelector.value) {
+                startSessionAction(urlAction);
+                return; // Skip showing modal
+            }
+
+            // Show Modal if no auto-action
+            document.getElementById('sessionSetupModal').classList.remove('hidden');
+        }
+
+        function startSessionAction(action) {
+            const topic = document.getElementById('topicSelector').value;
+            const modal = document.getElementById('sessionSetupModal');
+
+            // Apply Topic Filter if selected
+            if (topic) {
+                // Filter problems in the active session
+                // We need to access the private/internal problems list of learningSession
+                // Since this is a demo, we'll just re-init or filter.
+
+                // Better approach: use the internal filter logic if it existed, or just simplistic filtering:
+                const allProblems = learningSession.problems; // Assuming we can access or reload them
+                const filtered = allProblems.filter(p => p.topic === topic);
+
+                if (filtered.length > 0) {
+                    learningSession.problems = filtered.slice(0, 5); // Enforce 5 question limit
+                    learningSession.totalProblems = learningSession.problems.length;
+                    learningSession.currentProblem = 1;
+                    learningSession.loadProblem();
+                } else {
+                    // If no questions for this topic (e.g. only notes exist), we might need to rely on AI generation
+                    // But if action is 'notes', we don't need questions.
+                    if (action !== 'notes' && confirm(`No pre-set questions found for "${topic}". Generate one with Edu AI?`)) {
+                        modal.classList.add('hidden');
+                        // Update badge manually so AI knows context
+                        document.getElementById('topicBadge').textContent = topic;
+                        window.generateAIQuestion();
+                        return;
+                    }
+                }
+
+                // Update badge
+                const badge = document.getElementById('topicBadge');
+                if (badge) badge.textContent = topic;
+            }
+
+            modal.classList.add('hidden');
+
+            // Handle Actions
+            if (action === 'notes') {
+                switchMode('notes');
+            } else if (action === 'doubt') {
+                switchMode('doubt');
+            } else {
+                switchMode('quiz');
+            }
+        }
+    </script>
+    <script>
+        // API Client for Edu AI (Backend: main.py)
+
+        window.generateAIQuestion = async function () {
+            const topic = document.getElementById('topicBadge').textContent || "General";
+            const feedbackMsg = document.getElementById('feedbackMessage');
+
+            // Check limit using global session
+            if (window.learningSession && window.learningSession.problemsSolved >= 5) {
+                alert("Quiz Complete! You have finished 5 questions.");
+                window.learningSession.endSession();
+                return;
+            }
+
+            feedbackMsg.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            feedbackMsg.classList.add('bg-blue-100', 'text-blue-700');
+            feedbackMsg.textContent = "🤖 waking up Edu AI...";
+            feedbackMsg.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/generate-question', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topic,
+                        problemsSolved: window.learningSession ? window.learningSession.problemsSolved : 0
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'complete') {
+                    alert(data.message);
+                    window.learningSession.endSession();
+                    return;
+                }
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Load the question
+                feedbackMsg.textContent = `🤖 Generated question for ${topic}!`;
+                loadAIProblem(data);
+
+                // Hide feedback after short delay or keep distinct? 
+                // Original behavior: hidden after load.
+                setTimeout(() => feedbackMsg.classList.add('hidden'), 1000);
+
+            } catch (e) {
+                console.error("AI Error:", e);
+                feedbackMsg.textContent = "Error connecting to Edu AI. Ensure server.py is running.";
+                feedbackMsg.classList.remove('bg-blue-100', 'text-blue-700');
+                feedbackMsg.classList.add('bg-red-100', 'text-red-700');
+            }
+        };
+
+        window.solveDoubt = async function () {
+            const doubtInput = document.getElementById('doubtInput');
+            const doubtText = doubtInput.value.trim();
+            const answerPanel = document.getElementById('doubtAnswer');
+
+            if (!doubtText) return;
+
+            answerPanel.innerHTML = '<span class="animate-pulse">Thinking... 🧠</span>';
+            answerPanel.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/api/solve-doubt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ doubt: doubtText })
+                });
+                const data = await response.json();
+
+                if (data.error) throw new Error(data.error);
+
+                answerPanel.innerHTML = data.answer;
+
+            } catch (e) {
+                console.error(e);
+                answerPanel.textContent = "Error: Could not reach Edu AI server.";
+            }
+        };
+
+        function loadAIProblem(data) {
+            const problemCard = document.getElementById('problemQuestion');
+            problemCard.textContent = data.question;
+
+            const ansInput = document.getElementById('answerInput');
+            const essayInput = document.getElementById('essayInput');
+
+            if (ansInput) ansInput.classList.add('hidden');
+            if (essayInput) essayInput.classList.add('hidden');
+
+            let optionsDiv = document.getElementById('aiOptions');
+            if (!optionsDiv) {
+                optionsDiv = document.createElement('div');
+                optionsDiv.id = 'aiOptions';
+                optionsDiv.className = 'grid grid-cols-1 gap-3 mb-6';
+                if (ansInput && ansInput.parentNode) {
+                    ansInput.parentNode.insertBefore(optionsDiv, ansInput);
+                }
+            }
+            optionsDiv.innerHTML = '';
+            optionsDiv.classList.remove('hidden');
+
+            document.getElementById('nextButton').classList.add('hidden');
+
+            data.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-gray-700";
+                btn.textContent = opt;
+                btn.onclick = () => checkAIAnswer(opt, data.answer, data.explanation, btn);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAIAnswer(selected, correct, explanation, btnElement) {
+            const isCorrect = selected === correct;
+
+            // Access global session
+            if (window.learningSession) {
+                if (isCorrect) {
+                    window.learningSession.correctAnswers++;
+                    window.learningSession.currentStreak++;
+                    window.learningSession.showAchievement();
+                } else {
+                    window.learningSession.currentStreak = 0;
+                }
+                window.learningSession.problemsSolved++;
+                window.learningSession.updateProgress();
+            }
+
+            // Disable all buttons
+            const allBtns = document.getElementById('aiOptions').querySelectorAll('button');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btnElement.classList.remove('border-gray-200', 'hover:border-blue-500', 'hover:bg-blue-50');
+                btnElement.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                document.getElementById('feedbackMessage').innerHTML = `<span class="text-green-600 font-bold">Correct!</span> ${explanation}`;
+            } else {
+                btnElement.classList.remove('border-gray-200', 'hover:border-blue-500', 'hover:bg-blue-50');
+                btnElement.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                document.getElementById('feedbackMessage').innerHTML = `<span class="text-red-600 font-bold">Incorrect.</span> The correct answer is: ${correct}. ${explanation}`;
+            }
+            document.getElementById('feedbackMessage').classList.remove('hidden');
+
+            // Show Next Button logic
+            const nextBtn = document.getElementById('nextButton');
+            nextBtn.classList.remove('hidden');
+
+            // Override Next Button OnClick to call generateAIQuestion again if we are in AI mode
+            nextBtn.onclick = function () {
+                if (window.learningSession && window.learningSession.problemsSolved >= 5) {
+                    alert(`Session Complete! You scored ${window.learningSession.correctAnswers}/5.`);
+                    window.learningSession.endSession();
+                } else {
+                    window.generateAIQuestion();
+                    // Reset UI for next question
+                    document.getElementById('feedbackMessage').classList.add('hidden');
+                    nextBtn.classList.add('hidden');
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

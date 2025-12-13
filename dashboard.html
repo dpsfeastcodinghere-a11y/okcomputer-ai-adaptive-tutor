@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EduAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --sage-green: #2D5A3D;
+            --terracotta: #C4704A;
+            --cream: #F8F6F0;
+            --gold: #D4A574;
+            --slate-blue: #4A5568;
+            --coral: #E8A598;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, #F0EDE6 100%);
+            min-height: 100vh;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sage-green), #3A6B4A);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(45, 90, 61, 0.3);
+        }
+
+        .subject-progress {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-progress::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .subject-progress:hover::before {
+            left: 100%;
+        }
+
+        .achievement-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-badge:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--sage-green), #3A6B4A);
+            border-radius: 1rem;
+            transition: width 1s ease-out;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--sage-green), #3A6B4A);
+            color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .streak-flame {
+            animation: flicker 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: scale(1) rotate(-2deg);
+            }
+
+            100% {
+                transform: scale(1.1) rotate(2deg);
+            }
+        }
+
+        .recommendation-card {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left: 4px solid #f59e0b;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .weakness-card {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border-left: 4px solid #ef4444;
+            transition: all 0.3s ease;
+        }
+
+        .weakness-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
+        }
+
+        .strength-card {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-left: 4px solid #10b981;
+            transition: all 0.3s ease;
+        }
+
+        .strength-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-sage-green to-terracotta rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">E</span>
+                    </div>
+                    <span class="text-2xl font-bold" style="color: var(--sage-green);">EduAI</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-gray-700 hover:text-sage-green transition-colors font-medium">Home</a>
+                    <a href="dashboard.html" class="text-sage-green font-semibold">Dashboard</a>
+                    <a href="learning.html" class="btn-primary px-6 py-2 rounded-full font-medium">Start Learning</a>
+                </div>
+                <button class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner mb-8">
+            <div class="relative z-10">
+                <h1 class="text-3xl lg:text-4xl font-bold mb-4">
+                    Welcome back, <span id="studentName">Student</span>! 👋
+                </h1>
+                <p class="text-xl opacity-90 mb-6">
+                    Ready to continue your learning journey? Let's see how you're doing across all subjects.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="bg-white/20 rounded-lg px-4 py-2">
+                        <span class="text-sm opacity-75">Current Streak</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="streak-flame">🔥</span>
+                            <span class="font-bold text-lg" id="currentStreak">0</span>
+                            <span class="text-sm">days</span>
+                        </div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg px-4 py-2">
+                        <span class="text-sm opacity-75">Overall Accuracy</span>
+                        <div class="font-bold text-lg" id="overallAccuracy">85%</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg px-4 py-2">
+                        <span class="text-sm opacity-75">Problems Solved</span>
+                        <div class="font-bold text-lg" id="totalProblemsSolved">127</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div
+                    class="w-12 h-12 bg-gradient-to-br from-sage-green to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-xl">📐</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Mathematics</h3>
+                <div class="text-2xl font-bold mb-1" style="color: var(--sage-green);">87%</div>
+                <p class="text-sm text-gray-600">Proficiency Level</p>
+                <div class="progress-bar h-2 mt-3">
+                    <div class="progress-fill" style="width: 87%"></div>
+                </div>
+                <button onclick="startLearning('mathematics')"
+                    class="mt-4 w-full py-2 rounded-lg bg-green-50 text-sage-green font-semibold hover:bg-green-100 transition-colors text-sm">
+                    Start Test
+                </button>
+            </div>
+
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div
+                    class="w-12 h-12 bg-gradient-to-br from-terracotta to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-xl">🔬</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Science</h3>
+                <div class="text-2xl font-bold mb-1" style="color: var(--terracotta);">79%</div>
+                <p class="text-sm text-gray-600">Proficiency Level</p>
+                <div class="progress-bar h-2 mt-3">
+                    <div class="progress-fill" style="width: 79%"></div>
+                </div>
+                <button onclick="startLearning('science')"
+                    class="mt-4 w-full py-2 rounded-lg bg-orange-50 text-terracotta font-semibold hover:bg-orange-100 transition-colors text-sm">
+                    Start Test
+                </button>
+            </div>
+
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div
+                    class="w-12 h-12 bg-gradient-to-br from-gold to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-xl">📚</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">English</h3>
+                <div class="text-2xl font-bold mb-1" style="color: var(--gold);">92%</div>
+                <p class="text-sm text-gray-600">Proficiency Level</p>
+                <div class="progress-bar h-2 mt-3">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+                <button onclick="startLearning('english')"
+                    class="mt-4 w-full py-2 rounded-lg bg-yellow-50 text-yellow-700 font-semibold hover:bg-yellow-100 transition-colors text-sm">
+                    Start Test
+                </button>
+            </div>
+
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div
+                    class="w-12 h-12 bg-gradient-to-br from-slate-blue to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-xl">🌍</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Social Studies</h3>
+                <div class="text-2xl font-bold mb-1" style="color: var(--slate-blue);">74%</div>
+                <p class="text-sm text-gray-600">Proficiency Level</p>
+                <div class="progress-bar h-2 mt-3">
+                    <div class="progress-fill" style="width: 74%"></div>
+                </div>
+                <button onclick="startLearning('social_studies')"
+                    class="mt-4 w-full py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors text-sm">
+                    Start Test
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Left Column - Charts and Analytics -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Performance Chart -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Performance Trends</h3>
+                    <div class="chart-container" id="performanceChart"></div>
+                </div>
+
+                <!-- Subject Progress -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Subject Progress</h3>
+                    <div class="space-y-6">
+                        <div class="subject-progress">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">📐</span>
+                                    <span class="font-semibold text-gray-800">Mathematics</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-sage-green">87%</div>
+                                    <div class="text-sm text-gray-500">45 problems</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar h-3">
+                                <div class="progress-fill" style="width: 87%"></div>
+                            </div>
+                        </div>
+
+                        <div class="subject-progress">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">🔬</span>
+                                    <span class="font-semibold text-gray-800">Science</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-terracotta">79%</div>
+                                    <div class="text-sm text-gray-500">32 problems</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar h-3">
+                                <div class="progress-fill" style="width: 79%"></div>
+                            </div>
+                        </div>
+
+                        <div class="subject-progress">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">📚</span>
+                                    <span class="font-semibold text-gray-800">English</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-gold">92%</div>
+                                    <div class="text-sm text-gray-500">28 problems</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar h-3">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+
+                        <div class="subject-progress">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">🌍</span>
+                                    <span class="font-semibold text-gray-800">Social Studies</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-slate-blue">74%</div>
+                                    <div class="text-sm text-gray-500">22 problems</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar h-3">
+                                <div class="progress-fill" style="width: 74%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Activity -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Weekly Activity</h3>
+                    <div class="chart-container" id="activityChart"></div>
+                </div>
+            </div>
+
+            <!-- Right Column - Recommendations and Achievements -->
+            <div class="space-y-8">
+                <!-- AI Recommendations -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">AI Recommendations</h3>
+                    <div class="space-y-4">
+                        <div class="recommendation-card p-4 rounded-lg">
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span class="text-white text-sm">💡</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-1">Focus on Science</h4>
+                                    <p class="text-sm text-gray-600">Your science scores have room for improvement. Try
+                                        practicing 15 minutes daily.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="strength-card p-4 rounded-lg">
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span class="text-white text-sm">🌟</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-1">English Excellence</h4>
+                                    <p class="text-sm text-gray-600">Great job! Your English skills are excellent.
+                                        Consider advanced topics.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-card p-4 rounded-lg">
+                            <div class="flex items-start space-x-3">
+                                <div
+                                    class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span class="text-white text-sm">🎯</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-1">Practice Geometry</h4>
+                                    <p class="text-sm text-gray-600">Focus on geometry problems to boost your math
+                                        scores further.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Achievements</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="achievement-badge">🔥</div>
+                            <h4 class="font-semibold text-gray-800 text-sm">5-Day Streak</h4>
+                            <p class="text-xs text-gray-600">Keep it up!</p>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="achievement-badge">📚</div>
+                            <h4 class="font-semibold text-gray-800 text-sm">Bookworm</h4>
+                            <p class="text-xs text-gray-600">100 problems solved</p>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="achievement-badge">🎯</div>
+                            <h4 class="font-semibold text-gray-800 text-sm">Sharp Shooter</h4>
+                            <p class="text-xs text-gray-600">90% accuracy</p>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="achievement-badge">🚀</div>
+                            <h4 class="font-semibold text-gray-800 text-sm">Quick Learner</h4>
+                            <p class="text-xs text-gray-600">Fast problem solving</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Recent Activity</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <span class="text-green-600 text-sm">✓</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">Solved Algebra problem</p>
+                                <p class="text-xs text-gray-500">2 minutes ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                                <span class="text-red-600 text-sm">✗</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">Struggled with Geometry</p>
+                                <p class="text-xs text-gray-500">15 minutes ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <span class="text-blue-600 text-sm">📚</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">Started English session</p>
+                                <p class="text-xs text-gray-500">1 hour ago</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <span class="text-yellow-600 text-sm">🏆</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">Earned achievement badge</p>
+                                <p class="text-xs text-gray-500">2 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button onclick="startLearning('mathematics')"
+                            class="w-full btn-primary py-3 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2">
+                            <span>📐</span>
+                            <span>Practice Mathematics</span>
+                        </button>
+                        <button onclick="startLearning('science')"
+                            class="w-full btn-primary py-3 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2">
+                            <span>🔬</span>
+                            <span>Practice Science</span>
+                        </button>
+                        <button onclick="viewDetailedProgress()"
+                            class="w-full border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                            View Detailed Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard Analytics and Interactions
+        class Dashboard {
+            constructor() {
+                this.studentData = JSON.parse(localStorage.getItem('currentStudent') || '{}');
+                this.sessionData = JSON.parse(localStorage.getItem('lastSession') || '{}');
+                this.performanceLog = JSON.parse(localStorage.getItem('performanceLog') || '[]');
+                this.init();
+            }
+
+            init() {
+                this.loadStudentData();
+                this.initializeCharts();
+                this.animateElements();
+                this.updateRecommendations();
+            }
+
+            loadStudentData() {
+                // Update welcome message
+                if (this.studentData.name) {
+                    document.getElementById('studentName').textContent = this.studentData.name;
+                }
+
+                // Update stats from session data
+                if (this.sessionData.currentStreak) {
+                    document.getElementById('currentStreak').textContent = this.sessionData.currentStreak;
+                }
+
+                if (this.sessionData.accuracy) {
+                    document.getElementById('overallAccuracy').textContent = `${Math.round(this.sessionData.accuracy)}%`;
+                }
+
+                if (this.sessionData.problemsSolved) {
+                    document.getElementById('totalProblemsSolved').textContent = this.sessionData.problemsSolved;
+                }
+            }
+
+            initializeCharts() {
+                this.createPerformanceChart();
+                this.createActivityChart();
+            }
+
+            createPerformanceChart() {
+                const chartDom = document.getElementById('performanceChart');
+                const myChart = echarts.init(chartDom);
+
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
+                    },
+                    legend: {
+                        data: ['Mathematics', 'Science', 'English', 'Social Studies']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            min: 0,
+                            max: 100,
+                            axisLabel: {
+                                formatter: '{value}%'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: 'Mathematics',
+                            type: 'line',
+                            stack: 'Total',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#2D5A3D'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(45, 90, 61, 0.3)'
+                                    }, {
+                                        offset: 1, color: 'rgba(45, 90, 61, 0.1)'
+                                    }]
+                                }
+                            },
+                            data: [65, 72, 78, 82, 85, 87]
+                        },
+                        {
+                            name: 'Science',
+                            type: 'line',
+                            stack: 'Total',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#C4704A'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(196, 112, 74, 0.3)'
+                                    }, {
+                                        offset: 1, color: 'rgba(196, 112, 74, 0.1)'
+                                    }]
+                                }
+                            },
+                            data: [58, 65, 70, 74, 76, 79]
+                        },
+                        {
+                            name: 'English',
+                            type: 'line',
+                            stack: 'Total',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#D4A574'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(212, 165, 116, 0.3)'
+                                    }, {
+                                        offset: 1, color: 'rgba(212, 165, 116, 0.1)'
+                                    }]
+                                }
+                            },
+                            data: [78, 82, 85, 88, 90, 92]
+                        },
+                        {
+                            name: 'Social Studies',
+                            type: 'line',
+                            stack: 'Total',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#4A5568'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: 'rgba(74, 85, 104, 0.3)'
+                                    }, {
+                                        offset: 1, color: 'rgba(74, 85, 104, 0.1)'
+                                    }]
+                                }
+                            },
+                            data: [62, 68, 71, 73, 72, 74]
+                        }
+                    ]
+                };
+
+                myChart.setOption(option);
+
+                // Make chart responsive
+                window.addEventListener('resize', () => {
+                    myChart.resize();
+                });
+            }
+
+            createActivityChart() {
+                const chartDom = document.getElementById('activityChart');
+                const myChart = echarts.init(chartDom);
+
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'Problems Solved',
+                            type: 'bar',
+                            data: [12, 8, 15, 10, 18, 6, 14],
+                            itemStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 0, color: '#2D5A3D'
+                                    }, {
+                                        offset: 1, color: '#3A6B4A'
+                                    }]
+                                }
+                            },
+                            barWidth: '60%',
+                            borderRadius: [4, 4, 0, 0]
+                        }
+                    ]
+                };
+
+                myChart.setOption(option);
+
+                // Make chart responsive
+                window.addEventListener('resize', () => {
+                    myChart.resize();
+                });
+            }
+
+            animateElements() {
+                // Animate stat cards
+                const statCards = document.querySelectorAll('.stat-card');
+                statCards.forEach((card, index) => {
+                    anime({
+                        targets: card,
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        duration: 600,
+                        delay: index * 100,
+                        easing: 'easeOutCubic'
+                    });
+                });
+
+                // Animate progress bars
+                setTimeout(() => {
+                    const progressBars = document.querySelectorAll('.progress-fill');
+                    progressBars.forEach((bar, index) => {
+                        const width = bar.style.width;
+                        bar.style.width = '0%';
+
+                        anime({
+                            targets: bar,
+                            width: width,
+                            duration: 1000,
+                            delay: index * 200,
+                            easing: 'easeOutCubic'
+                        });
+                    });
+                }, 500);
+
+                // Animate achievement badges
+                const badges = document.querySelectorAll('.achievement-badge');
+                badges.forEach((badge, index) => {
+                    anime({
+                        targets: badge,
+                        scale: [0.8, 1],
+                        rotate: [0, 360],
+                        duration: 800,
+                        delay: 1000 + (index * 100),
+                        easing: 'easeOutElastic(1, .8)'
+                    });
+                });
+            }
+
+            updateRecommendations() {
+                // Analyze performance data to generate personalized recommendations
+                const recommendations = this.generatePersonalizedRecommendations();
+
+                // This would typically update the recommendations panel
+                // For now, we'll use the static recommendations in the HTML
+                console.log('Personalized recommendations:', recommendations);
+            }
+
+            generatePersonalizedRecommendations() {
+                // Analyze student performance and generate recommendations
+                const recommendations = [];
+
+                // Example recommendation logic
+                if (this.sessionData.accuracy < 70) {
+                    recommendations.push({
+                        type: 'weakness',
+                        title: 'Practice Fundamentals',
+                        description: 'Focus on basic concepts to build a stronger foundation.',
+                        priority: 'high'
+                    });
+                }
+
+                if (this.sessionData.currentStreak >= 5) {
+                    recommendations.push({
+                        type: 'strength',
+                        title: 'Challenge Yourself',
+                        description: 'You\'re on a streak! Try some harder problems.',
+                        priority: 'medium'
+                    });
+                }
+
+                return recommendations;
+            }
+        }
+
+        // Global functions
+        function startLearning(subject) {
+            // Save selected subject and redirect to learning page
+            const studentData = JSON.parse(localStorage.getItem('currentStudent') || '{}');
+            studentData.selectedSubject = subject;
+            studentData.subject = subject; // Ensure this is set for learning.html to pick it up
+            localStorage.setItem('currentStudent', JSON.stringify(studentData));
+
+            window.location.href = 'learning.html?action=quiz';
+        }
+
+        function viewDetailedProgress() {
+            window.location.href = 'progress.html';
+        }
+
+        // Initialize dashboard
+        let dashboard;
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new Dashboard();
+        });
+    </script>
+</body>
+
+</html>

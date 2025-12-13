@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Analytics - EduAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage-green: #2D5A3D;
+            --terracotta: #C4704A;
+            --cream: #F8F6F0;
+            --gold: #D4A574;
+            --slate-blue: #4A5568;
+            --coral: #E8A598;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, #F0EDE6 100%);
+            min-height: 100vh;
+        }
+        
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .analytics-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s;
+        }
+        
+        .metric-card:hover::before {
+            left: 100%;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sage-green), #3A6B4A);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(45, 90, 61, 0.3);
+        }
+        
+        .heatmap-cell {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .heatmap-cell.level-0 { background-color: #ebedf0; }
+        .heatmap-cell.level-1 { background-color: #c6e48b; }
+        .heatmap-cell.level-2 { background-color: #7bc96f; }
+        .heatmap-cell.level-3 { background-color: #239a3b; }
+        .heatmap-cell.level-4 { background-color: #196127; }
+        
+        .topic-mastery-item {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .topic-mastery-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .topic-mastery-item.excellent { border-left-color: #10b981; }
+        .topic-mastery-item.good { border-left-color: #f59e0b; }
+        .topic-mastery-item.needs-improvement { border-left-color: #ef4444; }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        .chart-container.small {
+            height: 250px;
+        }
+        
+        .filter-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .filter-button.active {
+            border-color: var(--sage-green);
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .filter-button:hover {
+            border-color: var(--sage-green);
+            color: var(--sage-green);
+        }
+        
+        .filter-button.active:hover {
+            color: white;
+        }
+        
+        .performance-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .performance-indicator.excellent {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+        
+        .performance-indicator.good {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+        }
+        
+        .performance-indicator.needs-improvement {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            color: #991b1b;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--sage-green);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--sage-green);
+        }
+        
+        .timeline-dot.success {
+            background: #10b981;
+            box-shadow: 0 0 0 2px #10b981;
+        }
+        
+        .timeline-dot.error {
+            background: #ef4444;
+            box-shadow: 0 0 0 2px #ef4444;
+        }
+        
+        .timeline-dot.warning {
+            background: #f59e0b;
+            box-shadow: 0 0 0 2px #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-sage-green to-terracotta rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">E</span>
+                    </div>
+                    <span class="text-2xl font-bold" style="color: var(--sage-green);">EduAI</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="dashboard.html" class="text-gray-700 hover:text-sage-green transition-colors font-medium">Dashboard</a>
+                    <a href="progress.html" class="text-sage-green font-semibold">Progress</a>
+                    <a href="learning.html" class="btn-primary px-6 py-2 rounded-full font-medium">Start Learning</a>
+                </div>
+                <button class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Learning Progress Analytics</h1>
+            <p class="text-xl text-gray-600">Detailed insights into your learning journey and performance across all subjects.</p>
+        </div>
+
+        <!-- Time Filter -->
+        <div class="mb-8">
+            <div class="flex flex-wrap gap-3">
+                <button class="filter-button active" onclick="setTimeFilter('week')">This Week</button>
+                <button class="filter-button" onclick="setTimeFilter('month')">This Month</button>
+                <button class="filter-button" onclick="setTimeFilter('quarter')">This Quarter</button>
+                <button class="filter-button" onclick="setTimeFilter('year')">This Year</button>
+                <button class="filter-button" onclick="setTimeFilter('all')">All Time</button>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card rounded-2xl p-6 text-center">
+                <div class="relative w-20 h-20 mx-auto mb-4">
+                    <svg class="progress-ring w-20 h-20">
+                        <circle cx="40" cy="40" r="32" stroke="#e5e7eb" stroke-width="6" fill="transparent"/>
+                        <circle id="overallProgressCircle" cx="40" cy="40" r="32" stroke="var(--sage-green)" 
+                                stroke-width="6" fill="transparent" stroke-dasharray="201.06" 
+                                stroke-dashoffset="201.06" class="progress-ring-circle"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-gray-800" id="overallProgressPercent">82%</div>
+                            <div class="text-xs text-gray-500">Overall</div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Overall Progress</h3>
+                <p class="text-sm text-gray-600">Across all subjects</p>
+            </div>
+            
+            <div class="metric-card rounded-2xl p-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-sage-green to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-2xl">🎯</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Accuracy Rate</h3>
+                <div class="text-3xl font-bold mb-2" style="color: var(--sage-green);" id="accuracyRate">85.2%</div>
+                <p class="text-sm text-gray-600">Last 30 days</p>
+            </div>
+            
+            <div class="metric-card rounded-2xl p-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-terracotta to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-2xl">⚡</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Avg. Speed</h3>
+                <div class="text-3xl font-bold mb-2" style="color: var(--terracotta);" id="avgSpeed">2.3 min</div>
+                <p class="text-sm text-gray-600">Per problem</p>
+            </div>
+            
+            <div class="metric-card rounded-2xl p-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-gold to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-white text-2xl">🔥</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Current Streak</h3>
+                <div class="text-3xl font-bold mb-2" style="color: var(--gold);" id="currentStreak">7 days</div>
+                <p class="text-sm text-gray-600">Keep it up!</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <!-- Performance Over Time -->
+            <div class="analytics-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Performance Over Time</h3>
+                <div class="chart-container" id="performanceTimelineChart"></div>
+            </div>
+            
+            <!-- Subject Mastery -->
+            <div class="analytics-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Subject Mastery Distribution</h3>
+                <div class="chart-container" id="subjectMasteryChart"></div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-8">
+            <!-- Topic Mastery -->
+            <div class="lg:col-span-2 analytics-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Topic-wise Mastery</h3>
+                <div class="space-y-4" id="topicMasteryList">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Activity Heatmap -->
+            <div class="analytics-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Activity Heatmap</h3>
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-2">Problems solved in the last 12 weeks</p>
+                    <div class="flex items-center space-x-2 text-xs text-gray-500">
+                        <span>Less</span>
+                        <div class="flex space-x-1">
+                            <div class="heatmap-cell level-0"></div>
+                            <div class="heatmap-cell level-1"></div>
+                            <div class="heatmap-cell level-2"></div>
+                            <div class="heatmap-cell level-3"></div>
+                            <div class="heatmap-cell level-4"></div>
+                        </div>
+                        <span>More</span>
+                    </div>
+                </div>
+                <div id="activityHeatmap" class="grid grid-cols-7 gap-1">
+                    <!-- Heatmap cells will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Insights -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            <!-- Strengths & Weaknesses -->
+            <div class="analytics-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Learning Insights</h3>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-green-600 mb-3">Strengths</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                <span class="font-medium text-gray-800">English Grammar</span>
+                                <span class="performance-indicator excellent">Excellent</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                <span class="font-medium text-gray-800">Basic Algebra</span>
+                                <span class="performance-indicator excellent">Excellent</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                <span class="font-medium text-gray-800">Reading Comprehension</span>
+                                <span class="performance-indicator excellent">Excellent</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-red-600 mb-3">Areas for Improvement</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                                <span class="font-medium text-gray-800">Chemical Reactions</span>
+                                <span class="performance-indicator needs-improvement">Needs Practice</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                                <span class="font-medium text-gray-800">Geometry Proofs</span>
+                                <span class="performance-indicator needs-improvement">Needs Practice</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                                <span class="font-medium text-gray-800">World History</span>
+                                <span class="performance-indicator good">Good Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity Timeline -->
+            <div class="analytics-card rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Recent Activity</h3>
+                <div class="space-y-6" id="activityTimeline">
+                    <!-- Timeline items will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Performance Breakdown -->
+        <div class="analytics-card rounded-2xl p-6 mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Detailed Performance Breakdown</h3>
+            <div class="chart-container" id="detailedPerformanceChart"></div>
+        </div>
+
+        <!-- Export and Actions -->
+        <div class="flex flex-wrap gap-4 justify-center">
+            <button onclick="exportProgress()" class="btn-primary px-6 py-3 rounded-lg font-semibold flex items-center space-x-2">
+                <span>📊</span>
+                <span>Export Progress Report</span>
+            </button>
+            <button onclick="shareProgress()" class="border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center space-x-2">
+                <span>📤</span>
+                <span>Share with Teacher</span>
+            </button>
+            <button onclick="setGoals()" class="border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center space-x-2">
+                <span>🎯</span>
+                <span>Set Learning Goals</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Progress Analytics Management
+        class ProgressAnalytics {
+            constructor() {
+                this.currentTimeFilter = 'week';
+                this.studentData = JSON.parse(localStorage.getItem('currentStudent') || '{}');
+                this.performanceLog = JSON.parse(localStorage.getItem('performanceLog') || '[]');
+                this.sessionData = JSON.parse(localStorage.getItem('lastSession') || '{}');
+                this.init();
+            }
+            
+            init() {
+                this.loadStudentData();
+                this.initializeCharts();
+                this.generateHeatmap();
+                this.generateTopicMastery();
+                this.generateActivityTimeline();
+                this.animateElements();
+            }
+            
+            loadStudentData() {
+                // Update key metrics based on actual data
+                if (this.sessionData.accuracy) {
+                    document.getElementById('accuracyRate').textContent = `${this.sessionData.accuracy}%`;
+                }
+                
+                if (this.sessionData.currentStreak) {
+                    document.getElementById('currentStreak').textContent = `${this.sessionData.currentStreak} days`;
+                }
+                
+                // Calculate overall progress
+                const overallProgress = this.calculateOverallProgress();
+                this.updateProgressRing(overallProgress);
+            }
+            
+            calculateOverallProgress() {
+                // Calculate weighted average of all subject progress
+                // This is a simplified calculation - in reality, this would be more complex
+                const subjectProgress = [87, 79, 92, 74]; // Math, Science, English, Social
+                return Math.round(subjectProgress.reduce((a, b) => a + b, 0) / subjectProgress.length);
+            }
+            
+            updateProgressRing(progress) {
+                const circle = document.getElementById('overallProgressCircle');
+                const circumference = 2 * Math.PI * 32;
+                const offset = circumference - (progress / 100) * circumference;
+                
+                circle.style.strokeDashoffset = offset;
+                document.getElementById('overallProgressPercent').textContent = `${progress}%`;
+            }
+            
+            initializeCharts() {
+                this.createPerformanceTimelineChart();
+                this.createSubjectMasteryChart();
+                this.createDetailedPerformanceChart();
+            }
+            
+            createPerformanceTimelineChart() {
+                const chartDom = document.getElementById('performanceTimelineChart');
+                const myChart = echarts.init(chartDom);
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
+                    },
+                    legend: {
+                        data: ['Accuracy', 'Speed', 'Consistency']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            min: 0,
+                            max: 100,
+                            axisLabel: {
+                                formatter: '{value}%'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: 'Accuracy',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#2D5A3D'
+                            },
+                            data: [72, 75, 78, 82, 84, 85, 87]
+                        },
+                        {
+                            name: 'Speed',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#C4704A'
+                            },
+                            data: [65, 68, 72, 75, 78, 80, 82]
+                        },
+                        {
+                            name: 'Consistency',
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: {
+                                width: 3,
+                                color: '#D4A574'
+                            },
+                            data: [70, 72, 75, 77, 79, 81, 83]
+                        }
+                    ]
+                };
+                
+                myChart.setOption(option);
+                window.addEventListener('resize', () => myChart.resize());
+            }
+            
+            createSubjectMasteryChart() {
+                const chartDom = document.getElementById('subjectMasteryChart');
+                const myChart = echarts.init(chartDom);
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left'
+                    },
+                    series: [
+                        {
+                            name: 'Subject Mastery',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+                                { value: 87, name: 'Mathematics', itemStyle: { color: '#2D5A3D' } },
+                                { value: 79, name: 'Science', itemStyle: { color: '#C4704A' } },
+                                { value: 92, name: 'English', itemStyle: { color: '#D4A574' } },
+                                { value: 74, name: 'Social Studies', itemStyle: { color: '#4A5568' } }
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                
+                myChart.setOption(option);
+                window.addEventListener('resize', () => myChart.resize());
+            }
+            
+            createDetailedPerformanceChart() {
+                const chartDom = document.getElementById('detailedPerformanceChart');
+                const myChart = echarts.init(chartDom);
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: ['Correct', 'Incorrect', 'Skipped']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['Algebra', 'Geometry', 'Fractions', 'Percentages', 'Chemistry', 'Physics', 'Biology', 'Grammar', 'Literature', 'History', 'Geography', 'Civics']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'Correct',
+                            type: 'bar',
+                            stack: 'total',
+                            data: [15, 12, 18, 14, 8, 10, 11, 20, 16, 9, 7, 12],
+                            itemStyle: {
+                                color: '#10b981'
+                            }
+                        },
+                        {
+                            name: 'Incorrect',
+                            type: 'bar',
+                            stack: 'total',
+                            data: [3, 5, 2, 4, 7, 6, 5, 1, 3, 6, 8, 4],
+                            itemStyle: {
+                                color: '#ef4444'
+                            }
+                        },
+                        {
+                            name: 'Skipped',
+                            type: 'bar',
+                            stack: 'total',
+                            data: [1, 2, 0, 1, 2, 1, 1, 0, 1, 2, 3, 1],
+                            itemStyle: {
+                                color: '#6b7280'
+                            }
+                        }
+                    ]
+                };
+                
+                myChart.setOption(option);
+                window.addEventListener('resize', () => myChart.resize());
+            }
+            
+            generateHeatmap() {
+                const heatmapContainer = document.getElementById('activityHeatmap');
+                const totalDays = 84; // 12 weeks
+                
+                // Generate random activity data
+                for (let i = 0; i < totalDays; i++) {
+                    const cell = document.createElement('div');
+                    const level = Math.floor(Math.random() * 5);
+                    cell.className = `heatmap-cell level-${level}`;
+                    cell.title = `Day ${i + 1}: ${level * 5} problems solved`;
+                    heatmapContainer.appendChild(cell);
+                }
+            }
+            
+            generateTopicMastery() {
+                const topics = [
+                    { name: 'Linear Equations', subject: 'Mathematics', mastery: 92, problems: 25 },
+                    { name: 'Chemical Reactions', subject: 'Science', mastery: 68, problems: 18 },
+                    { name: 'Grammar & Syntax', subject: 'English', mastery: 95, problems: 32 },
+                    { name: 'World History', subject: 'Social Studies', mastery: 78, problems: 15 },
+                    { name: 'Quadratic Equations', subject: 'Mathematics', mastery: 85, problems: 20 },
+                    { name: 'Physics Concepts', subject: 'Science', mastery: 72, problems: 14 },
+                    { name: 'Essay Writing', subject: 'English', mastery: 88, problems: 8 },
+                    { name: 'Geography', subject: 'Social Studies', mastery: 82, problems: 12 },
+                    { name: 'Geometry', subject: 'Mathematics', mastery: 76, problems: 22 },
+                    { name: 'Biology', subject: 'Science', mastery: 84, problems: 16 }
+                ];
+                
+                const container = document.getElementById('topicMasteryList');
+                container.innerHTML = topics.map(topic => {
+                    const masteryClass = topic.mastery >= 85 ? 'excellent' : 
+                                       topic.mastery >= 70 ? 'good' : 'needs-improvement';
+                    
+                    return `
+                        <div class="topic-mastery-item ${masteryClass} bg-white rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">${topic.name}</h4>
+                                    <p class="text-sm text-gray-600">${topic.subject}</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold ${masteryClass === 'excellent' ? 'text-green-600' : 
+                                                                   masteryClass === 'good' ? 'text-yellow-600' : 'text-red-600'}">
+                                        ${topic.mastery}%
+                                    </div>
+                                    <p class="text-xs text-gray-500">${topic.problems} problems</p>
+                                </div>
+                            </div>
+                            <div class="progress-bar h-2">
+                                <div class="progress-fill" style="width: ${topic.mastery}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            generateActivityTimeline() {
+                const activities = [
+                    {
+                        type: 'success',
+                        title: 'Solved Quadratic Equation',
+                        subject: 'Mathematics',
+                        time: '2 minutes ago',
+                        description: 'Perfect solution with optimal steps'
+                    },
+                    {
+                        type: 'error',
+                        title: 'Struggled with Chemical Bonds',
+                        subject: 'Science',
+                        time: '15 minutes ago',
+                        description: 'Needs more practice with ionic compounds'
+                    },
+                    {
+                        type: 'success',
+                        title: 'Completed Grammar Exercise',
+                        subject: 'English',
+                        time: '1 hour ago',
+                        description: 'Excellent understanding of tenses'
+                    },
+                    {
+                        type: 'warning',
+                        title: 'Session Paused',
+                        subject: 'General',
+                        time: '2 hours ago',
+                        description: 'Took a break during math practice'
+                    },
+                    {
+                        type: 'success',
+                        title: 'Achievement Unlocked',
+                        subject: 'System',
+                        time: '3 hours ago',
+                        description: '5-day learning streak completed'
+                    },
+                    {
+                        type: 'success',
+                        title: 'Solved Geometry Problem',
+                        subject: 'Mathematics',
+                        time: '4 hours ago',
+                        description: 'Good progress with angle calculations'
+                    }
+                ];
+                
+                const container = document.getElementById('activityTimeline');
+                container.innerHTML = activities.map(activity => `
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${activity.type}"></div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold text-gray-800">${activity.title}</h4>
+                                <span class="text-xs text-gray-500">${activity.time}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">${activity.subject}</p>
+                            <p class="text-sm text-gray-700">${activity.description}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            animateElements() {
+                // Animate metric cards
+                const metricCards = document.querySelectorAll('.metric-card');
+                metricCards.forEach((card, index) => {
+                    anime({
+                        targets: card,
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        duration: 600,
+                        delay: index * 100,
+                        easing: 'easeOutCubic'
+                    });
+                });
+                
+                // Animate topic mastery items
+                setTimeout(() => {
+                    const topicItems = document.querySelectorAll('.topic-mastery-item');
+                    topicItems.forEach((item, index) => {
+                        anime({
+                            targets: item,
+                            translateX: [-30, 0],
+                            opacity: [0, 1],
+                            duration: 500,
+                            delay: index * 50,
+                            easing: 'easeOutCubic'
+                        });
+                    });
+                }, 800);
+                
+                // Animate heatmap cells
+                setTimeout(() => {
+                    const heatmapCells = document.querySelectorAll('.heatmap-cell');
+                    heatmapCells.forEach((cell, index) => {
+                        anime({
+                            targets: cell,
+                            scale: [0, 1],
+                            duration: 300,
+                            delay: index * 10,
+                            easing: 'easeOutElastic(1, .8)'
+                        });
+                    });
+                }, 1200);
+            }
+            
+            setTimeFilter(period) {
+                // Update active filter button
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                this.currentTimeFilter = period;
+                // In a real implementation, this would update all charts and data
+                console.log(`Time filter set to: ${period}`);
+            }
+            
+            exportProgress() {
+                // Generate and download progress report
+                const reportData = {
+                    student: this.studentData,
+                    overallProgress: this.calculateOverallProgress(),
+                    subjectProgress: {
+                        mathematics: 87,
+                        science: 79,
+                        english: 92,
+                        socialStudies: 74
+                    },
+                    recentActivity: this.performanceLog.slice(-20),
+                    generatedAt: new Date().toISOString()
+                };
+                
+                const dataStr = JSON.stringify(reportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `progress-report-${this.studentData.name || 'student'}-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                
+                // Show success message
+                this.showNotification('Progress report exported successfully!', 'success');
+            }
+            
+            shareProgress() {
+                // Simulate sharing with teacher
+                this.showNotification('Progress shared with your teacher!', 'success');
+            }
+            
+            setGoals() {
+                // Simulate goal setting
+                this.showNotification('Learning goals updated!', 'success');
+            }
+            
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+                    type === 'success' ? 'bg-green-500 text-white' : 
+                    type === 'error' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
+                }`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                anime({
+                    targets: notification,
+                    translateX: [300, 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+                
+                setTimeout(() => {
+                    anime({
+                        targets: notification,
+                        translateX: [0, 300],
+                        opacity: [1, 0],
+                        duration: 300,
+                        easing: 'easeInCubic',
+                        complete: () => {
+                            document.body.removeChild(notification);
+                        }
+                    });
+                }, 3000);
+            }
+        }
+        
+        // Global functions
+        function setTimeFilter(period) {
+            progressAnalytics.setTimeFilter(period);
+        }
+        
+        function exportProgress() {
+            progressAnalytics.exportProgress();
+        }
+        
+        function shareProgress() {
+            progressAnalytics.shareProgress();
+        }
+        
+        function setGoals() {
+            progressAnalytics.setGoals();
+        }
+        
+        // Initialize progress analytics
+        let progressAnalytics;
+        document.addEventListener('DOMContentLoaded', () => {
+            progressAnalytics = new ProgressAnalytics();
+        });
+    </script>
+</body>
+</html>

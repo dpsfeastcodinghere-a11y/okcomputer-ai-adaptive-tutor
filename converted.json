@@ -1,0 +1,934 @@
+{
+  "database_info": {
+    "subject": "Science",
+    "curriculum": "NCERT",
+    "classes_covered": [6, 7, 8, 9, 10],
+    "description": "Structured curriculum data sorted by class and topic, including short notes, questions, and special concepts."
+  },
+  "special_topics": {
+    "antigravity": {
+      "concept": "Antigravity",
+      "definition": "A hypothetical concept of creating a place or object that is free from the force of gravity.",
+      "scientific_reality": "In current physics, gravity is a fundamental force of attraction between masses. There is no known technology to 'shield' or 'block' gravity.",
+      "related_phenomena": [
+        {
+          "name": "Magnetic Levitation (Maglev)",
+          "description": "Using powerful magnets to float objects (like trains) above a track. This acts against gravity but does not remove it."
+        },
+        {
+          "name": "Microgravity (Zero-G)",
+          "description": "Experienced by astronauts in orbit. They are not free from gravity; they are in a constant state of free-fall, creating the sensation of weightlessness."
+        }
+      ]
+    }
+  },
+  "classes": [
+    {
+      "grade": 6,
+      "textbook_name": "Curiosity",
+      "chapters": [
+        { 
+          "id": 1, 
+          "title": "The Wonderful World of Science",
+          "ncert_exercises": [
+            "Why do we need to separate different components of a mixture?",
+            "What is winnowing? Where is it used?",
+            "How will you separate husk or dirt particles from a given sample of pulses before cooking?",
+            "What is sieving? Where is it used?",
+            "How will you separate sand and water from their mixture?"
+          ],
+          "intext_questions": [
+             "Paheli wants to know if you have seen any other example of separation.",
+             "Boojho wants to know why we need to separate substances."
+          ]
+        },
+        { 
+          "id": 2, 
+          "title": "Diversity in the Living World",
+          "short_notes": {
+            "biodiversity": "The variety of plants and animals found in a specific region.",
+            "plant_classification": ["Herbs (soft stems)", "Shrubs (bushy)", "Trees (thick trunks)"],
+            "root_types": ["Taproot (main root)", "Fibrous root (cluster)"],
+            "habitat": "The specific environment (terrestrial or aquatic) where an organism lives."
+          },
+          "questions": [
+            "Differentiate between a taproot and a fibrous root with examples.",
+            "How is a camel adapted to survive in a desert?",
+            "Classify Tomato, Mango, Rose, and Lemon into Herb, Shrub, or Tree."
+          ],
+          "ncert_exercises": [
+             "What is a habitat?",
+             "How are cactus adapted to survive in a desert?",
+             "Fill in the blanks: (a) The presence of specific features, which enable a plant or an animal to live in a particular habitat, is called _____."
+          ],
+          "intext_questions": [
+             "What do you find in the surroundings of your school?",
+             "Can you tell which are the living things and which are non-living things?"
+          ]
+        },
+        { 
+            "id": 3, 
+            "title": "Mindful Eating: A Path to a Healthy Body",
+             "ncert_exercises": [
+                "Name the major nutrients in our food.",
+                "Name the following: (a) The nutrients which mainly give energy to our body.",
+                "Name two foods each rich in: (a) Fats (b) Starch (c) Dietary fibre (d) Protein"
+             ],
+             "intext_questions": [
+                "Do all foods contain all these nutrients?",
+                "What do various nutrients do for our body?"
+             ]
+        },
+        { 
+            "id": 4, 
+            "title": "Exploring Magnets",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) Artificial magnets are made in different shapes such as __________, __________ and __________.",
+                "State whether the following statements are true or false.",
+                "Where are poles of a bar magnet located?"
+            ],
+            "intext_questions": [
+                "Can you separate iron filings from soil?",
+                "Do you think this is a magic?"
+            ]
+        },
+        { 
+            "id": 5, 
+            "title": "Measurement of Length and Motion",
+            "ncert_exercises": [
+                "Give two examples each, of modes of transport used on land, water and air.",
+                "Fill in the blanks: (a) One metre is __________ cm.",
+                "Why can a pace or a footstep not be used as a standard unit of length?"
+            ],
+            "intext_questions": [
+                "How wide is this desk?",
+                "How far is it from your home to school?"
+            ]
+        },
+        { 
+            "id": 6, 
+            "title": "Materials Around Us",
+            "ncert_exercises": [
+                "Name five objects which can be made from wood.",
+                "Select those objects from the following which shine: Glass bowl, plastic toy, steel spoon, cotton shirt.",
+                "Match the objects given below with the materials from which they could be made."
+            ],
+            "intext_questions": [
+                "What are these objects made of?",
+                "Is this water pure?"
+            ]
+        },
+        { 
+            "id": 7, 
+            "title": "Temperature and its Measurement",
+            "ncert_exercises": [
+                "State similarities and differences between the laboratory thermometer and the clinical thermometer.",
+                "Give two examples each of conductors and insulators of heat.",
+                "Fill in the blanks: (a) The hotness of an object is determined by its __________."
+            ],
+            "intext_questions": [
+                "Is the handle of a pressure cooker a conductor or an insulator?",
+                "Why do we wear woollen clothes in winter?"
+            ]
+        },
+        { 
+            "id": 8, 
+            "title": "A Journey through States of Water",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) The process of changing of water into its vapour is called __________.",
+                "State for each of the following whether it is due to evaporation or condensation.",
+                "Which of the following statements are 'True'?"
+            ],
+            "intext_questions": [
+                "Where does the water go after washing clothes?",
+                "How are clouds formed?"
+            ]
+        },
+        { 
+            "id": 9, 
+            "title": "Methods of Separation in Everyday Life",
+            "ncert_exercises": [
+                "Why do we need to separate different components of a mixture? Give examples.",
+                "What is winnowing? Where is it used?",
+                "How will you separate husk or dirt particles from a given sample of pulses before cooking?"
+            ],
+            "intext_questions": [
+                "Can you separate salt from water?",
+                "How do we separate tea leaves from tea?"
+            ]
+        },
+        { 
+            "id": 10, 
+            "title": "Living Creatures: Exploring their Characteristics",
+            "ncert_exercises": [
+                "What is a habitat?",
+                "How are cactus adapted to survive in a desert?",
+                "Fill in the blanks: (a) The presence of specific features, which enable a plant or an animal to live in a particular habitat, is called _____."
+            ],
+            "intext_questions": [
+                "Do all living things need food?",
+                "Do all living things show growth?"
+            ]
+        },
+        { 
+            "id": 11, 
+            "title": "Nature’s Treasures",
+            "ncert_exercises": [
+                "What is the composition of air?",
+                "Which gas in the atmosphere is essential for respiration?",
+                "How will you prove that air supports burning?"
+            ],
+            "intext_questions": [
+                "Is air present everywhere around us?",
+                "What is air made up of?"
+            ]
+        },
+        { 
+            "id": 12, 
+            "title": "Beyond Earth",
+            "ncert_exercises": [
+                "Answer the following questions: (a) If the moon revolves around the Earth, then the Earth revolves around the _________.",
+                "True or False: The Sun is a star.",
+                "Fill in the blanks: The group of stars that appears to form a pattern in the sky is known as a __________."
+            ],
+            "intext_questions": [
+                "Why do we see the moon changing its shape every day?",
+                "What is the universe?"
+            ]
+        }
+      ]
+    },
+    {
+      "grade": 7,
+      "textbook_name": "Science",
+      "chapters": [
+        { 
+          "id": 1, 
+          "title": "Nutrition in Plants",
+          "short_notes": {
+            "autotrophs": "Organisms that make their own food (e.g., green plants).",
+            "photosynthesis": "CO2 + Water + Sunlight + Chlorophyll -> Carbohydrate + Oxygen.",
+            "heterotrophs": "Organisms depending on others for food.",
+            "saprotrophs": "Feed on dead and decaying matter (e.g., fungi)."
+          },
+          "questions": [
+            "What is the function of stomata in leaves?",
+            "Write the word equation for photosynthesis.",
+            "Differentiate between a parasite and a saprotroph."
+          ],
+          "ncert_exercises": [
+             "Why do organisms take food?",
+             "Distinguish between a parasite and a saprotroph.",
+             "How would you test the presence of starch in leaves?",
+             "Give a brief description of the process of synthesis of food in green plants."
+          ],
+          "intext_questions": [
+             "Boojho wants to know how plants prepare their own food.",
+             "Paheli wants to know why our body cannot make food from carbon dioxide, water and minerals like plants do."
+          ]
+        },
+        { 
+            "id": 2, 
+            "title": "Nutrition in Animals",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) The main steps of nutrition in humans are __________, __________, __________, __________ and __________.",
+                "Mark 'T' if the statement is true and 'F' if it is false.",
+                "Tick (âˆš) mark the correct answer in each of the following: (a) Fat is completely digested in the"
+            ],
+            "intext_questions": [
+                "Boojho is fascinated by the highly coiled small intestine seen in Fig. 2.2. He wants to know its length.",
+                "Paheli wants to know how food moves in the opposite direction during vomiting."
+            ]
+        },
+        { 
+            "id": 3, 
+            "title": "Heat",
+            "ncert_exercises": [
+                "State similarities and differences between the laboratory thermometer and the clinical thermometer.",
+                "Give two examples each of conductors and insulators of heat.",
+                "Fill in the blanks: (a) The hotness of an object is determined by its __________."
+            ],
+            "intext_questions": [
+                "Boojho says, 'My left hand tells me that the water in mug C is hot and the right hand tells me that the same water is cold. What should I conclude?'",
+                "Paheli asks: 'Does it mean that heat will not be transferred if the temperature of two objects is the same?'"
+            ]
+        },
+        { 
+            "id": 4, 
+            "title": "Acids, Bases and Salts",
+            "ncert_exercises": [
+                "State differences between acids and bases.",
+                "Ammonia is found in many household products, such as window cleaners. It turns red litmus blue. What is its nature?",
+                "Name the source from which litmus solution is obtained. What is the use of this solution?"
+            ],
+            "intext_questions": [
+                "Can I taste all substances to find their taste?",
+                "Paheli brought the following paheli (riddle) for you."
+            ]
+        },
+        { 
+            "id": 5, 
+            "title": "Physical and Chemical Changes",
+            "ncert_exercises": [
+                "Classify the changes involved in the following processes as physical or chemical changes:",
+                "State whether the following statements are true or false. In case a statement is false, write the corrected statement in your notebook.",
+                "Fill in the blanks in the following statements:"
+            ],
+            "intext_questions": [
+                "Paheli said that even digestion is a chemical change.",
+                "Boojho added dilute sulphuric acid to lime water. Will the reaction mixture become hot or cool?"
+            ]
+        },
+        { 
+            "id": 6, 
+            "title": "Respiration in Organisms",
+            "ncert_exercises": [
+                "Why does an athlete breathe faster and deeper than usual after finishing the race?",
+                "List the similarities and differences between aerobic and anaerobic respiration.",
+                "Why do we often sneeze when we inhale a lot of dust-laden air?"
+            ],
+            "intext_questions": [
+                "Boojho wants to know if cockroaches, snails, fish, earthworms, ants and mosquitoes also have lungs.",
+                "Paheli wants to know why we yawn when we are sleepy or drowsy."
+            ]
+        },
+        { 
+            "id": 7, 
+            "title": "Transportation in Animals and Plants",
+            "ncert_exercises": [
+                "Match structures given in Column I with functions given in Column II.",
+                "Fill in the blanks: (i) The blood from the heart is transported to all parts of the body by the __________.",
+                "Choose the correct option: (a) In plants, water is transported through"
+            ],
+            "intext_questions": [
+                "Paheli wonders which side of the heart will have oxygen-rich blood and which side will have carbon dioxide-rich blood.",
+                "Boojho thinks that plants may have pipes to transport water to the entire plant like we have in our homes for the supply of water."
+            ]
+        },
+        { 
+            "id": 8, 
+            "title": "Reproduction in Plants",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) Production of new individuals from the vegetative part of parent is called_____________.",
+                "Describe the different methods of asexual reproduction. Give examples.",
+                "Explain what you understand by sexual reproduction."
+            ],
+            "intext_questions": [
+                "Paheli thought that new plants always grow from seeds. But, she has never seen the seeds of sugarcane, potato and rose. She wants to know how these plants reproduce.",
+                "Boojho wants to know if there is any advantage of vegetative propagation."
+            ]
+        },
+        { 
+            "id": 9, 
+            "title": "Motion and Time",
+            "ncert_exercises": [
+                "Classify the following as motion along a straight line, circular or oscillatory motion:",
+                "Which of the following are not correct?",
+                "A simple pendulum takes 32 s to complete 20 oscillations. What is the time period of the pendulum?"
+            ],
+            "intext_questions": [
+                "Paheli wondered how time was measured when pendulum clocks were not available.",
+                "Boojho wants to know whether there is any device that measures the speed."
+            ]
+        },
+        { 
+            "id": 10, 
+            "title": "Electric Current and its Effects",
+            "ncert_exercises": [
+                "Draw in your notebook the symbols to represent the following components of electrical circuits:",
+                "Draw the circuit diagram to represent the circuit shown in Fig.10.21.",
+                "Fig.10.22 shows four cells fixed on a board. Draw lines to indicate how you will connect their terminals with wires to make a battery of four cells."
+            ],
+            "intext_questions": [
+                "Paheli and Boojho wonder whether the batteries used in tractors, trucks and inverters are also made from cells. Then why is it called a battery?",
+                "Boojho could not see element in an electric iron."
+            ]
+        },
+        { 
+            "id": 11, 
+            "title": "Light",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) An image that cannot be obtained on a screen is called ____________.",
+                "Mark 'T' if the statement is true and 'F' if it is false:",
+                "Match the items given in Column I with one or more items of Column II."
+            ],
+            "intext_questions": [
+                "Paheli wants to know, what makes things visible to us?",
+                "Boojho noted in his notebook: Is it not surprising that my image is of the same size as me whether the mirror is small or large?"
+            ]
+        },
+        { 
+            "id": 12, 
+            "title": "Forests: Our Lifeline",
+            "ncert_exercises": [
+                "Explain how animals dwelling in the forest help it grow and regenerate.",
+                "Explain how forests prevent floods.",
+                "What are decomposers? Name any two of them. What do they do in the forest?"
+            ],
+            "intext_questions": [
+                "Paheli reminded Prof Ahmad that he had not explained why forests are called green lungs.",
+                "Boojho recalled what he had learnt about the water cycle in Class VI. Trees take in water from their roots and release water vapour into the air through evaporation."
+            ]
+        },
+        { 
+            "id": 13, 
+            "title": "Wastewater Story",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) Cleaning of water is a process of removing ____________.",
+                "What is sewage? Explain why it is harmful to discharge untreated sewage into rivers or seas.",
+                "Why should oils and fats be not released in the drain? Explain."
+            ],
+            "intext_questions": [
+                "Paheli wonders how!",
+                "Bhoojo wants to know how sewage is disposed of in an aeroplane."
+            ]
+        }
+      ]
+    },
+    {
+      "grade": 8,
+      "textbook_name": "Science",
+      "chapters": [
+        { 
+            "id": 1, 
+            "title": "Crop Production and Management",
+            "ncert_exercises": [
+                "Select the correct word from the following list and fill in the blanks.",
+                "Match items in column A with those in column B.",
+                "Give two examples of each: (a) Kharif crop (b) Rabi crop"
+            ],
+            "intext_questions": [
+                "I saw a healthy crop growing in a farm. In the neighbouring farm, the plants were weak. Why do some plants grow better than others?",
+                "What is a weedicide?"
+            ]
+        },
+        { 
+            "id": 2, 
+            "title": "Microorganisms: Friend and Foe",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) Microorganisms can be seen with the help of a ____________.",
+                "Tick the correct answer: (a) Yeast is used in the production of",
+                "Match the organisms in Column A with their action in Column B."
+            ],
+            "intext_questions": [
+                "I saw that my mother added a little curd to warm milk to set curd for the next day. I wonder why?",
+                "Paheli is keen to know whether her beautiful shoes, which she wore on special occasions, were spoiled by fungi during the rainy season."
+            ]
+        },
+        { 
+            "id": 3, 
+            "title": "Coal and Petroleum",
+            "ncert_exercises": [
+                "What are the advantages of using CNG and LPG as fuels?",
+                "Name the petroleum product used for surfacing of roads.",
+                "Describe how coal is formed from dead vegetation. What is this process called?"
+            ],
+            "intext_questions": [
+                "Can coal, petroleum and natural gas be prepared in the laboratory from dead organisms?",
+                "Can we use all our natural resources forever?"
+            ]
+        },
+        { 
+            "id": 4, 
+            "title": "Combustion and Flame",
+            "ncert_exercises": [
+                "List conditions under which combustion can take place.",
+                "Fill in the blanks: (a) Burning of wood and coal causes __________ of air.",
+                "Explain how the use of CNG in automobiles has reduced pollution in our cities."
+            ],
+            "intext_questions": [
+                "Can you burn a piece of wood by bringing a lighted matchstick near it?",
+                "We have read that the sun produces its own heat and light. Is it also some kind of combustion?"
+            ]
+        },
+        { 
+            "id": 5, 
+            "title": "Conservation of Plants and Animals",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) A place where animals are protected in their natural habitat is called __________.",
+                "Differentiate between the following: (a) Wildlife sanctuary and biosphere reserve",
+                "Discuss the effects of deforestation on the following: (a) Wild animals"
+            ],
+            "intext_questions": [
+                "I have heard that some of the endemic species may vanish. Is it true?",
+                "Are only big animals facing extinction?"
+            ]
+        },
+        { 
+            "id": 6, 
+            "title": "Reproduction in Animals",
+            "ncert_exercises": [
+                "Explain the importance of reproduction in organisms.",
+                "Describe the process of fertilisation in human beings.",
+                "Choose the most appropriate answer: (a) Internal fertilisation occurs"
+            ],
+            "intext_questions": [
+                "Boojho recalls that the size of eggs in animals varies. The egg may be very small as in humans, much larger as in hens. Ostrich egg is the largest!",
+                "Paheli wants to know why animals produce so many eggs and sperms."
+            ]
+        },
+        { 
+            "id": 7, 
+            "title": "Reaching the Age of Adolescence",
+            "ncert_exercises": [
+                "What is the term used for chemical secretions of endocrine glands responsible for changes taking place in the body?",
+                "Define adolescence.",
+                "What is menstruation? Explain."
+            ],
+            "intext_questions": [
+                "I wonder how long this period marked by changes in the body will last!",
+                "Many of my classmates have a hoarse voice. Now I know why?"
+            ]
+        },
+        { 
+          "id": 8, 
+          "title": "Force and Pressure",
+          "short_notes": {
+            "force": "A push or pull acting on an object.",
+            "types_of_force": ["Contact (Muscular, Friction)", "Non-Contact (Magnetic, Gravitational, Electrostatic)"],
+            "pressure": "Force per unit area (P = F/A).",
+            "relationship": "Smaller area results in higher pressure for the same force."
+          },
+          "questions": [
+            "Why do shoulder bags have broad straps?",
+            "Identify the agent exerting the force if you squeeze a lemon.",
+            "Explain why atmospheric pressure does not crush us."
+          ],
+          "ncert_exercises": [
+             "Give two examples each of situations in which you push or pull to change the state of motion of objects.",
+             "Give two examples of situations in which applied force causes a change in the shape of an object.",
+             "Fill in the blanks in the following statements: (a) To draw water from a well we have to __________ at the rope."
+          ],
+          "intext_questions": [
+             "I learnt in Class VI that a magnet attracts a piece of iron towards it. Is attraction also a pull?",
+             "Does it mean that the net force on an object is zero if the two forces acting on it in opposite directions are equal?"
+          ]
+        },
+        { 
+            "id": 9, 
+            "title": "Friction",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) Friction opposes the _____________ between the surfaces in contact with each other.",
+                "Four children were asked to arrange forces due to rolling, static and sliding frictions in a decreasing order. Choose the correct arrangement.",
+                "Alida runs her toy car on dry marble floor, wet marble floor, newspaper and towel spread on the floor. The force of friction acting on the car on different surfaces in increasing order will be"
+            ],
+            "intext_questions": [
+                "Can we reduce friction to zero by polishing surfaces or using large amount of lubricants?",
+                "I shall try the activity by wrapping a piece of sandpaper around the cell."
+            ]
+        },
+        { 
+            "id": 10, 
+            "title": "Sound",
+            "ncert_exercises": [
+                "Choose the correct answer. Sound can travel through",
+                "Voice of which of the following is likely to have minimum frequency?",
+                "In the following statements, tick 'T' against those which are true, and 'F' against those which are false."
+            ],
+            "intext_questions": [
+                "I wonder why my voice is different from that of my teacher.",
+                "Oh! That is how whales and dolphins might be communicating under water."
+            ]
+        },
+        { 
+            "id": 11, 
+            "title": "Chemical Effects of Electric Current",
+            "ncert_exercises": [
+                "Fill in the blanks: (a) Most liquids that conduct electricity are solutions of __________, __________ and __________.",
+                "When the free ends of a tester are dipped into a solution, the magnetic needle shows deflection. Can you explain the reason?",
+                "Name three liquids, which when tested in the manner shown in Fig.11.9, may cause the magnetic needle to deflect."
+            ],
+            "intext_questions": [
+                "Paheli and Boojho want to remind you that one should not experiment with the electric supply from the mains or a generator or an inverter.",
+                "When the free ends of the tester do not touch each other, there is an air gap between them. Paheli knows that air is a poor conductor of electricity."
+            ]
+        },
+        { 
+            "id": 12, 
+            "title": "Some Natural Phenomena",
+            "ncert_exercises": [
+                "Which of the following cannot be charged easily by friction?",
+                "When a glass rod is rubbed with a piece of silk cloth the rod",
+                "Write T against true and F against false in the following statements."
+            ],
+            "intext_questions": [
+                "I wonder why they took so many years to realise the similarity.",
+                "If scientists know so much about earthquakes, can they also predict when and where the next one will strike?"
+            ]
+        },
+        { 
+            "id": 13, 
+            "title": "Light",
+            "ncert_exercises": [
+                "Suppose you are in a dark room. Can you see objects in the room? Can you see objects outside the room. Explain.",
+                "Differentiate between regular and diffused reflection. Does diffused reflection mean the failure of the laws of reflection?",
+                "Mention against each of the following whether regular or diffused reflection will take place when a beam of light strikes. Justify your answer in each case."
+            ],
+            "intext_questions": [
+                "I have a question. Can the reflected rays be further reflected if incident on another mirror?",
+                "What would happen if I threw the light on the mirror along the normal."
+            ]
+        }
+      ]
+    },
+    {
+      "grade": 9,
+      "textbook_name": "Science",
+      "chapters": [
+        { 
+            "id": 1, 
+            "title": "Matter in Our Surroundings",
+            "ncert_exercises": [
+                "Convert the following temperatures to the celsius scale. (a) 293 K (b) 470 K",
+                "Convert the following temperatures to the kelvin scale. (a) 25 Â°C (b) 373 Â°C",
+                "Give reason for the following observations. (a) Naphthalene balls disappear with time without leaving any solid."
+            ],
+            "intext_questions": [
+                "Which of the following are matter? Chair, air, love, smell, hate, almonds, thought, cold, lemon water, smell of perfume.",
+                "Convert the following temperature to celsius scale: a. 300 K b. 573 K"
+            ]
+        },
+        { 
+            "id": 2, 
+            "title": "Is Matter Around Us Pure?",
+            "ncert_exercises": [
+                "Which separation techniques will you apply for the separation of the following?",
+                "Write the steps you would use for making tea. Use the words solution, solvent, solute, dissolve, soluble, insoluble, filtrate and residue.",
+                "Pragya tested the solubility of three different substances at different temperatures and collected the data as given below..."
+            ],
+            "intext_questions": [
+                "What is meant by a substance?",
+                "Differentiate between homogeneous and heterogeneous mixtures with examples."
+            ]
+        },
+        { 
+            "id": 3, 
+            "title": "Atoms and Molecules",
+            "ncert_exercises": [
+                "A 0.24 g sample of compound of oxygen and boron was found by analysis to contain 0.096 g of boron and 0.144 g of oxygen. Calculate the percentage composition of the compound by weight.",
+                "When 3.0 g of carbon is burnt in 8.00 g oxygen, 11.00 g of carbon dioxide is produced. What mass of carbon dioxide will be formed when 3.00 g of carbon is burnt in 50.00 g of oxygen? Which law of chemical combination will govern your answer?",
+                "What are polyatomic ions? Give examples."
+            ],
+            "intext_questions": [
+                "In a reaction, 5.3 g of sodium carbonate reacted with 6 g of acetic acid. The products were 2.2 g of carbon dioxide, 0.9 g water and 8.2 g of sodium acetate. Show that these observations are in agreement with the law of conservation of mass.",
+                "Define the atomic mass unit."
+            ]
+        },
+        { 
+            "id": 4, 
+            "title": "Structure of the Atom",
+            "ncert_exercises": [
+                "Compare the properties of electrons, protons and neutrons.",
+                "What are the limitations of J.J. Thomsonâ€™s model of the atom?",
+                "What are the limitations of Rutherfordâ€™s model of the atom?"
+            ],
+            "intext_questions": [
+                "What are canal rays?",
+                "On the basis of Thomsonâ€™s model of an atom, explain how the atom is neutral as a whole."
+            ]
+        },
+        { 
+            "id": 5, 
+            "title": "The Fundamental Unit of Life",
+            "ncert_exercises": [
+                "Make a comparison and write down ways in which plant cells are different from animal cells.",
+                "How is a prokaryotic cell different from a eukaryotic cell?",
+                "What would happen if the plasma membrane ruptures or breaks down?"
+            ],
+            "intext_questions": [
+                "Who discovered cells, and how?",
+                "Why is the cell called the structural and functional unit of life?"
+            ]
+        },
+        { 
+            "id": 6, 
+            "title": "Tissues",
+            "ncert_exercises": [
+                "Define the term \"tissue\".",
+                "How many types of elements together make up the xylem tissue? Name them.",
+                "How are simple tissues different from complex tissues in plants?"
+            ],
+            "intext_questions": [
+                "What is a tissue?",
+                "Name types of simple tissues."
+            ]
+        },
+        { 
+            "id": 7, 
+            "title": "Motion",
+            "ncert_exercises": [
+                "An athlete completes one round of a circular track of diameter 200 m in 40 s. What will be the distance covered and the displacement at the end of 2 minutes 20 s?",
+                "Joseph jogs from one end A to the other end B of a straight 300 m road in 2 minutes 30 seconds and then turns around and jogs 100 m back to point C in another 1 minute. What are Josephâ€™s average speeds and velocities in jogging (a) from A to B and (b) from A to C?",
+                "Abdul, while driving to school, computes the average speed for his trip to be 20 km hâ€“1. On his return trip along the same route, there is less traffic and the average speed is 30 km hâ€“1. What is the average speed for Abdulâ€™s trip?"
+            ],
+            "intext_questions": [
+                "An object has moved through a distance. Can it have zero displacement? If yes, support your answer with an example.",
+                "Distinguish between speed and velocity."
+            ]
+        },
+        { 
+            "id": 8, 
+            "title": "Force and Laws of Motion",
+            "ncert_exercises": [
+                "An object experiences a net zero external unbalanced force. Is it possible for the object to be travelling with a non-zero velocity? If yes, state the conditions that must be placed on the magnitude and direction of the velocity. If no, provide a reason.",
+                "When a carpet is beaten with a stick, dust comes out of it. Explain.",
+                "Why is it advised to tie any luggage kept on the roof of a bus with a rope?"
+            ],
+            "intext_questions": [
+                "Which of the following has more inertia: (a) a rubber ball and a stone of the same size? (b) a bicycle and a train? (c) a five-rupees coin and a one-rupee coin?",
+                "From a rifle of mass 4 kg, a bullet of mass 50 g is fired with an initial velocity of 35 m s-1. Calculate the initial recoil velocity of the rifle."
+            ]
+        },
+        { 
+          "id": 9, 
+          "title": "Gravitation",
+          "short_notes": {
+            "universal_law": "Every object attracts every other object with a force proportional to the product of masses and inversely proportional to the square of distance.",
+            "mass_vs_weight": "Mass is constant quantity of matter. Weight is the force of gravity (W = m x g).",
+            "buoyancy": "The upward force exerted by a fluid on an immersed object."
+          },
+          "questions": [
+            "State the Universal Law of Gravitation.",
+            "Why does a crumpled ball of paper fall faster than a flat sheet?",
+            "If mass is 10kg, what is the weight on Earth (g=9.8) and on the Moon (g=1.63)?"
+          ],
+          "ncert_exercises": [
+             "How does the force of gravitation between two objects change when the distance between them is reduced to half?",
+             "Gravitational force acts on all objects in proportion to their masses. Why then, a heavy object does not fall faster than a light object?",
+             "What is the magnitude of the gravitational force between the earth and a 1 kg object on its surface? (Mass of the earth is 6 x 10^24 kg and radius of the earth is 6.4 x 10^6 m.)"
+          ],
+          "intext_questions": [
+             "State the universal law of gravitation.",
+             "What do you mean by free fall?"
+          ]
+        },
+        { 
+            "id": 10, 
+            "title": "Work and Energy",
+            "ncert_exercises": [
+                "Look at the activities listed below. Reason out whether or not work is done in the light of your understanding of the term 'work'.",
+                "An object thrown at a certain angle to the ground moves in a curved path and falls back to the ground. The initial and the final points of the path of the object lie on the same horizontal line. What is the work done by the force of gravity on the object?",
+                "A battery lights a bulb. Describe the energy changes involved in the process."
+            ],
+            "intext_questions": [
+                "A force of 7 N acts on an object. The displacement is, say 8 m, in the direction of the force. Let us take it that the force acts on the object through the displacement. What is the work done in this case?",
+                "What is the kinetic energy of an object?"
+            ]
+        },
+        { 
+            "id": 11, 
+            "title": "Sound",
+            "ncert_exercises": [
+                "What is sound and how is it produced?",
+                "Describe with the help of a diagram, how compressions and rarefactions are produced in air near a source of sound.",
+                "Why is sound wave called a longitudinal wave?"
+            ],
+            "intext_questions": [
+                "How does the sound produced by a vibrating object in a medium reach your ear?",
+                "Explain how sound is produced by your school bell."
+            ]
+        },
+        { 
+            "id": 12, 
+            "title": "Improvement in Food Resources",
+            "ncert_exercises": [
+                "Explain any one method of crop production which ensures high yield.",
+                "Why are manure and fertilizers used in fields?",
+                "What are the advantages of inter-cropping and crop rotation?"
+            ],
+            "intext_questions": [
+                "What do we get from cereals, pulses, fruits and vegetables?",
+                "How do biotic and abiotic factors affect crop production?"
+            ]
+        }
+      ]
+    },
+    {
+      "grade": 10,
+      "textbook_name": "Science",
+      "chapters": [
+        { 
+            "id": 1, 
+            "title": "Chemical Reactions and Equations",
+            "ncert_exercises": [
+                "Which of the statements about the reaction below are incorrect? 2PbO(s) + C(s) -> 2Pb(s) + CO2(g)",
+                "Fe2O3 + 2Al -> Al2O3 + 2Fe. The above reaction is an example of a",
+                "What happens when dilute hydrochloric acid is added to iron fillings? Tick the correct answer."
+            ],
+            "intext_questions": [
+                "Why should a magnesium ribbon be cleaned before burning in air?",
+                "Write the balanced equation for the following chemical reactions."
+            ]
+        },
+        { 
+            "id": 2, 
+            "title": "Acids, Bases and Salts",
+            "ncert_exercises": [
+                "A solution turns red litmus blue, its pH is likely to be",
+                "A solution reacts with crushed egg-shells to give a gas that turns lime-water milky. The solution contains",
+                "10 mL of a solution of NaOH is found to be completely neutralised by 8 mL of a given solution of HCl. If we take 20 mL of the same solution of NaOH, the amount HCl solution (the same solution as before) required to neutralise it will be"
+            ],
+            "intext_questions": [
+                "You have been provided with three test tubes. One of them contains distilled water and the other two contain an acidic solution and a basic solution, respectively. If you are given only red litmus paper, how will you identify the contents of each test tube?",
+                "Why should curd and sour substances not be kept in brass and copper vessels?"
+            ]
+        },
+        { 
+            "id": 3, 
+            "title": "Metals and Non-metals",
+            "ncert_exercises": [
+                "Which of the following pairs will give displacement reactions?",
+                "Which of the following methods is suitable for preventing an iron frying pan from rusting?",
+                "An element reacts with oxygen to give a compound with a high melting point. This compound is also soluble in water. The element is likely to be"
+            ],
+            "intext_questions": [
+                "Give an example of a metal which (i) is a liquid at room temperature.",
+                "Why is sodium kept immersed in kerosene oil?"
+            ]
+        },
+        { 
+            "id": 4, 
+            "title": "Carbon and its Compounds",
+            "ncert_exercises": [
+                "Ethane, with the molecular formula C2H6 has",
+                "Butanone is a four-carbon compound with the functional group",
+                "While cooking, if the bottom of the vessel is getting blackened on the outside, it means that"
+            ],
+            "intext_questions": [
+                "What would be the electron dot structure of carbon dioxide which has the formula CO2?",
+                "How many structural isomers can you draw for pentane?"
+            ]
+        },
+        { 
+            "id": 5, 
+            "title": "Life Processes",
+            "ncert_exercises": [
+                "The kidneys in human beings are a part of the system for",
+                "The xylem in plants are responsible for",
+                "The autotrophic mode of nutrition requires"
+            ],
+            "intext_questions": [
+                "Why is diffusion insufficient to meet the oxygen requirements of multi-cellular organisms like humans?",
+                "What are the differences between autotrophic nutrition and heterotrophic nutrition?"
+            ]
+        },
+        { 
+            "id": 6, 
+            "title": "Control and Coordination",
+            "ncert_exercises": [
+                "Which of the following is a plant hormone?",
+                "The gap between two neurons is called a",
+                "The brain is responsible for"
+            ],
+            "intext_questions": [
+                "What is the difference between a reflex action and walking?",
+                "What are plant hormones?"
+            ]
+        },
+        { 
+            "id": 7, 
+            "title": "How do Organisms Reproduce?",
+            "ncert_exercises": [
+                "Asexual reproduction takes place through budding in",
+                "Which of the following is not a part of the female reproductive system in human beings?",
+                "The anther contains"
+            ],
+            "intext_questions": [
+                "What is the importance of DNA copying in reproduction?",
+                "How does binary fission differ from multiple fission?"
+            ]
+        },
+        { 
+            "id": 8, 
+            "title": "Heredity",
+            "ncert_exercises": [
+                "A Mendelian experiment consisted of breeding tall pea plants bearing violet flowers with short pea plants bearing white flowers. The progeny all bore violet flowers, but almost half of them were short. This suggests that the genetic make-up of the tall parent can be depicted as",
+                "A study found that children with light-coloured eyes are likely to have parents with light-coloured eyes. On this basis, can we say anything about whether the light eye colour trait is dominant or recessive? Why or why not?",
+                "Outline a project which aims to find the dominant coat colour in dogs."
+            ],
+            "intext_questions": [
+                "If a trait A exists in 10% of a population of an asexually reproducing species and a trait B exists in 60% of the same population, which trait is likely to have arisen earlier?",
+                "How do Mendelâ€™s experiments show that traits may be dominant or recessive?"
+            ]
+        },
+        { 
+          "id": 9, 
+          "title": "Light – Reflection and Refraction",
+          "short_notes": {
+            "reflection": "Bouncing back of light. Laws: i = r.",
+            "mirrors": ["Concave (Converging)", "Convex (Diverging)"],
+            "refraction": "Bending of light passing between media of different densities.",
+            "lenses": ["Convex (Converging)", "Concave (Diverging)"],
+            "power_of_lens": "P = 1/f (in meters). Unit: Dioptre (D)."
+          },
+          "questions": [
+            "Define the principal focus of a concave mirror.",
+            "An object is at 20cm from a convex lens of focal length 10cm. Find the image position.",
+            "Why does a stick appear bent when half-immersed in water?"
+          ],
+          "ncert_exercises": [
+             "Which one of the following materials cannot be used to make a lens?",
+             "The image formed by a concave mirror is observed to be virtual, erect and larger than the object. Where should be the position of the object?",
+             "Where should an object be placed in front of a convex lens to get a real image of the size of the object?"
+          ],
+          "intext_questions": [
+             "Define the principal focus of a concave mirror.",
+             "A ray of light travelling in air enters obliquely into water. Does the light ray bend towards the normal or away from the normal? Why?"
+          ]
+        },
+        { 
+            "id": 10, 
+            "title": "The Human Eye and the Colourful World",
+            "ncert_exercises": [
+                "The human eye can focus on objects at different distances by adjusting the focal length of the eye lens. This is due to",
+                "The human eye forms the image of an object at its",
+                "The least distance of distinct vision for a young adult with normal vision is about"
+            ],
+            "intext_questions": [
+                "What is meant by power of accommodation of the eye?",
+                "A person with a myopic eye cannot see objects beyond 1.2 m distinctly. What should be the type of the corrective lens used to restore proper vision?"
+            ]
+        },
+        { 
+            "id": 11, 
+            "title": "Electricity",
+            "ncert_exercises": [
+                "A piece of wire of resistance R is cut into five equal parts. These parts are then connected in parallel. If the equivalent resistance of this combination is R', then the ratio R/R' is",
+                "Which of the following terms does not represent electrical power in a circuit?",
+                "An electric bulb is rated 220 V and 100 W. When it is operated on 110 V, the power consumed will be"
+            ],
+            "intext_questions": [
+                "What does an electric circuit mean?",
+                "Define the unit of current."
+            ]
+        },
+        { 
+            "id": 12, 
+            "title": "Magnetic Effects of Electric Current",
+            "ncert_exercises": [
+                "Which of the following correctly describes the magnetic field near a long straight wire?",
+                "At the time of short circuit, the current in the circuit",
+                "State whether the following statements are true or false."
+            ],
+            "intext_questions": [
+                "Why does a compass needle get deflected when brought near a bar magnet?",
+                "Draw magnetic field lines around a bar magnet."
+            ]
+        },
+        { 
+            "id": 13, 
+            "title": "Our Environment",
+            "ncert_exercises": [
+                "Which of the following groups contain only biodegradable items?",
+                "Which of the following constitute a food-chain?",
+                "Which of the following are environment-friendly practices?"
+            ],
+            "intext_questions": [
+                "Why are some substances biodegradable and some non-biodegradable?",
+                "What are trophic levels? Give an example of a food chain and state the different trophic levels in it."
+            ]
+        }
+      ]
+    }
+  ]
+}

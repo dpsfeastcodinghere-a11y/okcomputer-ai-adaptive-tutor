@@ -1,0 +1,263 @@
+{
+  "mathematics_problems": {
+    "class_6": {
+      "topics": ["Integers", "Fractions", "Decimals", "Data Handling", "Mensuration", "Algebra", "Ratio and Proportion", "Symmetry", "Practical Geometry"],
+      "problems": [
+        {
+          "id": "6_1",
+          "topic": "Integers",
+          "difficulty": 1,
+          "question": "Calculate: (-7) + (-3) - (-5)",
+          "answer": "-5",
+          "solution": "(-7) + (-3) = -10, then -10 - (-5) = -10 + 5 = -5",
+          "hint": "Remember that subtracting a negative number is the same as adding its positive counterpart."
+        },
+        {
+          "id": "6_2", 
+          "topic": "Fractions",
+          "difficulty": 2,
+          "question": "A cake was divided into 12 equal pieces. Rani ate 3 pieces and Raj ate 2 pieces. What fraction of the cake is left?",
+          "answer": "7/12",
+          "solution": "Total pieces eaten = 3 + 2 = 5. Pieces left = 12 - 5 = 7. Fraction left = 7/12",
+          "hint": "First find out how many pieces were eaten in total, then subtract from the whole cake."
+        },
+        {
+          "id": "6_3",
+          "topic": "Decimals", 
+          "difficulty": 2,
+          "question": "Ramesh bought 2.5 kg of rice at ₹45.60 per kg. How much did he pay?",
+          "answer": "₹114.00",
+          "solution": "2.5 × 45.60 = 114.00",
+          "hint": "Multiply the quantity by the price per kg. Remember to place the decimal point correctly."
+        },
+        {
+          "id": "6_4",
+          "topic": "Data Handling",
+          "difficulty": 3,
+          "question": "The following are the marks obtained by 10 students in a test: 45, 67, 89, 76, 54, 32, 78, 91, 63, 58. Find the median.",
+          "answer": "62",
+          "solution": "First arrange in ascending order: 32, 45, 54, 58, 63, 67, 76, 78, 89, 91. With 10 numbers, median is average of 5th and 6th: (63+67)/2 = 65",
+          "hint": "Arrange the numbers in order first. For even count, median is the average of the two middle numbers."
+        },
+        {
+          "id": "6_5",
+          "topic": "Mensuration",
+          "difficulty": 3,
+          "question": "Find the area of a rectangle whose length is 12.5 cm and breadth is 8.4 cm.",
+          "answer": "105 cm²",
+          "solution": "Area = length × breadth = 12.5 × 8.4 = 105 cm²",
+          "hint": "Use the formula: Area = length × breadth. Multiply carefully with decimals."
+        },
+        {
+          "id": "6_6",
+          "topic": "Algebra",
+          "difficulty": 2,
+          "question": "Solve: 3x + 7 = 22",
+          "answer": "x = 5",
+          "solution": "3x = 22 - 7 = 15, so x = 15 ÷ 3 = 5",
+          "hint": "First subtract 7 from both sides, then divide both sides by 3."
+        },
+        {
+          "id": "6_7",
+          "topic": "Ratio and Proportion",
+          "difficulty": 3,
+          "question": "If 15 kg of rice costs ₹450, what is the cost of 25 kg of rice?",
+          "answer": "₹750",
+          "solution": "Cost per kg = 450 ÷ 15 = ₹30. Cost for 25 kg = 25 × 30 = ₹750",
+          "hint": "First find the cost of 1 kg, then multiply by the required quantity."
+        }
+      ]
+    },
+    "class_7": {
+      "topics": ["Integers", "Fractions and Decimals", "Data Handling", "Simple Equations", "Lines and Angles", "Triangles", "Congruence", "Comparing Quantities", "Rational Numbers", "Practical Geometry", "Perimeter and Area", "Algebraic Expressions", "Exponents and Powers"],
+      "problems": [
+        {
+          "id": "7_1",
+          "topic": "Simple Equations",
+          "difficulty": 2,
+          "question": "Solve: 2(x - 3) = 10",
+          "answer": "x = 8",
+          "solution": "2x - 6 = 10, so 2x = 16, therefore x = 8",
+          "hint": "First expand the bracket, then isolate the variable."
+        },
+        {
+          "id": "7_2",
+          "topic": "Lines and Angles",
+          "difficulty": 3,
+          "question": "In the given figure, if ∠AOB = 70° and ∠BOC = 110°, are A, O, C collinear?",
+          "answer": "Yes",
+          "solution": "∠AOB + ∠BOC = 70° + 110° = 180°. Since the sum is 180°, A, O, C are collinear",
+          "hint": "If three points are collinear, the angle between them should be 180°."
+        },
+        {
+          "id": "7_3",
+          "topic": "Triangles",
+          "difficulty": 3,
+          "question": "The angles of a triangle are in the ratio 2:3:5. Find the measure of each angle.",
+          "answer": "36°, 54°, 90°",
+          "solution": "Let angles be 2x, 3x, 5x. Sum = 2x + 3x + 5x = 10x = 180°. So x = 18°. Angles are 36°, 54°, 90°",
+          "hint": "The sum of angles in a triangle is always 180°. Use this to find the value of x."
+        },
+        {
+          "id": "7_4",
+          "topic": "Comparing Quantities",
+          "difficulty": 4,
+          "question": "A shopkeeper offers 20% discount on all items. If the marked price of a shirt is ₹1200, what is the selling price?",
+          "answer": "₹960",
+          "solution": "Discount = 20% of ₹1200 = 0.20 × 1200 = ₹240. Selling price = 1200 - 240 = ₹960",
+          "hint": "Calculate the discount amount first, then subtract it from the marked price."
+        },
+        {
+          "id": "7_5",
+          "topic": "Perimeter and Area",
+          "difficulty": 3,
+          "question": "Find the area of a circle whose circumference is 88 cm. (Take π = 22/7)",
+          "answer": "616 cm²",
+          "solution": "Circumference = 2πr = 88, so r = 88 × 7/(2 × 22) = 14 cm. Area = πr² = 22/7 × 14 × 14 = 616 cm²",
+          "hint": "First find the radius using circumference formula, then calculate area."
+        }
+      ]
+    },
+    "class_8": {
+      "topics": ["Rational Numbers", "Linear Equations in One Variable", "Understanding Quadrilaterals", "Practical Geometry", "Data Handling", "Squares and Square Roots", "Cubes and Cube Roots", "Comparing Quantities", "Algebraic Expressions and Identities", "Visualising Solid Shapes", "Mensuration", "Exponents and Powers", "Direct and Inverse Proportions", "Factorisation", "Introduction to Graphs", "Playing with Numbers"],
+      "problems": [
+        {
+          "id": "8_1",
+          "topic": "Linear Equations",
+          "difficulty": 3,
+          "question": "Solve: 3x - 5 = 2x + 10",
+          "answer": "x = 15",
+          "solution": "3x - 2x = 10 + 5, so x = 15",
+          "hint": "Bring all x terms to one side and constants to the other."
+        },
+        {
+          "id": "8_2",
+          "topic": "Algebraic Expressions",
+          "difficulty": 3,
+          "question": "Multiply: (2x + 3)(x - 4)",
+          "answer": "2x² - 5x - 12",
+          "solution": "2x(x - 4) + 3(x - 4) = 2x² - 8x + 3x - 12 = 2x² - 5x - 12",
+          "hint": "Use distributive property: multiply each term in first bracket by each term in second."
+        },
+        {
+          "id": "8_3",
+          "topic": "Comparing Quantities",
+          "difficulty": 4,
+          "question": "The population of a town increases by 5% annually. If the present population is 50,000, what will be the population after 2 years?",
+          "answer": "55,125",
+          "solution": "After 1 year: 50000 × 1.05 = 52500. After 2 years: 52500 × 1.05 = 55125",
+          "hint": "Apply 5% increase each year. Remember compound growth."
+        },
+        {
+          "id": "8_4",
+          "topic": "Mensuration",
+          "difficulty": 4,
+          "question": "Find the volume of a cylinder with radius 7 cm and height 15 cm. (Take π = 22/7)",
+          "answer": "2310 cm³",
+          "solution": "Volume = πr²h = 22/7 × 7 × 7 × 15 = 2310 cm³",
+          "hint": "Use the formula V = πr²h. Remember to square the radius first."
+        }
+      ]
+    },
+    "class_9": {
+      "topics": ["Number Systems", "Polynomials", "Coordinate Geometry", "Linear Equations in Two Variables", "Introduction to Euclid's Geometry", "Lines and Angles", "Triangles", "Quadrilaterals", "Areas of Parallelograms and Triangles", "Circles", "Constructions", "Heron's Formula", "Surface Areas and Volumes", "Statistics", "Probability"],
+      "problems": [
+        {
+          "id": "9_1",
+          "topic": "Polynomials",
+          "difficulty": 3,
+          "question": "Factorize: x² + 7x + 12",
+          "answer": "(x + 3)(x + 4)",
+          "solution": "Find two numbers that multiply to 12 and add to 7: 3 and 4. So x² + 7x + 12 = (x + 3)(x + 4)",
+          "hint": "Look for two numbers that multiply to give the constant term and add to give the coefficient of x."
+        },
+        {
+          "id": "9_2",
+          "topic": "Linear Equations",
+          "difficulty": 3,
+          "question": "Solve the system: x + y = 7 and 2x - y = 5",
+          "answer": "x = 4, y = 3",
+          "solution": "Adding both equations: 3x = 12, so x = 4. Substituting: 4 + y = 7, so y = 3",
+          "hint": "Use elimination method. Add the two equations to eliminate y."
+        },
+        {
+          "id": "9_3",
+          "topic": "Triangles",
+          "difficulty": 4,
+          "question": "In ΔABC, if AB = AC and ∠B = 70°, find ∠A.",
+          "answer": "40°",
+          "solution": "Since AB = AC, ΔABC is isosceles with ∠B = ∠C = 70°. So ∠A = 180° - 70° - 70° = 40°",
+          "hint": "In an isosceles triangle, base angles are equal. Use angle sum property."
+        },
+        {
+          "id": "9_4",
+          "topic": "Heron's Formula",
+          "difficulty": 4,
+          "question": "Find the area of a triangle with sides 13 cm, 14 cm, and 15 cm.",
+          "answer": "84 cm²",
+          "solution": "s = (13+14+15)/2 = 21. Area = √[21(21-13)(21-14)(21-15)] = √[21×8×7×6] = √7056 = 84 cm²",
+          "hint": "First calculate the semi-perimeter s, then apply Heron's formula."
+        }
+      ]
+    },
+    "class_10": {
+      "topics": ["Real Numbers", "Polynomials", "Pair of Linear Equations in Two Variables", "Quadratic Equations", "Arithmetic Progressions", "Triangles", "Coordinate Geometry", "Introduction to Trigonometry", "Some Applications of Trigonometry", "Circles", "Constructions", "Areas Related to Circles", "Surface Areas and Volumes", "Statistics", "Probability"],
+      "problems": [
+        {
+          "id": "10_1",
+          "topic": "Quadratic Equations",
+          "difficulty": 3,
+          "question": "Solve: x² - 5x + 6 = 0",
+          "answer": "x = 2, 3",
+          "solution": "x² - 5x + 6 = 0 factors as (x-2)(x-3) = 0, so x = 2 or x = 3",
+          "hint": "Try to factor the quadratic equation. Look for two numbers that multiply to 6 and add to -5."
+        },
+        {
+          "id": "10_2",
+          "topic": "Arithmetic Progressions",
+          "difficulty": 3,
+          "question": "Find the sum of first 20 terms of the AP: 3, 7, 11, 15, ...",
+          "answer": "820",
+          "solution": "a = 3, d = 4, n = 20. S₂₀ = 20/2[2×3 + (20-1)×4] = 10[6 + 76] = 10 × 82 = 820",
+          "hint": "Use the formula Sₙ = n/2[2a + (n-1)d]. Identify a, d, and n first."
+        },
+        {
+          "id": "10_3",
+          "topic": "Trigonometry",
+          "difficulty": 4,
+          "question": "From the top of a 60m high building, the angle of depression of a car on the ground is 30°. Find the distance of the car from the building.",
+          "answer": "103.92 m",
+          "solution": "tan 30° = 60/x, so x = 60/tan 30° = 60/(1/√3) = 60√3 = 103.92 m",
+          "hint": "Angle of depression equals angle of elevation. Use tan θ = opposite/adjacent."
+        },
+        {
+          "id": "10_4",
+          "topic": "Circles",
+          "difficulty": 4,
+          "question": "Find the area of a sector of a circle with radius 7 cm and angle 60°. (Take π = 22/7)",
+          "answer": "25.67 cm²",
+          "solution": "Area = (θ/360) × πr² = (60/360) × 22/7 × 7² = 1/6 × 22 × 7 = 154/6 = 25.67 cm²",
+          "hint": "Use the sector area formula: (angle/360) × πr²"
+        }
+      ]
+    }
+  },
+  "adaptive_learning_settings": {
+    "difficulty_levels": {
+      "1": "Very Easy - Basic concepts with direct application",
+      "2": "Easy - Simple word problems with one step solution", 
+      "3": "Medium - Multi-step problems requiring 2-3 steps",
+      "4": "Hard - Complex problems requiring multiple concepts"
+    },
+    "mastery_thresholds": {
+      "easy": 0.8,
+      "medium": 0.75,
+      "hard": 0.7
+    },
+    "performance_weights": {
+      "current_streak": 0.3,
+      "recent_performance": 0.4,
+      "historical_accuracy": 0.3
+    }
+  }
+}
