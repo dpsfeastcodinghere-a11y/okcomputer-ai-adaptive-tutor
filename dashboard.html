@@ -600,9 +600,15 @@
             }
 
             loadStudentData() {
-                // Update welcome message
+                // Update welcome message with profile name
+                const profileType = localStorage.getItem('profileType') || 'weak';
+                const profileName = profileType === 'strong' ? 'Rahul' : 'Ram';
+
+                // Check if there's a saved student name, otherwise use profile name
                 if (this.studentData.name) {
                     document.getElementById('studentName').textContent = this.studentData.name;
+                } else {
+                    document.getElementById('studentName').textContent = profileName;
                 }
 
                 // Update stats from session data
