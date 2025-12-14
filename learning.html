@@ -245,12 +245,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
                 <!-- Rahul Profile -->
                 <button onclick="selectProfile('strong')"
+                    aria-label="Select Rahul profile - Advanced student with fast-paced learning" role="button"
+                    tabindex="0"
                     class="group relative bg-indigo-50 hover:bg-indigo-600 border-2 border-indigo-100 hover:border-indigo-600 rounded-2xl p-8 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl text-left">
-                    <div
-                        class="absolute top-4 right-4 text-3xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                    <div class="absolute top-4 right-4 text-3xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all"
+                        aria-hidden="true">
                         🚀</div>
-                    <div
-                        class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-md border-4 border-indigo-100 group-hover:border-white/20 transition-all">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-md border-4 border-indigo-100 group-hover:border-white/20 transition-all"
+                        aria-hidden="true">
                         👨‍🎓
                     </div>
                     <h3 class="text-2xl font-bold text-gray-800 group-hover:text-white mb-2">Rahul</h3>
@@ -268,12 +270,14 @@
 
                 <!-- Ram Profile -->
                 <button onclick="selectProfile('weak')"
+                    aria-label="Select Ram profile - Foundational student with guided learning" role="button"
+                    tabindex="0"
                     class="group relative bg-orange-50 hover:bg-orange-500 border-2 border-orange-100 hover:border-orange-500 rounded-2xl p-8 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl text-left">
-                    <div
-                        class="absolute top-4 right-4 text-3xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                    <div class="absolute top-4 right-4 text-3xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all"
+                        aria-hidden="true">
                         🌱</div>
-                    <div
-                        class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-md border-4 border-orange-100 group-hover:border-white/20 transition-all">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-md border-4 border-orange-100 group-hover:border-white/20 transition-all"
+                        aria-hidden="true">
                         🧑‍💻
                     </div>
                     <h3 class="text-2xl font-bold text-gray-800 group-hover:text-white mb-2">Ram</h3>
@@ -2585,7 +2589,246 @@
                 window.lastHighlightedElement = target;
             }
         };
+
+        // ============================================
+        // ACCESSIBILITY FEATURES FOR BLIND USERS
+        // ============================================
+
+        /**
+         * Announce messages to screen readers
+         * @param {string} message - The message to announce
+         * @param {string} priority - 'polite' or 'assertive'
+         */
+        function announceToScreenReader(message, priority = 'polite') {
+            const liveRegion = document.getElementById('aria-live-region');
+            if (liveRegion) {
+                // Clear first to ensure announcement is heard even if same message
+                liveRegion.textContent = '';
+                setTimeout(() => {
+                    liveRegion.textContent = message;
+                }, 100);
+            }
+        }
+
+        /**
+         * Enhanced keyboard navigation
+         */
+        document.addEventListener('keydown', function (e) {
+            // Alt + 1: Focus on Quiz Mode
+            if (e.altKey && e.key === '1') {
+                e.preventDefault();
+                document.getElementById('btn-mode-quiz')?.click();
+                announceToScreenReader('Switched to Quiz Mode');
+            }
+
+            // Alt + 2: Focus on Notes Mode
+            if (e.altKey && e.key === '2') {
+                e.preventDefault();
+                document.getElementById('btn-mode-notes')?.click();
+                announceToScreenReader('Switched to Concept Notes Mode');
+            }
+
+            // Alt + 3: Focus on Doubt Mode
+            if (e.altKey && e.key === '3') {
+                e.preventDefault();
+                document.getElementById('btn-mode-doubt')?.click();
+                announceToScreenReader('Switched to Ask EduAI Mode');
+            }
+
+            // Alt + P: Change Profile
+            if (e.altKey && e.key === 'p') {
+                e.preventDefault();
+                showProfileSwitcher();
+                announceToScreenReader('Profile switcher opened. Select Ram or Rahul');
+            }
+
+            // Alt + H: Show Help/Shortcuts
+            if (e.altKey && e.key === 'h') {
+                e.preventDefault();
+                showAccessibilityHelp();
+            }
+        });
+
+        /**
+         * Show accessibility keyboard shortcuts help
+         */
+        function showAccessibilityHelp() {
+            const helpMessage = `
+                Keyboard Shortcuts:
+                Alt + 1: Quiz Mode
+                Alt + 2: Concept Notes Mode
+                Alt + 3: Ask EduAI Mode
+                Alt + P: Change Profile
+                Alt + H: Show this help
+                Tab: Navigate between elements
+                Enter/Space: Activate buttons
+            `;
+
+            announceToScreenReader(helpMessage, 'assertive');
+
+            // Also show visual modal
+            const modal = document.createElement('div');
+            modal.id = 'accessibility-help-modal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 z-[200] flex items-center justify-center p-4';
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-labelledby', 'help-title');
+            modal.setAttribute('aria-modal', 'true');
+
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl max-w-2xl w-full p-8 shadow-2xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 id="help-title" class="text-2xl font-bold text-gray-800">♿ Accessibility Shortcuts</h2>
+                        <button onclick="document.getElementById('accessibility-help-modal').remove()" 
+                                class="text-gray-400 hover:text-gray-600 text-2xl"
+                                aria-label="Close help dialog">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-indigo-900 mb-2">Navigation</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Alt + 1</kbd> - Switch to Quiz Mode</li>
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Alt + 2</kbd> - Switch to Concept Notes</li>
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Alt + 3</kbd> - Switch to Ask EduAI</li>
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Alt + P</kbd> - Change Student Profile</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-green-900 mb-2">General Controls</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Tab</kbd> - Navigate between elements</li>
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Enter</kbd> / <kbd class="px-2 py-1 bg-white rounded border">Space</kbd> - Activate buttons</li>
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Esc</kbd> - Close modals</li>
+                                <li><kbd class="px-2 py-1 bg-white rounded border">Alt + H</kbd> - Show this help</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-orange-900 mb-2">Screen Reader Support</h3>
+                            <p class="text-sm text-gray-700">
+                                This application is optimized for screen readers. All interactive elements have proper ARIA labels, 
+                                and important updates are announced automatically. Use your screen reader's navigation commands 
+                                to explore headings, buttons, and form controls.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="document.getElementById('accessibility-help-modal').remove()" 
+                            class="mt-6 w-full bg-sage-green text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">
+                        Got it!
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Focus on close button
+            setTimeout(() => {
+                modal.querySelector('button').focus();
+            }, 100);
+
+            // Close on Escape
+            modal.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    modal.remove();
+                }
+            });
+        }
+
+        /**
+         * Add focus indicators for keyboard navigation
+         */
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Enhanced focus indicators for accessibility */
+            *:focus {
+                outline: 3px solid #2D5A3D !important;
+                outline-offset: 2px !important;
+            }
+            
+            button:focus, a:focus, input:focus, select:focus, textarea:focus {
+                box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.3) !important;
+            }
+            
+            /* Skip to main content link */
+            .skip-link {
+                position: absolute;
+                top: -40px;
+                left: 0;
+                background: #2D5A3D;
+                color: white;
+                padding: 8px 16px;
+                text-decoration: none;
+                border-radius: 0 0 4px 0;
+                z-index: 1000;
+                font-weight: bold;
+            }
+            
+            .skip-link:focus {
+                top: 0;
+            }
+        `;
+        document.head.appendChild(style);
+
+        /**
+         * Initialize accessibility features on page load
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add skip link
+            const skipLink = document.createElement('a');
+            skipLink.href = '#main-content';
+            skipLink.className = 'skip-link';
+            skipLink.textContent = 'Skip to main content';
+            skipLink.setAttribute('aria-label', 'Skip to main content');
+            document.body.insertBefore(skipLink, document.body.firstChild);
+
+            // Add main content landmark
+            const mainContent = document.querySelector('.max-w-7xl');
+            if (mainContent) {
+                mainContent.id = 'main-content';
+                mainContent.setAttribute('role', 'main');
+                mainContent.setAttribute('aria-label', 'Learning interface');
+            }
+
+            // Announce welcome message
+            setTimeout(() => {
+                announceToScreenReader('Welcome to GyanNova AI Adaptive Tutor. Press Alt + H for keyboard shortcuts.');
+            }, 1000);
+        });
+
+        // Enhance existing functions with screen reader announcements
+        const originalSwitchMode = window.switchMode;
+        window.switchMode = function (mode) {
+            originalSwitchMode(mode);
+            const modeNames = {
+                'quiz': 'Quiz Mode',
+                'notes': 'Concept Notes Mode',
+                'doubt': 'Ask EduAI Mode'
+            };
+            announceToScreenReader(`Switched to ${modeNames[mode] || mode}`);
+        };
+
+        // Announce question changes
+        const originalShowQuestion = window.showQuestion;
+        if (originalShowQuestion) {
+            window.showQuestion = function (question) {
+                originalShowQuestion(question);
+                announceToScreenReader(`New question loaded: ${question.question || 'Question displayed'}`);
+            };
+        }
     </script>
+
+    <!-- ARIA Live Region for Screen Reader Announcements -->
+    <div id="aria-live-region" class="sr-only" role="status" aria-live="polite" aria-atomic="true">
+    </div>
+
+    <!-- Assertive Live Region for Important Announcements -->
+    <div id="aria-live-assertive" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true">
+    </div>
+
 </body>
 
 </html>
