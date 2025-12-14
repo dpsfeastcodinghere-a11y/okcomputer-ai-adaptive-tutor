@@ -1,17 +1,7 @@
-/* QUICK FIX: Hide Profile Selection, Show Subject Selection Directly */
-
-/* Add this to the <style> section in learning.html */
-
-/* Hide the profile selection step (Ram/Rahul) */
 #onboardingStep1 {
     display: none !important;
 }
 
-/* Show the subject selection step directly */
 #onboardingStep2 {
     display: block !important;
 }
-
-/* Alternative: If you want to completely remove the modal */
-/* Uncomment the line below to skip onboarding entirely */
-/* #onboardingModal { display: none !important; } */
