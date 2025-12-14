@@ -1,4 +1,4 @@
-// EduAI - Adaptive Learning Platform JavaScript
+// GyanNova - Adaptive Learning Platform JavaScript
 // Main functionality for interactive learning experience
 
 class EduAIPlatform {
@@ -190,7 +190,7 @@ class EduAIPlatform {
     // Subject selection handler
     selectSubject(subject) {
         this.selectedSubject = subject;
-        this.showSubjectModal(subject);
+        this.startAssessment(); // Skip modal
     }
 
     // Show subject-specific modal
@@ -276,16 +276,11 @@ class EduAIPlatform {
         });
     }
 
-    // Start diagnostic assessment
+    // Start diagnostic assessment (Modified: Skips Modal)
     startAssessment() {
-        const name = document.getElementById('studentName').value;
-        const studentClass = document.getElementById('studentClass').value;
-        const weakestSubject = document.getElementById('weakestSubject').value;
-
-        if (!name || !studentClass || !weakestSubject) {
-            this.showNotification('Please fill in all fields', 'error');
-            return;
-        }
+        const name = "Student"; // Default name as user requested to skip prompt
+        const studentClass = "9"; // Default class
+        const weakestSubject = this.selectedSubject || "mathematics";
 
         // Create student profile
         this.currentStudent = {
@@ -297,18 +292,12 @@ class EduAIPlatform {
             startTime: new Date()
         };
 
-        // Save to localStorage
+        // Reset progress explicitly for every new start
+        localStorage.setItem('problemsSolved', '0');
         localStorage.setItem('currentStudent', JSON.stringify(this.currentStudent));
 
-        // Close modal and redirect to learning page
-        this.closeModal();
-
-        // Show loading animation
-        this.showLoadingScreen();
-
-        setTimeout(() => {
-            window.location.href = 'learning.html';
-        }, 1000);
+        // Redirect to learning page
+        window.location.href = 'learning.html';
     }
 
     // Show loading screen
@@ -373,10 +362,10 @@ class EduAIPlatform {
         });
     }
 
-    // Start diagnostic assessment
+    // Start diagnostic assessment (Modified: Direct Start)
     startDiagnostic() {
         this.selectedSubject = 'all';
-        this.showSubjectModal('all');
+        this.startAssessment(); // Skip modal, just go
     }
 
     // Initialize diagnostic test (placeholder for future implementation)
@@ -428,8 +417,8 @@ let platform;
 document.addEventListener('DOMContentLoaded', () => {
     platform = new EduAIPlatform();
 
-    // Auto-open diagnostic modal on load
-    platform.startDiagnostic();
+    // Auto-open diagnostic modal on load - DISABLED per request
+    // platform.startDiagnostic();
 
     // Add some additional interactive enhancements
     addScrollEffects();

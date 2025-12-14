@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning Session - EduAI</title>
+    <title>GyanNova - Learning Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
@@ -209,12 +209,396 @@
                 opacity: 0;
             }
         }
+
+        /* Screen Reader Only - Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
     </style>
 </head>
 
 <body>
     <!-- Session Setup Modal -->
-    <div id="sessionSetupModal"
+    <!-- Onboarding Modal (Multi-step) -->
+    <div id="onboardingModal"
+        class="fixed inset-0 bg-slate-900 bg-opacity-95 z-[100] flex items-center justify-center p-4 backdrop-blur-md transition-all duration-500">
+
+        <!-- Step 1: User Profile Selection -->
+        <div id="onboardingStep1"
+            class="bg-white rounded-3xl max-w-4xl w-full p-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+            </div>
+
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-black text-gray-800 mb-4 tracking-tight">Who is learning today?</h1>
+                <p class="text-lg text-gray-500">Select your profile to personalize the AI experience.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                <!-- Rahul Profile -->
+                <button onclick="selectProfile('strong')"
+                    class="group relative bg-indigo-50 hover:bg-indigo-600 border-2 border-indigo-100 hover:border-indigo-600 rounded-2xl p-8 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl text-left">
+                    <div
+                        class="absolute top-4 right-4 text-3xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                        🚀</div>
+                    <div
+                        class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-md border-4 border-indigo-100 group-hover:border-white/20 transition-all">
+                        👨‍🎓
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-white mb-2">Rahul</h3>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span
+                            class="px-3 py-1 bg-indigo-200 text-indigo-800 text-xs font-bold rounded-full group-hover:bg-white/20 group-hover:text-white">Advanced</span>
+                        <span
+                            class="px-3 py-1 bg-green-200 text-green-800 text-xs font-bold rounded-full group-hover:bg-white/20 group-hover:text-white">Fast
+                            Paced</span>
+                    </div>
+                    <p class="text-gray-600 group-hover:text-indigo-100 text-sm leading-relaxed">
+                        Ready for challenging problems and deep conceptual dives. The AI checks work strictly.
+                    </p>
+                </button>
+
+                <!-- Ram Profile -->
+                <button onclick="selectProfile('weak')"
+                    class="group relative bg-orange-50 hover:bg-orange-500 border-2 border-orange-100 hover:border-orange-500 rounded-2xl p-8 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl text-left">
+                    <div
+                        class="absolute top-4 right-4 text-3xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                        🌱</div>
+                    <div
+                        class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-md border-4 border-orange-100 group-hover:border-white/20 transition-all">
+                        🧑‍💻
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-white mb-2">Ram</h3>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span
+                            class="px-3 py-1 bg-orange-200 text-orange-800 text-xs font-bold rounded-full group-hover:bg-white/20 group-hover:text-white">Foundational</span>
+                        <span
+                            class="px-3 py-1 bg-blue-200 text-blue-800 text-xs font-bold rounded-full group-hover:bg-white/20 group-hover:text-white">Guided</span>
+                    </div>
+                    <p class="text-gray-600 group-hover:text-orange-100 text-sm leading-relaxed">
+                        Needs step-by-step guidance and simpler explanations. The AI is encouraging and patient.
+                    </p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Subject Selection (Hidden initially) -->
+        <div id="onboardingStep2" class="hidden bg-white rounded-3xl max-w-2xl w-full p-10 shadow-2xl relative">
+            <button onclick="backToStep1()"
+                class="absolute top-6 left-6 text-gray-400 hover:text-gray-800 transition-colors flex items-center gap-2 font-medium">
+                ← Back
+            </button>
+
+            <div class="text-center mb-10 mt-4">
+                <div
+                    class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg rotate-3">
+                    <span class="text-3xl text-white">📚</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">What are we mastering?</h2>
+                <p class="text-gray-500 mt-2">Select a topic to generate your first AI challenge.</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Class Selection -->
+                <div class="relative group">
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide ml-1">Class</label>
+                    <select id="classSelectorOnboarding" onchange="onClassChange()"
+                        class="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 outline-none appearance-none font-bold text-lg text-gray-700 transition-all cursor-pointer hover:bg-white">
+                        <option value="">Choose a class...</option>
+                        <!-- Options injected via JS -->
+                    </select>
+                    <div
+                        class="absolute inset-y-0 right-0 flex items-center px-6 pointer-events-none text-gray-400 group-hover:text-purple-600 transition-colors pt-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Subject Selection -->
+                <div id="subjectContainer" class="relative group opacity-50 pointer-events-none transition-all">
+                    <label
+                        class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide ml-1">Subject</label>
+                    <select id="subjectSelectorOnboarding" onchange="onSubjectChange()"
+                        class="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none appearance-none font-bold text-lg text-gray-700 transition-all cursor-pointer hover:bg-white">
+                        <option value="">Choose a subject...</option>
+                        <!-- Options injected via JS -->
+                    </select>
+                    <div
+                        class="absolute inset-y-0 right-0 flex items-center px-6 pointer-events-none text-gray-400 group-hover:text-blue-600 transition-colors pt-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Topic Selection -->
+                <div id="topicContainer" class="relative group opacity-50 pointer-events-none transition-all">
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide ml-1">Topic</label>
+                    <select id="topicSelectorOnboarding" onchange="checkTopicReady()" disabled
+                        class="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 outline-none appearance-none font-bold text-lg text-gray-700 transition-all cursor-pointer hover:bg-white">
+                        <option value="">Select a subject first...</option>
+                        <!-- Options injected via JS -->
+                    </select>
+                    <div
+                        class="absolute inset-y-0 right-0 flex items-center px-6 pointer-events-none text-gray-400 group-hover:text-green-600 transition-colors pt-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="text-xs text-gray-400 text-center">
+                    The AI will generate a unique question based on this topic.
+                </div>
+
+                <button id="startSessionBtn" disabled onclick="completeOnboarding()"
+                    class="w-full py-4 bg-gray-200 text-gray-400 font-bold rounded-xl text-lg transition-all transform scale-100 flex items-center justify-center gap-3">
+                    <span>Ask AI for Question</span>
+                    <span class="text-xl">✨</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for Onboarding -->
+    <script>
+        // Onboarding Logic
+        window.selectedProfile = null;
+
+        function selectProfile(profile) {
+            window.selectedProfile = profile;
+
+            // Safety check: Ensure session is initialized
+            if (window.learningSession) {
+                window.learningSession.switchStudentProfile(profile);
+            } else {
+                console.warn("LearningSession not yet ready, queuing profile selection.");
+                // Retrying slightly later or setting it when init happens
+                setTimeout(() => { if (window.learningSession) window.learningSession.switchStudentProfile(profile); }, 500);
+            }
+
+            // Trigger populating classes (which triggers subjects eventually)
+            if (window.populateOnboardingClasses) window.populateOnboardingClasses();
+
+            // Update the navbar profile badge
+            updateProfileBadge(profile);
+
+            // Animate transition
+            document.getElementById('onboardingStep1').classList.add('hidden');
+            document.getElementById('onboardingStep2').classList.remove('hidden');
+            document.getElementById('onboardingStep2').classList.add('animate-slide-up');
+        }
+
+        // Update Profile Badge in Navbar
+        function updateProfileBadge(profile) {
+            const badge = document.getElementById('studentProfileBadge');
+            const avatar = document.getElementById('studentAvatar');
+            const nameDisplay = document.getElementById('studentNameDisplay');
+
+            if (profile === 'strong') {
+                // Rahul - Strong Student
+                badge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-full border-2 border-indigo-300 bg-indigo-50 transition-all duration-300 shadow-sm hover:shadow-md';
+                avatar.className = 'w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-lg';
+                avatar.textContent = '🎓';
+                nameDisplay.textContent = 'Rahul';
+                nameDisplay.className = 'text-sm font-bold text-indigo-700';
+            } else if (profile === 'weak') {
+                // Ram - Foundational Student
+                badge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-full border-2 border-orange-300 bg-orange-50 transition-all duration-300 shadow-sm hover:shadow-md';
+                avatar.className = 'w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-lg';
+                avatar.textContent = '🌱';
+                nameDisplay.textContent = 'Ram';
+                nameDisplay.className = 'text-sm font-bold text-orange-700';
+            } else {
+                // Default/No selection
+                badge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-full border-2 border-gray-300 bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md';
+                avatar.className = 'w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg';
+                avatar.textContent = '👤';
+                nameDisplay.textContent = 'Select Profile';
+                nameDisplay.className = 'text-sm font-bold text-gray-600';
+            }
+        }
+
+        // Show Profile Switcher (reopen onboarding modal)
+        function showProfileSwitcher() {
+            document.getElementById('onboardingModal').classList.remove('hidden');
+            document.getElementById('onboardingStep1').classList.remove('hidden');
+            document.getElementById('onboardingStep2').classList.add('hidden');
+        }
+
+        function backToStep1() {
+            document.getElementById('onboardingStep2').classList.add('hidden');
+            document.getElementById('onboardingStep1').classList.remove('hidden');
+        }
+
+        function checkTopicReady() {
+            const selector = document.getElementById('topicSelectorOnboarding');
+            const btn = document.getElementById('startSessionBtn');
+            if (selector.value) {
+                btn.disabled = false;
+                btn.classList.remove('bg-gray-200', 'text-gray-400');
+                btn.classList.add('bg-sage-green', 'text-white', 'shadow-lg', 'hover:scale-105');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('bg-gray-200', 'text-gray-400');
+                btn.classList.remove('bg-sage-green', 'text-white', 'shadow-lg', 'hover:scale-105');
+            }
+        }
+
+        function completeOnboarding() {
+            const topic = document.getElementById('topicSelectorOnboarding').value;
+            if (!topic) return;
+
+            // Get student name from profile
+            const studentName = window.selectedProfile === 'strong' ? 'Rahul' : 'Ram';
+
+            // Set topic in main session
+            document.getElementById('topicBadge').textContent = topic;
+
+            // Show welcome message with student name
+            const welcomeDiv = document.getElementById('assessmentWelcome');
+            const welcomeNameSpan = document.getElementById('welcomeStudentName');
+            welcomeNameSpan.textContent = studentName;
+            welcomeDiv.classList.remove('hidden');
+
+            // Hide profile badge during assessment
+            document.getElementById('studentProfileBadge').style.display = 'none';
+
+            // Announce to screen reader
+            announceToScreenReader(`Welcome ${studentName}! Starting your assessment on ${topic}. Good luck!`);
+
+            // Auto-hide welcome message after 4 seconds
+            setTimeout(() => {
+                welcomeDiv.classList.add('hidden');
+            }, 4000);
+
+            // Close modal
+            document.getElementById('onboardingModal').classList.add('hidden');
+
+            // Trigger AI Generation immediately
+            setTimeout(() => {
+                switchMode('quiz');
+                window.generateAIQuestion();
+            }, 300);
+        }
+
+        // Populate Classes on Load or Profile Select
+        function populateOnboardingClasses() {
+            const selector = document.getElementById('classSelectorOnboarding');
+            if (!selector || selector.options.length > 1) return;
+
+            selector.innerHTML = '<option value="">Choose a class...</option>';
+            // Hardcoded classes for now as per DB structure (class_9, class_10 usually)
+            const classes = ['9', '10', '11', '12'];
+
+            classes.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = `Class ${c}`;
+                selector.appendChild(opt);
+            });
+        }
+
+        function onClassChange() {
+            const cls = document.getElementById('classSelectorOnboarding').value;
+            const subjectContainer = document.getElementById('subjectContainer');
+            const subjectSelector = document.getElementById('subjectSelectorOnboarding');
+            const topicContainer = document.getElementById('topicContainer');
+            const topicSelector = document.getElementById('topicSelectorOnboarding');
+
+            // Reset downstream
+            topicContainer.classList.add('opacity-50', 'pointer-events-none');
+            topicSelector.disabled = true;
+            topicSelector.innerHTML = '<option value="">Select a subject first...</option>';
+
+            if (!cls) {
+                subjectContainer.classList.add('opacity-50', 'pointer-events-none');
+                subjectSelector.disabled = true;
+                subjectSelector.innerHTML = '<option value="">Select a class first...</option>';
+                return;
+            }
+
+            // Enable Subject Selector
+            subjectContainer.classList.remove('opacity-50', 'pointer-events-none');
+            subjectSelector.disabled = false;
+            populateOnboardingSubjects();
+        }
+
+        // Populate Subjects
+        function populateOnboardingSubjects() {
+            const selector = document.getElementById('subjectSelectorOnboarding');
+            selector.innerHTML = '<option value="">Choose a subject...</option>';
+
+            const subjects = window.CONTENT_DATABASE ? Object.keys(window.CONTENT_DATABASE) : ['mathematics', 'science', 'english', 'history'];
+
+            subjects.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s.charAt(0).toUpperCase() + s.slice(1).replace('_', ' ');
+                selector.appendChild(opt);
+            });
+        }
+
+        function onSubjectChange() {
+            const subject = document.getElementById('subjectSelectorOnboarding').value;
+            // Get Class from the selector, not the student session yet (as we might update it)
+            const studentClass = document.getElementById('classSelectorOnboarding').value || '9';
+
+            const topicContainer = document.getElementById('topicContainer');
+            const topicSelector = document.getElementById('topicSelectorOnboarding');
+
+            if (!subject) {
+                topicContainer.classList.add('opacity-50', 'pointer-events-none');
+                topicSelector.disabled = true;
+                topicSelector.innerHTML = '<option value="">Select a subject first...</option>';
+                return;
+            }
+
+            // Enable Topic Selector
+            topicContainer.classList.remove('opacity-50', 'pointer-events-none');
+            topicSelector.disabled = false;
+            topicSelector.innerHTML = '<option value="">Loading topics...</option>';
+
+            // Fetch topics for the selected subject & class
+            let topics = [];
+            const classKey = `class_${studentClass}`;
+
+            if (window.CONTENT_DATABASE && window.CONTENT_DATABASE[subject] && window.CONTENT_DATABASE[subject][classKey]) {
+                topics = window.CONTENT_DATABASE[subject][classKey].topics || [];
+            } else {
+                // Fallback mock topics
+                topics = ['General Concepts', 'Advanced Theory', 'Practical Applications'];
+            }
+
+            populateOnboardingTopics(topics);
+        }
+
+        function populateOnboardingTopics(topics) {
+            const selector = document.getElementById('topicSelectorOnboarding');
+            selector.innerHTML = '<option value="">Choose a topic...</option>';
+            topics.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                selector.appendChild(opt);
+            });
+        }
+    </script>
+
+    <!-- OLD_SETUP_START -->
+    <div id="sessionSetupModal-OLD-REMOVED" style="display:none;"
         class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl transform transition-all scale-100">
             <div class="text-center mb-8">
@@ -290,14 +674,35 @@
     <!-- Navigation -->
     <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center py-3">
+                <!-- Logo Section -->
                 <div class="flex items-center space-x-2">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-br from-sage-green to-terracotta rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">E</span>
-                    </div>
-                    <span class="text-2xl font-bold" style="color: var(--sage-green);">EduAI</span>
+                    <img src="resources/logo.png" alt="GyanNova Logo" class="w-10 h-10">
+                    <span class="text-xl font-bold" style="color: var(--sage-green);">GyanNova</span>
                 </div>
+
+                <!-- Center: Student Profile Badge -->
+                <div id="studentProfileBadge"
+                    class="flex items-center gap-3 px-5 py-2.5 rounded-full border-2 transition-all duration-300 shadow-sm hover:shadow-md">
+                    <div class="flex items-center gap-2">
+                        <div id="studentAvatar" class="w-8 h-8 rounded-full flex items-center justify-center text-lg">
+                            👤
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs text-gray-500 font-medium">Learning as</span>
+                            <span id="studentNameDisplay" class="text-sm font-bold">Select Profile</span>
+                        </div>
+                    </div>
+                    <button onclick="showProfileSwitcher()" class="text-gray-400 hover:text-gray-600 transition-colors"
+                        title="Change Profile">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7h12M8 12h12m-12 5h12M4 7h.01M4 12h.01M4 17h.01"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Right: Timers and Actions -->
                 <div class="flex items-center space-x-4">
                     <div class="timer bg-blue-100 text-blue-800 border border-blue-200" id="currentQuestionTimer">Curr:
                         0s</div>
@@ -318,7 +723,8 @@
                     <button onclick="endSession()" class="text-gray-600 hover:text-red-600 p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
                         </svg>
                     </button>
                 </div>
@@ -346,7 +752,7 @@
 
         <div class="grid lg:grid-cols-4 gap-8">
             <!-- Progress Sidebar -->
-            <div class="lg:col-span-1" id="sidebarContainer">
+            <div class="lg:col-span-1 lg:order-last" id="sidebarContainer">
                 <div class="bg-white rounded-2xl p-6 shadow-lg sticky top-24">
                     <h3 class="text-lg font-bold mb-6 text-gray-800">Your Progress</h3>
 
@@ -366,205 +772,312 @@
                         </div>
                     </div>
 
+                    <!-- Student Simulation Switcher (Collapsible) -->
+                    <details class="mb-6 group">
+                        <summary
+                            class="list-none flex justify-between items-center cursor-pointer p-4 bg-indigo-50 rounded-xl border border-indigo-100 hover:bg-indigo-100 transition-colors">
+                            <h3 class="font-bold text-gray-700 text-sm flex items-center gap-2">
+                                <span>👥</span> Simulate Profile
+                            </h3>
+                            <span class="transform group-open:rotate-180 transition-transform text-indigo-400">▼</span>
+                        </summary>
+                        <div class="p-4 bg-white border border-t-0 border-indigo-100 rounded-b-xl -mt-2 pt-6">
+                            <p class="text-xs text-gray-500 mb-3">Test how the AI adapts to different student levels:
+                            </p>
+                            <div class="flex space-x-2">
+                                <button
+                                    onclick="window.learningSession.switchStudentProfile('strong'); updateProfileBadge('strong');"
+                                    id="btn-strong"
+                                    class="flex-1 py-2 text-[10px] font-bold rounded-lg border transition-colors bg-white text-gray-600 border-gray-300 hover:bg-gray-100 shadow-sm">
+                                    Rahul (Strong)
+                                </button>
+                                <button
+                                    onclick="window.learningSession.switchStudentProfile('weak'); updateProfileBadge('weak');"
+                                    id="btn-weak"
+                                    class="flex-1 py-2 text-[10px] font-bold rounded-lg border transition-colors bg-white text-gray-600 border-gray-300 hover:bg-gray-100 shadow-sm">
+                                    Ram (Weak)
+                                </button>
+                            </div>
+                        </div>
+                    </details>
+
                     <!-- Stats -->
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Problems Solved</span>
-                            <span id="problemsSolved" class="font-bold">0</span>
+                        <div
+                            class="flex items-center justify-between bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">⚡</span>
+                                <span class="font-bold text-yellow-800">XP Earned</span>
+                            </div>
+                            <span id="xpPoints" class="text-xl font-black text-yellow-600">0</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Accuracy</span>
-                            <span id="accuracyPercent" class="font-bold">0%</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Current Streak</span>
-                            <div class="streak-counter">
-                                <span>🔥</span>
-                                <span id="streakCount">0</span>
+
+                        <h3 class="font-bold text-gray-700">Your Progress</h3>
+
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Problem Set Progress</span>
+                                <span id="progressText">0/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div id="progressFill" class="bg-sage-green h-2.5 rounded-full" style="width: 0%"></div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Topic Mastery -->
-                    <div class="mt-8">
-                        <h4 class="text-md font-semibold mb-4 text-gray-800">Topic Mastery</h4>
-                        <div class="space-y-3" id="topicMastery">
-                            <!-- Dynamic content will be inserted here -->
-                        </div>
                     </div>
+                </div>
 
-                    <!-- Quick Actions -->
-                    <div class="mt-8 space-y-3">
-                        <button onclick="showHint()" class="w-full btn-secondary py-2 px-4 rounded-lg font-medium">
-                            💡 Get Hint
-                        </button>
-                        <button onclick="showNotes()"
-                            class="w-full bg-indigo-50 text-indigo-700 py-2 px-4 rounded-lg font-medium hover:bg-indigo-100 transition-colors">
-                            📖 Concept Note
-                        </button>
-                        <button onclick="skipProblem()"
-                            class="w-full border-2 border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">
-                            ⏭️ Skip Problem
-                        </button>
+                <!-- NEW: Adaptive Mastery Dashboard (Inspired by Cognito) -->
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-6">
+                    <h3 class="font-bold text-gray-700 mb-3 flex items-center">
+                        <span>🧠 Mastery Level</span>
+                        <span class="text-xs ml-2 bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Adaptive</span>
+                    </h3>
+                    <div id="mastery-container" class="space-y-3">
+                        <!-- Dynamic mastery bars will be injected here -->
+                        <p class="text-xs text-center text-gray-500 italic">Complete questions to unlock mastery
+                            data.</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Problems Solved</span>
+                    <span id="problemsSolved" class="font-bold">0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Accuracy</span>
+                    <span id="accuracyPercent" class="font-bold">0%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Current Streak</span>
+                    <div class="streak-counter">
+                        <span>🔥</span>
+                        <span id="streakCount">0</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Content Area -->
-            <div class="lg:col-span-3 transition-all" id="mainContentArea">
-
-                <!-- QUIZ MODE CONTAINER -->
-                <div id="quizContainer" class="mode-container">
-                    <!-- Problem Card -->
-                    <div class="problem-card rounded-2xl p-8 mb-6 bg-white shadow-xl relative overflow-hidden">
-
-                        <!-- Problem Header -->
-                        <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="topic-badge" id="topicBadge">General</div>
-                                <div class="difficulty-indicator" id="difficultyIndicator">
-                                    <div class="difficulty-dot active"></div>
-                                    <div class="difficulty-dot"></div>
-                                    <div class="difficulty-dot"></div>
-                                </div>
-                            </div>
-                            <div class="text-sm text-gray-500 font-mono">
-                                Q <span id="problemNumber">1</span> / 5
-                            </div>
-                        </div>
-
-                        <!-- Problem Question -->
-                        <div class="mb-8">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-4 leading-relaxed" id="problemQuestion">
-                                Loading question...
-                            </h2>
-                            <div id="problemImage" class="mb-6 hidden">
-                                <img src="" alt="Problem diagram" class="max-w-full h-auto rounded-lg shadow-sm">
-                            </div>
-                        </div>
-
-                        <!-- Answer Input -->
-                        <div class="mb-6">
-                            <input type="text" id="answerInput"
-                                class="answer-input w-full px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg"
-                                placeholder="Type your answer here..." autocomplete="off">
-
-                            <textarea id="essayInput"
-                                class="answer-input w-full px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg hidden"
-                                rows="6" placeholder="Write your detailed answer here..."></textarea>
-
-                            <div id="essayFeedback"
-                                class="hidden mt-3 p-4 rounded-lg bg-gray-50 border border-gray-200 text-sm"></div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col gap-3">
-                            <div class="flex gap-4">
-                                <button onclick="checkAnswer()"
-                                    class="btn-primary px-8 py-3 rounded-xl font-bold flex-1 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-                                    Check Answer
-                                </button>
-                                <button onclick="showSolution()"
-                                    class="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 hover:border-gray-300 transition-colors">
-                                    Solution
-                                </button>
-                            </div>
-                            <button onclick="window.generateAIQuestion()"
-                                class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 mt-2 hover:-translate-y-1">
-                                <span>✨</span> Generate New Question with Edu AI
-                            </button>
-                        </div>
-
-                        <!-- Feedback Message -->
-                        <div id="feedbackMessage" class="feedback-message hidden mt-4"></div>
-                    </div>
-
-                    <!-- Hint Panel -->
-                    <div id="hintPanel" class="hint-panel rounded-2xl p-6 mb-6 hidden shadow-md">
-                        <div class="flex items-start space-x-3">
-                            <div
-                                class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
-                                💡</div>
-                            <div>
-                                <h4 class="font-bold text-yellow-800 mb-2">Hint</h4>
-                                <p id="hintText" class="text-yellow-900 leading-relaxed"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Solution Panel -->
-                    <div id="solutionPanel" class="solution-panel rounded-2xl p-6 mb-6 hidden shadow-md">
-                        <div class="flex items-start space-x-3">
-                            <div
-                                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
-                                ✓</div>
-                            <div>
-                                <h4 class="font-bold text-green-800 mb-2">Solution</h4>
-                                <div id="solutionSteps" class="space-y-2 text-green-900 leading-relaxed"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Next Problem Button -->
-                    <div class="text-center pb-12">
-                        <button onclick="nextProblem()" id="nextButton"
-                            class="btn-primary px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all hidden">
-                            Next Problem →
-                        </button>
-                    </div>
+            <!-- Topic Mastery -->
+            <div class="mt-8">
+                <h4 class="text-md font-semibold mb-4 text-gray-800">Topic Mastery</h4>
+                <div class="space-y-3" id="topicMastery">
+                    <!-- Dynamic content will be inserted here -->
                 </div>
+            </div>
 
-                <!-- NOTES MODE CONTAINER -->
-                <div id="notesContainer" class="mode-container hidden">
-                    <div class="bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-8 shadow-lg min-h-[500px]">
-                        <div class="flex items-center gap-4 mb-8 border-b border-indigo-200 pb-4">
-                            <span class="text-4xl bg-white p-3 rounded-full shadow-sm">📖</span>
-                            <div>
-                                <h2 class="text-2xl font-bold text-indigo-900">Topic Notes</h2>
-                                <p class="text-indigo-600">Summary & Key Concepts</p>
-                            </div>
-                        </div>
-                        <div class="prose prose-indigo max-w-none">
-                            <p id="noteText" class="text-lg text-indigo-900 leading-8 whitespace-pre-line">
-                                Select a topic to view its notes.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DOUBT MODE CONTAINER -->
-                <div id="doubtContainer" class="mode-container hidden">
-                    <div
-                        class="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-100 rounded-2xl p-8 shadow-lg min-h-[500px]">
-                        <div class="flex items-center gap-4 mb-8">
-                            <span class="text-4xl bg-white p-3 rounded-full shadow-sm">🤖</span>
-                            <div>
-                                <h2 class="text-2xl font-bold text-orange-900">Edu AI Tutor</h2>
-                                <p class="text-orange-700">Ask any doubt and get instant help</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-100 mb-6">
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Your Question</label>
-                            <div class="flex gap-2">
-                                <input type="text" id="doubtInput"
-                                    class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
-                                    placeholder="e.g. Why is the sky blue?">
-                                <button onclick="window.solveDoubt()"
-                                    class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-md">
-                                    Ask
-                                </button>
-                            </div>
-                        </div>
-
-                        <div id="doubtAnswer"
-                            class="hidden p-6 bg-white rounded-xl border border-orange-200 text-gray-800 text-lg leading-relaxed shadow-sm">
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Quick Actions -->
+            <div class="mt-8 space-y-3">
+                <button onclick="showHint()" class="w-full btn-secondary py-2 px-4 rounded-lg font-medium">
+                    💡 Get Hint
+                </button>
+                <button onclick="showNotes()"
+                    class="w-full bg-indigo-50 text-indigo-700 py-2 px-4 rounded-lg font-medium hover:bg-indigo-100 transition-colors">
+                    📖 Concept Note
+                </button>
+                <button onclick="skipProblem()"
+                    class="w-full border-2 border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+                    ⏭️ Skip Problem
+                </button>
             </div>
         </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="lg:col-span-3 transition-all" id="mainContentArea">
+
+        <!-- QUIZ MODE CONTAINER -->
+        <div id="quizContainer" class="mode-container">
+            <!-- Welcome Message (shown at start of assessment) -->
+            <div id="assessmentWelcome"
+                class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 mb-6 text-white shadow-xl hidden"
+                role="alert" aria-live="polite">
+                <div class="flex items-center gap-4">
+                    <div class="text-5xl">👋</div>
+                    <div>
+                        <h2 class="text-2xl font-bold mb-1">Welcome, <span id="welcomeStudentName">Student</span>!</h2>
+                        <p class="text-indigo-100">Ready to start your learning journey? Let's begin!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen Reader Announcements -->
+            <div id="srAnnouncements" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+            <!-- Problem Card -->
+            <div class="problem-card rounded-2xl p-8 mb-6 bg-white shadow-xl relative overflow-hidden">
+
+                <!-- Problem Header -->
+                <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="topic-badge" id="topicBadge">General</div>
+                        <div class="difficulty-indicator" id="difficultyIndicator" role="img"
+                            aria-label="Difficulty level">
+                            <div class="difficulty-dot active"></div>
+                            <div class="difficulty-dot"></div>
+                            <div class="difficulty-dot"></div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-500 font-mono" aria-label="Question progress">
+                        Q <span id="problemNumber">1</span> / 5
+                    </div>
+                </div>
+
+                <!-- Problem Question -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 leading-relaxed" id="problemQuestion">
+                        Loading question...
+                    </h2>
+                    <div id="problemImage" class="mb-6 hidden">
+                        <img src="" alt="Problem diagram" class="max-w-full h-auto rounded-lg shadow-sm">
+                    </div>
+                </div>
+
+                <!-- Answer Input -->
+                <div class="mb-6">
+                    <label for="answerInput" class="block text-sm font-semibold text-gray-700 mb-2">Your Answer</label>
+                    <div class="flex gap-3 items-start" id="answerContainer">
+                        <input type="text" id="answerInput"
+                            class="answer-input flex-1 px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg"
+                            placeholder="Type your answer here..." autocomplete="off" aria-label="Answer input field"
+                            aria-describedby="answerHelp">
+
+                        <!-- Voice Input Button -->
+                        <button id="voiceBtn"
+                            class="px-4 py-4 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold transition-all shadow-sm hover:shadow-md flex items-center gap-2"
+                            aria-label="Activate voice input" title="Click to speak your answer">
+                            <span class="text-2xl">🎤</span>
+                            <span class="text-sm hidden sm:inline">Voice</span>
+                        </button>
+
+                        <!-- Screen Reader Toggle -->
+                        <button id="screenReaderBtn"
+                            class="px-4 py-4 rounded-xl bg-green-100 hover:bg-green-200 text-green-700 font-semibold transition-all shadow-sm hover:shadow-md flex items-center gap-2"
+                            aria-label="Toggle screen reader" title="Enable/Disable screen reader">
+                            <span class="text-2xl">🔊</span>
+                            <span class="text-sm hidden sm:inline">Read</span>
+                        </button>
+                    </div>
+                    <div id="answerHelp" class="text-xs text-gray-500 mt-2">
+                        💡 You can type your answer or use the microphone button to speak. Screen reader available for
+                        accessibility.
+                    </div>
+
+                    <textarea id="essayInput"
+                        class="answer-input w-full px-6 py-4 rounded-xl bg-gray-50 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 transition-all text-lg hidden"
+                        rows="6" placeholder="Write your detailed answer here..."
+                        aria-label="Essay answer input"></textarea>
+
+                    <div id="essayFeedback"
+                        class="hidden mt-3 p-4 rounded-lg bg-gray-50 border border-gray-200 text-sm"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex gap-4">
+                        <button onclick="checkAnswer()"
+                            class="btn-primary px-8 py-3 rounded-xl font-bold flex-1 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                            Check Answer
+                        </button>
+                        <button onclick="showSolution()"
+                            class="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 hover:border-gray-300 transition-colors">
+                            Solution
+                        </button>
+                    </div>
+                    <button onclick="window.generateAIQuestion()"
+                        class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 mt-2 hover:-translate-y-1">
+                        <span>✨</span> Generate New Question with Edu AI
+                    </button>
+                </div>
+
+                <!-- Feedback Message -->
+                <div id="feedbackMessage" class="feedback-message hidden mt-4" aria-live="polite"></div>
+            </div>
+
+            <!-- Hint Panel -->
+            <div id="hintPanel" class="hint-panel rounded-2xl p-6 mb-6 hidden shadow-md">
+                <div class="flex items-start space-x-3">
+                    <div
+                        class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                        💡</div>
+                    <div>
+                        <h4 class="font-bold text-yellow-800 mb-2">Hint</h4>
+                        <p id="hintText" class="text-yellow-900 leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution Panel -->
+            <div id="solutionPanel" class="solution-panel rounded-2xl p-6 mb-6 hidden shadow-md">
+                <div class="flex items-start space-x-3">
+                    <div
+                        class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
+                        ✓</div>
+                    <div>
+                        <h4 class="font-bold text-green-800 mb-2">Solution</h4>
+                        <div id="solutionSteps" class="space-y-2 text-green-900 leading-relaxed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Problem Button -->
+            <div class="text-center pb-12">
+                <button onclick="nextProblem()" id="nextButton"
+                    class="btn-primary px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all hidden">
+                    Next Problem →
+                </button>
+            </div>
+        </div>
+
+        <!-- NOTES MODE CONTAINER -->
+        <div id="notesContainer" class="mode-container hidden">
+            <div class="bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-8 shadow-lg min-h-[500px]">
+                <div class="flex items-center gap-4 mb-8 border-b border-indigo-200 pb-4">
+                    <span class="text-4xl bg-white p-3 rounded-full shadow-sm">📖</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-indigo-900">Topic Notes</h2>
+                        <p class="text-indigo-600">Summary & Key Concepts</p>
+                    </div>
+                </div>
+                <div class="prose prose-indigo max-w-none">
+                    <p id="noteText" class="text-lg text-indigo-900 leading-8 whitespace-pre-line">
+                        Select a topic to view its notes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOUBT MODE CONTAINER -->
+        <div id="doubtContainer" class="mode-container hidden">
+            <div
+                class="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-100 rounded-2xl p-8 shadow-lg min-h-[500px]">
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="text-4xl bg-white p-3 rounded-full shadow-sm">🤖</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-orange-900">Edu AI Tutor</h2>
+                        <p class="text-orange-700">Ask any doubt and get instant help</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-100 mb-6">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Your Question</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="doubtInput"
+                            class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all"
+                            placeholder="e.g. Why is the sky blue?">
+                        <button onclick="window.solveDoubt()"
+                            class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-md">
+                            Ask
+                        </button>
+                    </div>
+                </div>
+
+                <div id="doubtAnswer"
+                    class="hidden p-6 bg-white rounded-xl border border-orange-200 text-gray-800 text-lg leading-relaxed shadow-sm">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
     </div>
 
 
@@ -604,478 +1117,143 @@
         </div>
     </div>
 
+    <!-- External Content Database -->
+    <script src="content_data.js"></script>
+
     <script>
         // Database of problems
-        // Database of problems for all subjects
-        window.CONTENT_DATABASE = {
-            "mathematics": {
-                "class_6": {
-                    "topics": [
-                        "Knowing Our Numbers", "Whole Numbers", "Playing With Numbers", "Basic Geometrical Ideas",
-                        "Understanding Elementary Shapes", "Integers", "Fractions", "Decimals", "Data Handling",
-                        "Mensuration", "Algebra", "Ratio & Proportion", "Symmetry", "Practical Geometry"
-                    ],
-                    "notes": {
-                        "Knowing Our Numbers": "Large numbers, Indian/International place value, estimation, rounding, Roman numerals.",
-                        "Whole Numbers": "Natural & whole numbers, number line, properties (closure, commutative, associative, identity).",
-                        "Playing With Numbers": "Factors, multiples, primes, composite, divisibility rules, HCF/LCM, prime factorisation.",
-                        "Basic Geometrical Ideas": "Points, lines, segments, rays, triangles, quadrilaterals, polygons, circle parts.",
-                        "Understanding Elementary Shapes": "Angles, types of triangles, polygons, 3D shapes basics.",
-                        "Integers": "Positive & negative numbers, number line, addition/subtraction.",
-                        "Fractions": "Proper/improper, mixed, equivalent fractions, comparing, addition/subtraction.",
-                        "Decimals": "Place value, conversion, addition, subtraction, measurement applications.",
-                        "Data Handling": "Data, tally, bar graphs, pictographs.",
-                        "Mensuration": "Perimeter and area of square & rectangle.",
-                        "Algebra": "Variables, expressions, patterns, simple equations.",
-                        "Ratio & Proportion": "Ratios, equivalent ratios, proportion, unitary method.",
-                        "Symmetry": "Lines of symmetry.",
-                        "Practical Geometry": "Line segments, perpendiculars, angles construction."
-                    },
-                    "problems": [
-                        { "id": "m6_1", "topic": "Integers", "difficulty": 1, "question": "Calculate: -5 + 8", "answer": "3", "solution": ["-5 + 8 = 3"], "hint": "Subtract 5 from 8." },
-                        { "id": "m6_2", "topic": "Fractions", "difficulty": 2, "question": "What is 3/4 + 1/4?", "answer": "1", "solution": ["(3+1)/4 = 4/4 = 1"], "hint": "Add the numerators." },
-                        { "id": "m6_3", "topic": "Decimals", "difficulty": 2, "question": "Write 0.5 as a fraction in simplest form.", "answer": "1/2", "solution": ["0.5 = 5/10 = 1/2"], "hint": "0.5 is 5 tenths." },
-                        { "id": "m6_4", "topic": "Mensuration", "difficulty": 2, "question": "Find perimeter of square with side 5cm.", "answer": "20", "solution": ["4 * 5 = 20 cm"], "hint": "Length of boundary." },
-                        { "id": "m6_5", "topic": "Algebra", "difficulty": 2, "question": "If x = 3, find 2x + 1.", "answer": "7", "solution": ["2(3) + 1 = 6 + 1 = 7"], "hint": "Substitute x with 3." }
-                    ]
-                },
-                "class_7": {
-                    "topics": [
-                        "Integers", "Fractions & Decimals", "Data Handling", "Simple Equations", "Lines & Angles",
-                        "Triangle Properties", "Congruence of Triangles", "Comparing Quantities", "Algebraic Expressions",
-                        "Exponents & Powers", "Symmetry", "Perimeter & Area", "Practical Geometry"
-                    ],
-                    "notes": {
-                        "Integers": "Addition & subtraction rules, number line.",
-                        "Fractions & Decimals": "Operations on fractions/decimals, conversions.",
-                        "Data Handling": "Mean, median, mode, bar graphs, pie charts intro.",
-                        "Simple Equations": "Forming & solving linear equations.",
-                        "Lines & Angles": "Pair of angles, intersecting & transversal lines.",
-                        "Triangle Properties": "Median, altitude, angle sum property, inequality property.",
-                        "Congruence of Triangles": "SSS, SAS, ASA, RHS congruency rules.",
-                        "Comparing Quantities": "Percentage, profit/loss, simple interest.",
-                        "Algebraic Expressions": "Terms, factors, coefficients, addition/subtraction.",
-                        "Exponents & Powers": "Laws of exponents, scientific notation.",
-                        "Symmetry": "Rotational symmetry, lines of symmetry.",
-                        "Perimeter & Area": "Polygons, area of triangle, circle basics.",
-                        "Practical Geometry": "Constructing triangles using SSS, SAS, ASA, RHS."
-                    },
-                    "problems": [
-                        { "id": "m7_1", "topic": "Simple Equations", "difficulty": 2, "question": "Solve: 2x + 6 = 12", "answer": "3", "solution": ["2x = 6", "x = 3"], "hint": "Subtract 6 then divide by 2." },
-                        { "id": "m7_2", "topic": "Integers", "difficulty": 2, "question": "Product of (-2) and (-5)?", "answer": "10", "solution": ["Negative * Negative = Positive. 2*5=10"], "hint": "Signs are same." },
-                        { "id": "m7_3", "topic": "Fractions & Decimals", "difficulty": 2, "question": "2.5 x 4 = ?", "answer": "10", "solution": ["25 * 4 = 100, one decimal place -> 10.0"], "hint": "Ignore decimal, multiply, then place decimal." },
-                        { "id": "m7_4", "topic": "Lines & Angles", "difficulty": 2, "question": "Complement of 40 degrees?", "answer": "50", "solution": ["90 - 40 = 50"], "hint": "Sum is 90." },
-                        { "id": "m7_5", "topic": "Exponents & Powers", "difficulty": 3, "question": "Value of 2^3?", "answer": "8", "solution": ["2 * 2 * 2 = 8"], "hint": "2 multiplied by itself 3 times." }
-                    ]
-                },
-                "class_8": {
-                    "topics": [
-                        "Rational Numbers", "Linear Equations in One Variable", "Understanding Quadrilaterals", "Practical Geometry",
-                        "Data Handling", "Squares & Square Roots", "Cubes & Cube Roots", "Comparing Quantities",
-                        "Algebraic Expressions", "Visualising Solid Shapes", "Mensuration", "Exponents & Powers",
-                        "Direct & Inverse Proportions", "Factorisation", "Graphs", "Playing with Numbers"
-                    ],
-                    "notes": {
-                        "Rational Numbers": "Properties, representation on number line.",
-                        "Linear Equations in One Variable": "Solving multi-step equations.",
-                        "Understanding Quadrilaterals": "Polygons, angle sum, types of quadrilaterals.",
-                        "Practical Geometry": "Constructing quadrilaterals.",
-                        "Data Handling": "Probability, bar graph, pie chart.",
-                        "Squares & Square Roots": "Finding squares & roots using prime factorisation.",
-                        "Cubes & Cube Roots": "Cube properties & cube root methods.",
-                        "Comparing Quantities": "Discount, sales tax, compound interest.",
-                        "Algebraic Expressions": "Identities, factorisation.",
-                        "Visualising Solid Shapes": "3D views, nets.",
-                        "Mensuration": "Surface area & volume of cube, cuboid, cylinder.",
-                        "Exponents & Powers": "Laws, scientific notation.",
-                        "Direct & Inverse Proportions": "Concepts & applications.",
-                        "Factorisation": "Methods: common factor, grouping, identities.",
-                        "Graphs": "Linear graphs, Cartesian plane.",
-                        "Playing with Numbers": "Divisibility tests, number puzzles."
-                    },
-                    "problems": [
-                        { "id": "m8_1", "topic": "Square Roots", "difficulty": 2, "question": "What is the square root of 144?", "answer": "12", "solution": ["12 * 12 = 144"], "hint": "12 squared is?" },
-                        { "id": "m8_2", "topic": "Cube Roots", "difficulty": 2, "question": "Cube root of 27?", "answer": "3", "solution": ["3 * 3 * 3 = 27"], "hint": "Which number multiplies 3 times to 27?" },
-                        { "id": "m8_3", "topic": "Linear Equations", "difficulty": 2, "question": "Solve: 5x - 3 = 3x + 7", "answer": "5", "solution": ["2x = 10 -> x = 5"], "hint": "Bring x terms to one side." },
-                        { "id": "m8_4", "topic": "Mensuration", "difficulty": 3, "question": "Volume of cube with side 4cm?", "answer": "64", "solution": ["4 * 4 * 4 = 64"], "hint": "Side cubed." },
-                        { "id": "m8_5", "topic": "Factorisation", "difficulty": 3, "question": "Factorise: x^2 - 9", "answer": "(x+3)(x-3)", "solution": ["Difference of squares: a^2 - b^2 = (a+b)(a-b)"], "hint": "a squared minus b squared." }
-                    ]
-                },
-                "class_9": {
-                    "topics": [
-                        "Number Systems", "Polynomials", "Coordinate Geometry", "Linear Equations in Two Variables",
-                        "Euclid’s Geometry", "Lines & Angles", "Triangles", "Quadrilaterals", "Circles",
-                        "Constructions", "Heron’s Formula", "Surface Area & Volume", "Statistics", "Probability"
-                    ],
-                    "notes": {
-                        "Number Systems": "Rational/irrational numbers, real numbers, number line.",
-                        "Polynomials": "Types, degree, identities, remainder theorem.",
-                        "Coordinate Geometry": "Cartesian plane, plotting points.",
-                        "Linear Equations in Two Variables": "Graphing linear equations.",
-                        "Euclid’s Geometry": "Axioms & postulates.",
-                        "Lines & Angles": "Angle pairs, parallel lines, transversal.",
-                        "Triangles": "Congruence, inequalities, properties.",
-                        "Quadrilaterals": "Parallelogram & properties.",
-                        "Circles": "Chord properties, tangent basics.",
-                        "Constructions": "Bisectors, perpendiculars, angle constructions.",
-                        "Heron’s Formula": "Area of triangle using semi-perimeter.",
-                        "Surface Area & Volume": "Cube, cuboid, cylinder, cone, sphere.",
-                        "Statistics": "Mean, median, mode.",
-                        "Probability": "Simple probability."
-                    },
-                    "problems": [
-                        {
-                            "id": "m9_1", "topic": "Polynomials", "difficulty": 3,
-                            "question": "If x + 1 is a factor of x² + kx + 3, find k.", "answer": "4",
-                            "solution": ["p(-1) = 0 => 1 - k + 3 = 0 => k = 4"], "hint": "Use Factor Theorem."
-                        },
-                        {
-                            "id": "m9_2", "topic": "Linear Equations", "difficulty": 3,
-                            "question": "If x=2, y=1 is a solution of 2x + 3y = k, find k.", "answer": "7",
-                            "solution": ["2(2) + 3(1) = 7"], "hint": "Substitute values."
-                        },
-                        {
-                            "id": "m9_3", "topic": "Heron’s Formula", "difficulty": 3,
-                            "question": "Find area of triangle with sides 3, 4, 5.", "answer": "6",
-                            "solution": ["s=6, Area = sqrt(6*3*2*1) = 6"], "hint": "Use Heron's formula."
-                        },
-                        { "id": "m9_4", "topic": "Number Systems", "difficulty": 2, "question": "Value of (64)^(1/2)?", "answer": "8", "solution": ["Square root of 64 is 8."], "hint": "8 times 8 is 64." },
-                        { "id": "m9_5", "topic": "Circles", "difficulty": 3, "question": "Longest chord of a circle?", "answer": "Diameter", "solution": ["Diameter is the longest chord."], "hint": "Starts with D." }
-                    ]
-                },
-                "class_10": {
-                    "topics": [
-                        "Real Numbers", "Polynomials", "Pair of Linear Equations", "Quadratic Equations",
-                        "Arithmetic Progressions", "Triangles", "Coordinate Geometry", "Trigonometry",
-                        "Applications of Trigonometry", "Circles", "Constructions", "Areas Related to Circles",
-                        "Surface Areas & Volumes", "Statistics", "Probability"
-                    ],
-                    "notes": {
-                        "Real Numbers": "Euclid division lemma, HCF, LCM, irrational proofs.",
-                        "Polynomials": "Zeros of polynomials, relationship with coefficients, graph shapes.",
-                        "Pair of Linear Equations": "Graphical & algebraic methods (substitution, elimination).",
-                        "Quadratic Equations": "Roots, discriminant, nature of roots.",
-                        "Arithmetic Progressions": "Nth term, sum of n terms.",
-                        "Triangles": "Similarity (AAA, SSS, SAS), theorems, area ratios.",
-                        "Coordinate Geometry": "Distance, section, area of triangle formula.",
-                        "Trigonometry": "Ratios, identities.",
-                        "Applications of Trigonometry": "Height & distance problems.",
-                        "Circles": "Tangent properties.",
-                        "Constructions": "Similar triangles, tangents.",
-                        "Areas Related to Circles": "Sector & segment formulas.",
-                        "Surface Areas & Volumes": "Frustum, cone, sphere, cylinder, conversions.",
-                        "Statistics": "Mean (3 methods), median, ogives.",
-                        "Probability": "Theoretical probability."
-                    },
-                    "problems": [
-                        { "id": "m10_1", "topic": "Probability", "difficulty": 1, "question": "Prob. of getting a head in one coin toss?", "answer": "0.5", "solution": ["1/2 = 0.5"], "hint": "One favorable outcome out of two." },
-                        { "id": "m10_2", "topic": "Quadratic Equations", "difficulty": 3, "question": "Discriminant of x² + 2x + 1 = 0?", "answer": "0", "solution": ["b^2 - 4ac = 2^2 - 4(1)(1) = 4-4=0"], "hint": "b squared minus 4ac." },
-                        { "id": "m10_3", "topic": "Trigonometry", "difficulty": 2, "question": "Sin 30 degrees?", "answer": "0.5", "solution": ["From table, sin 30 is 1/2."], "hint": "Half." },
-                        { "id": "m10_4", "topic": "Arithmetic Progressions", "difficulty": 3, "question": "10th term of AP: 2, 4, 6...?", "answer": "20", "solution": ["a=2, d=2. a10 = a + 9d = 2 + 18 = 20"], "hint": "a plus (n-1)d" },
-                        { "id": "m10_5", "topic": "Coordinate Geometry", "difficulty": 2, "question": "Distance between (0,0) and (3,4)?", "answer": "5", "solution": ["sqrt(3^2 + 4^2) = sqrt(9+16) = 5"], "hint": "Pythagoras theorem." }
-                    ]
-                }
-            },
-            "science": {
-                "class_6": {
-                    "topics": [
-                        "The Wonderful World of Science", "Diversity in the Living World", "Mindful Eating", "Exploring Magnets",
-                        "Measurement of Length and Motion", "Materials Around Us", "Temperature and its Measurement", "A Journey through States of Water",
-                        "Methods of Separation", "Living Creatures", "Nature’s Treasures", "Beyond Earth"
-                    ],
-                    "problems": [
-                        {
-                            "id": "s6_1", "topic": "Measurement of Length and Motion", "difficulty": 2,
-                            "question": "Fill in the blanks: One metre is __________ cm.",
-                            "answer": "100",
-                            "solution": ["1 metre = 100 centimetres"],
-                            "hint": "Cent means 100."
-                        },
-                        {
-                            "id": "s6_2", "topic": "Mindful Eating", "difficulty": 2,
-                            "question": "Which nutrient mainly gives energy to our body?",
-                            "answer": "Carbohydrates",
-                            "solution": ["Carbohydrates and fats are the main energy-giving foods."],
-                            "hint": "Found in rice, wheat, and potatoes."
-                        },
-                        {
-                            "id": "s6_3", "topic": "Exploring Magnets", "difficulty": 2,
-                            "question": "Where are the poles of a bar magnet located?",
-                            "answer": "Ends",
-                            "solution": ["The poles are located near the two ends of the magnet."],
-                            "hint": "The strongest attraction is at the..."
-                        }
-                    ]
-                },
-                "class_7": {
-                    "topics": [
-                        "Nutrition in Plants", "Nutrition in Animals", "Heat", "Acids, Bases and Salts", "Physical and Chemical Changes",
-                        "Respiration in Organisms", "Transportation in Animals and Plants", "Reproduction in Plants", "Motion and Time",
-                        "Electric Current and its Effects", "Light", "Forests: Our Lifeline", "Wastewater Story"
-                    ],
-                    "problems": [
-                        {
-                            "id": "s7_1", "topic": "Nutrition in Plants", "difficulty": 2,
-                            "question": "Green plants are called ______ since they synthesise their own food.",
-                            "answer": "Autotrophs",
-                            "solution": ["Auto means self, trophos means nourishment."],
-                            "hint": "Starts with 'Auto'."
-                        },
-                        {
-                            "id": "s7_2", "topic": "Heat", "difficulty": 2,
-                            "question": "A solution turns red litmus blue. Is it Acidic or Basic?",
-                            "answer": "Basic",
-                            "solution": ["Bases turn red litmus blue. Acids turn blue litmus red."],
-                            "hint": "Bases are bitter and soapy."
-                        },
-                        {
-                            "id": "s7_3", "topic": "Electric Current", "difficulty": 3,
-                            "question": "Which effect of electric current is used in an electric iron?",
-                            "answer": "Heating",
-                            "solution": ["The heating effect of electric current causes the coil to get hot."],
-                            "hint": "It gets hot."
-                        }
-                    ]
-                },
-                "class_8": {
-                    "topics": [
-                        "Crop Production and Management", "Microorganisms", "Coal and Petroleum", "Combustion and Flame",
-                        "Conservation of Plants and Animals", "Reproduction in Animals", "Reaching the Age of Adolescence",
-                        "Force and Pressure", "Friction", "Sound", "Chemical Effects of Electric Current", "Some Natural Phenomena", "Light"
-                    ],
-                    "problems": [
-                        {
-                            "id": "s8_1", "topic": "Force and Pressure", "difficulty": 2,
-                            "question": "Fill in the blank: Friction opposes the ________ between surfaces in contact.",
-                            "answer": "Motion",
-                            "solution": ["Friction always acts opposite to the direction of motion."],
-                            "hint": "Movement."
-                        },
-                        {
-                            "id": "s8_2", "topic": "Sound", "difficulty": 2,
-                            "question": "Sound cannot travel through ________.",
-                            "answer": "Vacuum",
-                            "solution": ["Sound needs a medium (solid, liquid, gas) to travel."],
-                            "hint": "Empty space with no air."
-                        },
-                        {
-                            "id": "s8_3", "topic": "Coal and Petroleum", "difficulty": 2,
-                            "question": "Which gas is obtained during the processing of coal to get coke?",
-                            "answer": "Coal gas",
-                            "solution": ["Coal gas is obtained during the processing of coal to get coke."],
-                            "hint": "Gas from coal."
-                        }
-                    ]
-                },
-                "class_9": {
-                    "topics": [
-                        "Matter in Our Surroundings", "Is Matter Around Us Pure?", "Atoms and Molecules", "Structure of the Atom",
-                        "The Fundamental Unit of Life", "Tissues", "Motion", "Force and Laws of Motion", "Gravitation",
-                        "Work and Energy", "Sound", "Improvement in Food Resources"
-                    ],
-                    "notes": {
-                        "Matter in Our Surroundings": "• Matter is made of tiny particles with space between them.\n• 3 States: Solid (fixed shape/vol), Liquid (fixed vol, fluid), Gas (high compressibility).\n• Sublimation: Direct change from Solid to Gas (e.g., Camphor).",
-                        "Is Matter Around Us Pure?": "• Mixture: Two or more substances mixed (not chemically bonded).\n• Solution: Homogeneous mixture.\n• Suspension: Heterogeneous, particles settle.\n• Colloid: Heterogeneous, but particles don't settle (e.g., Milk).",
-                        "Atoms and Molecules": "• Law of Conservation of Mass: Mass isn't created/destroyed in reaction.\n• Atom: Smallest particle of element.\n• Molecule: Group of atoms bonded together.\n• Mole Concept: 1 mole = 6.022 × 10²³ particles.",
-                        "Structure of the Atom": "• Electrons (-ve), Protons (+ve), Neutrons (neutral).\n• Valency: Combining capacity of an atom.\n• Isotopes: Same atomic number, different mass number (e.g., C-12, C-14).",
-                        "The Fundamental Unit of Life": "• Cell is the basic unit of life.\n• Plasma Membrane: Selectively permeable.\n• Nucleus: Brain of the cell.\n• Mitochondria: Powerhouse (ATP).\n• Lysosomes: Suicide bags.",
-                        "Tissues": "• Plant Tissues: Meristematic (dividing) & Permanent.\n• Xylem: Transports water.\n• Phloem: Transports food.\n• Animal Tissues: Epithelial, Connective (Blood/Bone), Muscular, Nervous.",
-                        "Motion": "• Distance: Total path length.\n• Displacement: Shortest path (vector).\n• Velocity = Displacement / Time.\n• Acceleration = Change in velocity / Time.",
-                        "Force and Laws of Motion": "• 1st Law: Inertia (Object stays at rest/motion unless acted upon).\n• 2nd Law: F = ma (Force = mass × acceleration).\n• 3rd Law: Action and Reaction are equal and opposite.",
-                        "Gravitation": "• Universal Law: F = G(m1*m2)/d².\n• Weight (W) = m × g (g ≈ 9.8 m/s² on Earth).\n• Weight on Moon = 1/6th of weight on Earth.",
-                        "Work and Energy": "• Work = Force × Displacement (W = F × s).\n• Kinetic Energy: ½mv².\n• Potential Energy: mgh.\n• Power: Rate of doing work (Watts).",
-                        "Sound": "• Longitudinal mechanical waves.\n• Needs medium to travel (Solids > Liquids > Gases).\n• Frequency determines Pitch.\n• Amplitude determines Loudness.",
-                        "Improvement in Food Resources": "• Crop Rotation: Growing different crops sequentially.\n• Manure: Organic.\n• Fertilizer: Inorganic chemicals.\n• Animal Husbandry: Breeding of livestock."
-                    },
-                    "problems": [
-                        {
-                            "id": "s9_1", "topic": "Matter in Our Surroundings", "difficulty": 2,
-                            "question": "Convert 300 K to Celsius scale.",
-                            "answer": "27",
-                            "solution": ["C = K - 273", "300 - 273 = 27°C"],
-                            "hint": "Subtract 273."
-                        },
-                        {
-                            "id": "s9_2", "topic": "Atoms and Molecules", "difficulty": 3,
-                            "question": "What is the chemical formula of calcium oxide?",
-                            "answer": "CaO",
-                            "solution": ["Calcium (Ca) valency +2, Oxide (O) valency -2. Formula: CaO"],
-                            "hint": "Quick lime."
-                        },
-                        {
-                            "id": "s9_3", "topic": "The Fundamental Unit of Life", "difficulty": 2,
-                            "question": "Which organelle is known as the powerhouse of the cell?",
-                            "answer": "Mitochondria",
-                            "solution": ["Mitochondria release energy in the form of ATP."],
-                            "hint": "Starts with M."
-                        },
-                        {
-                            "id": "s9_4", "topic": "Gravitation", "difficulty": 3,
-                            "question": "If mass is 10kg, what is the weight on Earth (g=9.8 m/s²)?",
-                            "answer": "98",
-                            "solution": ["W = m × g", "W = 10 × 9.8 = 98 N"],
-                            "hint": "Multiply mass by gravity."
-                        },
-                        {
-                            "id": "s9_5", "topic": "Work and Energy", "difficulty": 3,
-                            "question": "What is the kinetic energy of an object of mass m moving with velocity v?",
-                            "answer": "1/2mv^2",
-                            "solution": ["Kinetic Energy formula is (1/2)mv²"],
-                            "hint": "Half m v squared."
-                        }
-                    ]
-                },
-                "class_10": {
-                    "topics": [
-                        "Chemical Reactions and Equations", "Acids, Bases and Salts", "Metals and Non-metals", "Carbon and its Compounds"
-                    ],
-                    "problems": [
-                        {
-                            "id": "s10_1", "topic": "Chemical Reactions", "difficulty": 2,
-                            "question": "Why is respiration considered an exothermic reaction?",
-                            "answer": "Releases energy",
-                            "solution": ["It releases energy along with CO2 and water."],
-                            "hint": "Exo means out/release."
-                        },
-                        {
-                            "id": "s10_2", "topic": "Acids, Bases and Salts", "difficulty": 3,
-                            "question": "What happens when an acid reacts with a metal?",
-                            "answer": "Hydrogen gas",
-                            "solution": ["Acid + Metal -> Salt + Hydrogen gas"],
-                            "hint": "A gas is evolved that burns with a pop sound."
-                        }
-                    ]
-                }
-            },
-            "english": {
-                "class_9": {
-                    "topics": [
-                        "The Fun They Had", "The Road Not Taken", "The Sound of Music", "The Little Girl",
-                        "A Truly Beautiful Mind", "The Snake and the Mirror", "My Childhood", "Reach for the Top",
-                        "Wind", "Rain on the Roof", "The Lake Isle of Innisfree", "A Legend of the Northland"
-                    ],
-                    "notes": {
-                        "The Fun They Had": "Set in future (2157), Margie & Tommy find a real book. Contrasts mechanical teacher with old schools.",
-                        "The Road Not Taken": "Poem by Robert Frost. About choices in life. 'Two roads diverged in a yellow wood'.",
-                        "The Sound of Music": "Evelyn Glennie (deaf percussionist) and Bismillah Khan (Shehnai maestro). Inspiration stories."
-                    },
-                    "problems": [
-                        {
-                            "id": "e9_1", "topic": "The Fun They Had", "difficulty": 2,
-                            "question": "What did Margie write in her diary?", "answer": "Tommy found a real book",
-                            "solution": ["On 17 May 2157, Margie wrote, 'Today Tommy found a real book!'"], "hint": "It was about an object Tommy found."
-                        },
-                        {
-                            "id": "e9_2", "topic": "The Road Not Taken", "difficulty": 2,
-                            "question": "Which road did the poet choose?", "answer": "The one less traveled by",
-                            "solution": ["He chose the road 'less traveled by', and that made all the difference."], "hint": "Not the popular one."
-                        },
-                        {
-                            "id": "e9_3", "topic": "The Sound of Music", "difficulty": 2,
-                            "question": "How does Evelyn Glennie listen to sound?", "answer": "Vibration",
-                            "solution": ["She feels sound through different parts of her body (vibrations)."], "hint": "Not through ears."
-                        },
-                        {
-                            "id": "e9_4", "topic": "The Little Girl", "difficulty": 3,
-                            "question": "Why was Kezia afraid of her father?", "answer": "He was strict",
-                            "solution": ["He appeared like a giant, was strict, and often scolded her."], "hint": "His behavior."
-                        }
-                    ]
-                }
-            },
-            "social_studies": {
-                "class_6": {
-                    "topics": ["Locating Places on Earth", "Oceans and Continents", "Landforms and Life", "Timeline and Sources of History", "Grassroots Democracy", "Economic Activities"],
-                    "notes": {
-                        "Locating Places on Earth": "Latitudes and Longitudes help locate places. The Globe is a model of Earth.",
-                        "Grassroots Democracy": "Panchayati Raj in rural areas and Municipalities in urban areas form the third tier of government."
-                    },
-                    "problems": [
-                        { "id": "sst6_1", "topic": "Locating Places on Earth", "difficulty": 2, "question": "What is the 0° Latitude called?", "answer": "Equator", "solution": ["The Equator is the 0° latitude that divides Earth into Northern and Southern Hemispheres."], "hint": "It divides the earth into two halves." },
-                        { "id": "sst6_2", "topic": "Grassroots Democracy", "difficulty": 2, "question": "Who is the head of the Gram Panchayat?", "answer": "Sarpanch", "solution": ["The Sarpanch is the elected head of the Village Panchayat."], "hint": "Starts with S." }
-                    ]
-                },
-                "class_7": {
-                    "topics": ["Delhi Sultanate", "Mughal Empire", "Environment", "Air and Water", "State Government", "Markets"],
-                    "notes": {
-                        "Delhi Sultanate": "Five dynasties ruled Delhi: Slave, Khalji, Tughlaq, Sayyid, and Lodi.",
-                        "Environment": "Our surroundings including biotic and abiotic components."
-                    },
-                    "problems": [
-                        { "id": "sst7_1", "topic": "Delhi Sultanate", "difficulty": 2, "question": "Who was the first woman ruler of Delhi?", "answer": "Razia Sultan", "solution": ["Razia Sultan was the daughter of Iltutmish and the only female ruler of Delhi Sultanate."], "hint": "Daughter of Iltutmish." },
-                        { "id": "sst7_2", "topic": "Environment", "difficulty": 1, "question": "Which gas is most abundant in the atmosphere?", "answer": "Nitrogen", "solution": ["Nitrogen makes up about 78% of the Earth's atmosphere."], "hint": "It starts with N." }
-                    ]
-                },
-                "class_8": {
-                    "topics": ["Colonialism and the City", "Revolt of 1857", "Resources", "Agriculture", "Indian Constitution", "Judiciary"],
-                    "notes": {
-                        "Revolt of 1857": "Also known as the First War of Independence. Started in Meerut.",
-                        "Indian Constitution": "The supreme law of India, adopted on 26 Jan 1950."
-                    },
-                    "problems": [
-                        { "id": "sst8_1", "topic": "Revolt of 1857", "difficulty": 2, "question": "Who was the last Mughal Emperor exiled after the 1857 revolt?", "answer": "Bahadur Shah Zafar", "solution": ["Bahadur Shah Zafar II was exiled to Rangoon."], "hint": "Last Mughal Emperor." },
-                        { "id": "sst8_2", "topic": "Resources", "difficulty": 2, "question": "Which resource is known as 'Black Gold'?", "answer": "Petroleum", "solution": ["Petroleum and its derivatives are called Black Gold due to their value."], "hint": "Used fuel." }
-                    ]
-                },
-                "class_9": {
-                    "topics": ["French Revolution", "Socialism in Europe", "India - Size and Location", "Drainage", "Constitutional Design", "People as Resource"],
-                    "notes": {
-                        "French Revolution": "Started in 1789. Storming of Bastille. Ideas of Liberty, Equality, Fraternity.",
-                        "India - Size and Location": "India is the 7th largest country. Tropic of Cancer passes through it."
-                    },
-                    "problems": [
-                        { "id": "sst9_1", "topic": "French Revolution", "difficulty": 3, "question": "When did the Storming of the Bastille take place?", "answer": "14 July 1789", "solution": ["On 14 July 1789, the people of Paris stormed the Bastille fortress-prison."], "hint": "Includes the year 1789." },
-                        { "id": "sst9_2", "topic": "India - Size and Location", "difficulty": 2, "question": "Which latitude line divides India into almost two equal parts?", "answer": "Tropic of Cancer", "solution": ["The Tropic of Cancer (23°30'N) passes through the middle of the country."], "hint": "Cancer." }
-                    ]
-                },
-                "class_10": {
-                    "topics": ["Rise of Nationalism in Europe", "Nationalism in India", "Resources and Development", "Agriculture", "Power Sharing", "Federalism", "Sectors of Indian Economy"],
-                    "notes": {
-                        "Rise of Nationalism in Europe": "Concept of Nation-state, French Revolution legacy, Unification of Italy and Germany.",
-                        "Nationalism in India": "Non-Cooperation Movement, Civil Disobedience, Role of Gandhi.",
-                        "Power Sharing": "Belgium and Sri Lanka models. Prudential and Moral reasons.",
-                        "Sectors of Indian Economy": "Primary (Agriculture), Secondary (Industry), Tertiary (Services)."
-                    },
-                    "problems": [
-                        { "id": "sst10_1", "topic": "Nationalism in India", "difficulty": 2, "question": "In which year was the Non-Cooperation Movement launched?", "answer": "1921", "solution": ["It was launched in 1921 under Mahatma Gandhi's leadership."], "hint": "Early 1920s." },
-                        { "id": "sst10_2", "topic": "Power Sharing", "difficulty": 3, "question": "Which country followed the policy of Majoritarianism?", "answer": "Sri Lanka", "solution": ["Sri Lanka adopted Majoritarianism favoring the Sinhala community."], "hint": "Island nation south of India." },
-                        { "id": "sst10_3", "topic": "Resources and Development", "difficulty": 2, "question": "Which soil is best for growing cotton?", "answer": "Black Soil", "solution": ["Black soil (Regur soil) is ideal for growing cotton."], "hint": "Color is black." },
-                        { "id": "sst10_4", "topic": "Sectors of Indian Economy", "difficulty": 2, "question": "Which sector contributes most to employment in India?", "answer": "Primary", "solution": ["The Primary sector (Agriculture) employs the largest workforce."], "hint": "Agriculture." }
-                    ]
-                }
-            },
-            "hindi": {
-                "class_9": {
-                    "topics": [
-                        "दुख का अधिकार (Dukh Ka Adhikar)", "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)",
-                        "तुम कब जाओगे, अतिथि (Tum Kab Jaoge, Atithi)", "वैज्ञानिक चेतना के वाहक (Vaigyanik Chetna)",
-                        "साकी (Saaki)", "पद (Pad - Raidas)", "दोहे (Dohe - Rahim)"
-                    ],
-                    "notes": {
-                        "दुख का अधिकार (Dukh Ka Adhikar)": "यशपाल द्वारा लिखित। अमीरी-गरीबी का भेद और समाज की संवेदनाहीनता। बुढ़िया का दुख.",
-                        "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)": "बचेंद्री पाल की एवरेस्ट विजय की कहानी। साहस और दृढ़ निश्चय।",
-                        "दोहे (Dohe - Rahim)": "रहीम के नीतिपरक दोहे। जीवन के अनुभव और नैतिकता।"
-                    },
-                    "problems": [
-                        {
-                            "id": "h9_1", "topic": "दुख का अधिकार (Dukh Ka Adhikar)", "difficulty": 2,
-                            "question": "बुढ़िया खरबूजे क्यों बेच रही थी?", "answer": "पेट भरने के लिए",
-                            "solution": ["अपने परिवार का पेट भरने और बेटे की मौत के बाद के खर्चों के लिए।"], "hint": "To feed family."
-                        },
-                        {
-                            "id": "h9_2", "topic": "एवरेस्ट: मेरी शिखर यात्रा (Everest: Meri Shikhar Yatra)", "difficulty": 2,
-                            "question": "बचेंद्री पाल कौन थीं?", "answer": "माउंट एवरेस्ट पर चढ़ने वाली पहली भारतीय महिला",
-                            "solution": ["First Indian woman to climb Mount Everest."], "hint": "First Indian woman..."
-                        },
-                        {
-                            "id": "h9_3", "topic": "दोहे (Dohe - Rahim)", "difficulty": 3,
-                            "question": "रहीम ने 'पानी' के कितने अर्थ बताए हैं?", "answer": "3",
-                            "solution": ["चमक (मोती), प्रतिष्ठा (मानुष), और जल (चून)।"], "hint": "Three meanings."
-                        }
-                    ]
+        // Loaded externally from content_data.js
+        if (!window.CONTENT_DATABASE) window.CONTENT_DATABASE = {};
+
+        // ========================================
+        // ACCESSIBILITY FEATURES
+        // ========================================
+
+        let isScreenReaderActive = false;
+        let recognition = null;
+        let speechSynthesis = window.speechSynthesis;
+
+        // Screen Reader Announcement Function
+        function announceToScreenReader(message) {
+            const srDiv = document.getElementById('srAnnouncements');
+            if (srDiv) {
+                srDiv.textContent = message;
+
+                // Also speak if screen reader is active
+                if (isScreenReaderActive && speechSynthesis) {
+                    const utterance = new SpeechSynthesisUtterance(message);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1;
+                    utterance.volume = 1;
+                    speechSynthesis.speak(utterance);
                 }
             }
-        };
+        }
+
+        // Initialize Voice Recognition
+        function initVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onresult = function (event) {
+                    const transcript = event.results[0][0].transcript;
+                    const answerInput = document.getElementById('answerInput');
+                    const essayInput = document.getElementById('essayInput');
+
+                    if (answerInput && !answerInput.classList.contains('hidden')) {
+                        answerInput.value = transcript;
+                        announceToScreenReader(`You said: ${transcript}`);
+                    } else if (essayInput && !essayInput.classList.contains('hidden')) {
+                        essayInput.value += transcript + ' ';
+                        announceToScreenReader(`Added to your answer: ${transcript}`);
+                    }
+                };
+
+                recognition.onerror = function (event) {
+                    console.error('Speech recognition error:', event.error);
+                    announceToScreenReader('Voice recognition error. Please try again.');
+                };
+
+                recognition.onend = function () {
+                    const voiceBtn = document.getElementById('voiceBtn');
+                    if (voiceBtn) {
+                        voiceBtn.classList.remove('bg-red-200', 'animate-pulse');
+                        voiceBtn.classList.add('bg-indigo-100');
+                    }
+                };
+            } else {
+                console.warn('Speech recognition not supported in this browser');
+            }
+        }
+
+        // Voice Button Click Handler
+        function startVoiceInput() {
+            if (!recognition) {
+                initVoiceRecognition();
+            }
+
+            if (recognition) {
+                const voiceBtn = document.getElementById('voiceBtn');
+                voiceBtn.classList.remove('bg-indigo-100');
+                voiceBtn.classList.add('bg-red-200', 'animate-pulse');
+
+                announceToScreenReader('Listening... Please speak your answer now.');
+                recognition.start();
+            } else {
+                alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+            }
+        }
+
+        // Screen Reader Toggle
+        function toggleScreenReader() {
+            isScreenReaderActive = !isScreenReaderActive;
+            const btn = document.getElementById('screenReaderBtn');
+
+            if (isScreenReaderActive) {
+                btn.classList.remove('bg-green-100');
+                btn.classList.add('bg-green-500', 'text-white');
+                announceToScreenReader('Screen reader activated. Questions and feedback will be read aloud.');
+
+                // Read current question if available
+                const questionText = document.getElementById('problemQuestion')?.textContent;
+                if (questionText && questionText !== 'Loading question...') {
+                    setTimeout(() => {
+                        announceToScreenReader(`Current question: ${questionText}`);
+                    }, 1000);
+                }
+            } else {
+                btn.classList.remove('bg-green-500', 'text-white');
+                btn.classList.add('bg-green-100');
+                speechSynthesis.cancel(); // Stop any ongoing speech
+                announceToScreenReader('Screen reader deactivated.');
+            }
+        }
+
+        // Initialize accessibility features on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Voice button
+            const voiceBtn = document.getElementById('voiceBtn');
+            if (voiceBtn) {
+                voiceBtn.addEventListener('click', startVoiceInput);
+            }
+
+            // Screen reader button
+            const screenReaderBtn = document.getElementById('screenReaderBtn');
+            if (screenReaderBtn) {
+                screenReaderBtn.addEventListener('click', toggleScreenReader);
+            }
+
+            // Initialize voice recognition
+            initVoiceRecognition();
+        });
+
+        // ========================================
+        // END ACCESSIBILITY FEATURES
+        // ========================================
 
         // Learning Session Management
         class LearningSession {
@@ -1133,26 +1311,31 @@
                     ];
                 }
 
-                this.totalProblems = this.problems.length;
+                // Render initial mastery
+                this.renderMastery();
 
                 this.init();
             }
 
             init() {
-                this.loadProblem();
-                this.startTimer();
-                this.updateProgress();
-                this.initializeEventListeners();
-                this.switchMode('quiz');
+                this.updateUI();
+
+                // Explicitly reset progress bar UI to start at 0%
+                const progressBar = document.getElementById('progressFill');
+                if (progressBar) progressBar.style.width = '0%';
+
+                this.loadContent();
+                this.setupEventListeners();
             }
 
             switchMode(mode) {
                 this.currentMode = mode;
 
-                // Containers
                 const quiz = document.getElementById('quizContainer');
                 const notes = document.getElementById('notesContainer');
                 const doubt = document.getElementById('doubtContainer');
+
+                // ... rest of switchMode is below this ...
                 const sidebar = document.getElementById('sidebarContainer');
                 const mainArea = document.getElementById('mainContentArea');
 
@@ -1325,87 +1508,231 @@
                 }
 
                 const userAnswer = document.getElementById('answerInput').value.trim();
-                const isCorrect = userAnswer.toLowerCase() === problem.answer.toLowerCase();
+                const feedbackMessage = document.getElementById('feedbackMessage');
+                const nextButton = document.getElementById('nextButton');
 
-                const responseTime = this.questionTimeSeconds;
+                // Show loading state
+                feedbackMessage.textContent = "Analyzing with logical validation...";
+                feedbackMessage.className = "feedback-message mt-4 text-blue-600 font-medium block";
+                feedbackMessage.classList.remove('hidden');
 
-                // Mark as attempted
-                this.hasAttempted = true;
+                // Simulate processing delay often found in AI
+                setTimeout(() => {
+                    const result = this.validateAnswerLocal(userAnswer, problem);
+                    const isCorrect = result.isCorrect;
 
-                // Stop question timer (optional: keep running or stop? "how much is he taking" usually means until answer).
-                // Let's keep it running to show time spent even after answering, or maybe stop it.
-                // Usually stops on correct answer.
-                if (isCorrect) clearInterval(this.questionTimer);
+                    // Display Result
+                    if (isCorrect) {
+                        this.correctAnswers++;
+                        this.currentStreak++;
+                        this.showAchievement();
 
-                // Update answer input styling
-                const answerInput = document.getElementById('answerInput');
-                answerInput.classList.remove('correct', 'incorrect');
-                answerInput.classList.add(isCorrect ? 'correct' : 'incorrect');
+                        // Update XP
+                        const xpEl = document.getElementById('xpPoints');
+                        if (xpEl) {
+                            let currentXP = parseInt(xpEl.textContent) || 0;
+                            let gained = 10 + (this.currentStreak * 5); // 10 base + streak bonus
+                            xpEl.textContent = currentXP + gained;
 
-                // Show feedback
-                this.showFeedback(isCorrect, userAnswer, problem.answer);
+                            // Animate XP
+                            xpEl.classList.add('scale-150', 'text-green-600');
+                            setTimeout(() => xpEl.classList.remove('scale-150', 'text-green-600'), 300);
+                        }
 
-                // Update statistics
-                if (!this.problemsSolved || this.currentProblem > this.problemsSolved) { // distinct problems solved
+                        feedbackMessage.innerHTML = `
+                    <div class="flex items-center gap-2 text-green-600">
+                        <span class="text-2xl">✅</span>
+                        <div>
+                            <div class="font-bold">${result.message}</div>
+                            <div class="text-xs text-gray-600 mt-1">${result.explanation}</div>
+                        </div>
+                    </div>`;
+
+                        this.playSound('correct');
+                        if (window.EduAIPlatform) {
+                            window.EduAIPlatform.showNotification('Correct Answer! +10 XP', 'success');
+                        }
+                    } else {
+                        this.currentStreak = 0;
+                        feedbackMessage.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-600">
+                        <span class="text-2xl">❌</span>
+                        <div>
+                            <div class="font-bold">${result.message}</div>
+                            <div class="text-xs text-gray-600 mt-1">${result.explanation}</div>
+                        </div>
+                    </div>`;
+
+                        this.playSound('wrong');
+                        if (window.EduAIPlatform) {
+                            window.EduAIPlatform.showNotification('Incorrect. ' + result.message, 'error');
+                        }
+                    }
+
+                    feedbackMessage.classList.remove('hidden');
+                    this.hasAttempted = true;
                     this.problemsSolved++;
-                }
+                    this.updateProgress();
 
-                // Update average time calculations
-                // We only add time for the FIRST successful or final attempt log to avoid skewing average?
-                // For simplicity, let's just count total time spent vs questions answered.
-                // But tracking per-question is easier.
-                if (isCorrect && !problem.solved) {
-                    problem.solved = true;
-                    this.totalQuestionTime += responseTime;
-                    this.questionsAnswered++;
-                    this.updateAverageTime();
-                }
-                if (isCorrect) {
-                    this.correctAnswers++;
-                    this.currentStreak++;
-                    this.showAchievement();
-                } else {
-                    this.currentStreak = 0;
-                }
+                    if (feedbackMessage.textContent.includes('Incorrect') || feedbackMessage.textContent.includes('❌')) {
+                        document.getElementById('solutionPanel').classList.remove('hidden');
+                    }
+                    nextButton.classList.remove('hidden');
+                    clearInterval(this.questionTimer);
 
-                // Update progress
-                this.updateProgress();
-
-                // Show next button
-                document.getElementById('nextButton').classList.remove('hidden');
-
-                // Log performance data
-                this.logPerformance({
-                    problemId: problem.id,
-                    correct: isCorrect,
-                    responseTime: responseTime,
-                    answer: userAnswer,
-                    expectedAnswer: problem.answer
-                });
+                }, 300);
             }
 
-            showFeedback(isCorrect, userAnswer, correctAnswer) {
+            validateAnswerLocal(userAnswer, problem) {
+                // 1. Check Units for Science
+                const subject = (this.currentStudent && this.currentStudent.subject) ? this.currentStudent.subject.toLowerCase() : 'science';
+                if (subject.includes('science')) {
+                    const unitCheck = this.checkScienceUnits(userAnswer, problem.answer);
+                    if (!unitCheck.isValid) {
+                        return {
+                            isCorrect: false,
+                            message: unitCheck.message,
+                            explanation: "In science, units are crucial. The answer requires the correct physical unit."
+                        };
+                    }
+                }
+
+                // 2. Value Logic
+                const isCorrect = userAnswer.toLowerCase() === problem.answer.toLowerCase();
+
+                // 3. Simulated AI Explanation
+                let explanation = "";
+                if (isCorrect) {
+                    explanation = this.generateAIExplanation(true, problem.topic);
+                    return {
+                        isCorrect: true,
+                        message: "Correct Answer!",
+                        explanation: explanation
+                    };
+                } else {
+                    // Try numeric tolerance if it's a number
+                    const userNum = parseFloat(userAnswer);
+                    const ansNum = parseFloat(problem.answer);
+                    if (!isNaN(userNum) && !isNaN(ansNum) && userNum === ansNum) {
+                        explanation = this.generateAIExplanation(true, problem.topic);
+                        return {
+                            isCorrect: true,
+                            message: "Correct Value!",
+                            explanation: explanation
+                        };
+                    }
+
+                    explanation = `The correct answer was <strong>${problem.answer}</strong>. `;
+                    explanation += this.generateAIExplanation(false, problem.topic);
+                    return {
+                        isCorrect: false,
+                        message: "Incorrect Answer",
+                        explanation: explanation
+                    };
+                }
+            }
+
+            checkScienceUnits(userAns, expectedAns) {
+                // Regex to find Number + Unit string (e.g., "5 kg", "10m/s")
+                // Simplified: looks for digits followed by letters
+                const expectedUnitMatch = expectedAns.match(/\d+\s*([a-zA-Z%°]+)/);
+
+                if (expectedUnitMatch) {
+                    const expectedUnit = expectedUnitMatch[1].toLowerCase();
+
+                    // Check if user answer has digits
+                    if (!/\d/.test(userAns)) {
+                        return { isValid: false, message: "Your answer is missing the numerical value." };
+                    }
+
+                    // Check if user answer has unit
+                    const userUnitMatch = userAns.match(/\d+\s*([a-zA-Z%°]+)/);
+                    if (!userUnitMatch) {
+                        return { isValid: false, message: `Missing units! Expected something like '${expectedUnit}'.` };
+                    }
+
+                    const userUnit = userUnitMatch[1].toLowerCase();
+                    if (userUnit !== expectedUnit) {
+                        return { isValid: false, message: `Incorrect units. Expected '${expectedUnit}', found '${userUnit}'.` };
+                    }
+                }
+                return { isValid: true };
+            }
+
+            generateAIExplanation(isCorrect, topic) {
+                const correctPhrases = [
+                    `This concept is fundamental to understanding ${topic}.`,
+                    `Excellent grasp of the core principles of ${topic}.`,
+                    `You correctly identified the key relationship here.`,
+                    `This calculation aligns perfectly with the formula.`
+                ];
+                const wrongPhrases = [
+                    `It seems like there was a misunderstanding of the ${topic} principles.`,
+                    `Review the chapter on ${topic} to clarify this concept.`,
+                    `Pay close attention to the details in the question.`,
+                    `A common pitfall in ${topic} is overlooking this factor.`
+                ];
+
+                const base = isCorrect
+                    ? correctPhrases[Math.floor(Math.random() * correctPhrases.length)]
+                    : wrongPhrases[Math.floor(Math.random() * wrongPhrases.length)];
+
+                return `${base} (AI Analysis)`;
+            }
+
+
+            showFeedback(isCorrect, userAnswer, correctAnswer, currentProblem) { // Added currentProblem
                 const feedbackDiv = document.getElementById('feedbackMessage');
                 feedbackDiv.classList.remove('hidden', 'feedback-success', 'feedback-error');
 
-                if (isCorrect) {
-                    feedbackDiv.classList.add('feedback-success');
-                    feedbackDiv.innerHTML = `
-                        <div class="flex items-center justify-center space-x-2">
-                            <span>🎉</span>
-                            <span>Excellent! That's correct!</span>
-                        </div>
-                    `;
-                } else {
-                    feedbackDiv.classList.add('feedback-error');
-                    feedbackDiv.innerHTML = `
-                        <div class="flex items-center justify-center space-x-2">
-                            <span>🤔</span>
-                            <span>Not quite right. The correct answer is: <strong>${correctAnswer}</strong></span>
-                        </div>
-                    `;
-                }
+                // The original code had an 'optionDiv' which is not present in this context.
+                // Assuming the styling should apply to the answerInput or feedbackDiv itself.
+                // For now, I'll omit 'optionDiv' styling as it's not defined.
 
+                if (isCorrect) {
+                    // Correct Answer
+                    // optionDiv.classList.add('bg-green-100', 'border-green-500', 'text-green-700'); // Removed as optionDiv is not defined
+
+                    // Determine message based on new difficulty state (simulated)
+                    let diffMsg = "Good job! Keeping steady.";
+                    // Assuming 'this.student' and 'this.student.mastery' exist for adaptive logic
+                    const currentScore = this.student && this.student.mastery && currentProblem.topic ? this.student.mastery[currentProblem.topic.toLowerCase()] || 50 : 50;
+                    if (currentScore > 70) diffMsg = "Excellent! Moving to harder questions next. 🚀";
+
+                    feedbackDiv.innerHTML = `<div class="flex items-center text-green-700 font-bold mb-2">
+                       <span class="text-2xl mr-2">✓</span> Correct! ${diffMsg}
+                   </div>${currentProblem.solution ? `<div class="text-gray-600 text-sm bg-white p-3 rounded-lg border border-green-200 mt-2">${currentProblem.solution}</div>` : ''}`;
+
+                    // Assuming this.playSuccessSound() exists
+                    if (this.playSuccessSound) this.playSuccessSound();
+                    // this.problemsSolved++; // This is already handled in checkAnswer, avoid double counting
+
+                    // Update Mastery - Assuming this.updateMastery() exists
+                    if (this.updateMastery && currentProblem.topic) this.updateMastery(true, currentProblem.topic);
+
+                } else {
+                    // Incorrect Answer
+                    // optionDiv.classList.add('bg-red-100', 'border-red-500', 'text-red-700'); // Removed as optionDiv is not defined
+
+                    // Determine remediation message
+                    const hintMsg = currentProblem.hint || "Review the concept notes to strengthen this topic.";
+
+                    feedbackDiv.innerHTML = `<div class="flex flex-col space-y-2">
+                       <div class="flex items-center text-red-700 font-bold">
+                            <span class="text-2xl mr-2">✗</span> Not quite right.
+                       </div>
+                       <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 text-sm text-yellow-800 rounded-r">
+                            <strong>💡 Adaptive Hint:</strong> ${hintMsg}
+                       </div>
+                       ${currentProblem.solution ? `<div class="text-gray-600 text-sm bg-white p-3 rounded-lg border border-red-200"><strong>Full Solution:</strong> ${currentProblem.solution}</div>` : ''}
+                   </div>`;
+
+                    // Assuming this.playErrorSound() exists
+                    if (this.playErrorSound) this.playErrorSound();
+
+                    // Update Mastery - Assuming this.updateMastery() exists
+                    if (this.updateMastery && currentProblem.topic) this.updateMastery(false, currentProblem.topic);
+                }
                 // Animate feedback
                 anime({
                     targets: feedbackDiv,
@@ -1825,7 +2152,9 @@
         }
 
         // Initialize learning session
-        let learningSession;
+        // Make it globally accessible for Onboarding Modal
+        window.learningSession = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             // Add some subjective questions for testing
             if (window.CONTENT_DATABASE && window.CONTENT_DATABASE.science && window.CONTENT_DATABASE.science.class_9) {
@@ -1842,7 +2171,7 @@
                 });
             }
 
-            learningSession = new LearningSession();
+            window.learningSession = new LearningSession();
 
             if (localStorage.getItem('darkMode') === 'true') {
                 toggleDarkMode(); // Reuse function to set initial state
@@ -1913,41 +2242,54 @@
             const studentClass = student.class || '9';
             const classKey = `class_${studentClass}`;
 
-            // Populate Topics
-            const topicSelector = document.getElementById('topicSelector');
-            topicSelector.innerHTML = '<option value="">All Topics</option>'; // Default
-
-            let topicsFound = false;
+            // Populate Topics for Onboarding
+            let topics = [];
             if (window.CONTENT_DATABASE[subject] && window.CONTENT_DATABASE[subject][classKey]) {
-                const topics = window.CONTENT_DATABASE[subject][classKey].topics || [];
-                topics.forEach(topic => {
-                    const option = document.createElement('option');
-                    option.value = topic;
-                    option.textContent = topic;
-                    topicSelector.appendChild(option);
-                });
-                topicsFound = true;
+                topics = window.CONTENT_DATABASE[subject][classKey].topics || [];
+            }
+
+            // Use the global helper if available, or direct DOM
+            if (window.populateOnboardingTopics) {
+                window.populateOnboardingTopics(topics);
+            } else {
+                const selector = document.getElementById('topicSelectorOnboarding');
+                if (selector) {
+                    selector.innerHTML = '<option value="">Choose a topic...</option>';
+                    topics.forEach(t => {
+                        const opt = document.createElement('option');
+                        opt.value = t;
+                        opt.textContent = t;
+                        selector.appendChild(opt);
+                    });
+                }
             }
 
             // Auto-Select Topic from URL
-            if (urlTopic && topicsFound) {
-                // simple fuzzy match or exact match
-                for (let i = 0; i < topicSelector.options.length; i++) {
-                    if (topicSelector.options[i].value.toLowerCase() === urlTopic.toLowerCase()) {
-                        topicSelector.selectedIndex = i;
-                        break;
+            if (urlTopic) {
+                const selector = document.getElementById('topicSelectorOnboarding');
+                if (selector) {
+                    for (let i = 0; i < selector.options.length; i++) {
+                        if (selector.options[i].value.toLowerCase() === urlTopic.toLowerCase()) {
+                            selector.selectedIndex = i;
+                            break;
+                        }
                     }
+                    if (window.checkTopicReady) window.checkTopicReady();
                 }
             }
 
             // Auto-Start Action from URL if topic is selected/valid
-            if (urlAction && topicSelector.value) {
-                startSessionAction(urlAction);
-                return; // Skip showing modal
+            if (urlAction && urlTopic) {
+                // Close onboarding and start
+                const modal = document.getElementById('onboardingModal');
+                if (modal) modal.classList.add('hidden');
+                switchMode(urlAction === 'quiz' ? 'quiz' : urlAction);
+                return;
             }
 
-            // Show Modal if no auto-action
-            document.getElementById('sessionSetupModal').classList.remove('hidden');
+            // Show Onboarding Modal
+            const modal = document.getElementById('onboardingModal');
+            if (modal) modal.classList.remove('hidden');
         }
 
         function startSessionAction(action) {
@@ -2001,11 +2343,10 @@
     <script>
         // API Client for Edu AI (Backend: main.py)
 
-        window.generateAIQuestion = async function () {
+        window.generateAIQuestion = function () {
             const topic = document.getElementById('topicBadge').textContent || "General";
             const feedbackMsg = document.getElementById('feedbackMessage');
 
-            // Check limit using global session
             if (window.learningSession && window.learningSession.problemsSolved >= 5) {
                 alert("Quiz Complete! You have finished 5 questions.");
                 window.learningSession.endSession();
@@ -2014,73 +2355,27 @@
 
             feedbackMsg.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
             feedbackMsg.classList.add('bg-blue-100', 'text-blue-700');
-            feedbackMsg.textContent = "🤖 waking up Edu AI...";
+            feedbackMsg.textContent = "🤖 GyanNova is crafting a unique question...";
             feedbackMsg.classList.remove('hidden');
 
-            try {
-                const response = await fetch('/api/generate-question', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        topic: topic,
-                        problemsSolved: window.learningSession ? window.learningSession.problemsSolved : 0
-                    })
-                });
+            // Simulate A delay
+            setTimeout(() => {
+                const mockData = {
+                    question: `(AI Generated) What is a key characteristic of ${topic}?`,
+                    options: [
+                        `It is essential for ${topic} principles.`,
+                        `It contradicts ${topic}.`,
+                        `It is unrelated to ${topic}.`,
+                        `None of the above.`
+                    ],
+                    answer: `It is essential for ${topic} principles.`,
+                    explanation: `This option correctly aligns with the fundamental definitions of ${topic} explored in Class 9 curriculum.`
+                };
 
-                const data = await response.json();
-
-                if (data.status === 'complete') {
-                    alert(data.message);
-                    window.learningSession.endSession();
-                    return;
-                }
-
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                // Load the question
                 feedbackMsg.textContent = `🤖 Generated question for ${topic}!`;
-                loadAIProblem(data);
-
-                // Hide feedback after short delay or keep distinct? 
-                // Original behavior: hidden after load.
-                setTimeout(() => feedbackMsg.classList.add('hidden'), 1000);
-
-            } catch (e) {
-                console.error("AI Error:", e);
-                feedbackMsg.textContent = "Error connecting to Edu AI. Ensure server.py is running.";
-                feedbackMsg.classList.remove('bg-blue-100', 'text-blue-700');
-                feedbackMsg.classList.add('bg-red-100', 'text-red-700');
-            }
-        };
-
-        window.solveDoubt = async function () {
-            const doubtInput = document.getElementById('doubtInput');
-            const doubtText = doubtInput.value.trim();
-            const answerPanel = document.getElementById('doubtAnswer');
-
-            if (!doubtText) return;
-
-            answerPanel.innerHTML = '<span class="animate-pulse">Thinking... 🧠</span>';
-            answerPanel.classList.remove('hidden');
-
-            try {
-                const response = await fetch('/api/solve-doubt', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ doubt: doubtText })
-                });
-                const data = await response.json();
-
-                if (data.error) throw new Error(data.error);
-
-                answerPanel.innerHTML = data.answer;
-
-            } catch (e) {
-                console.error(e);
-                answerPanel.textContent = "Error: Could not reach Edu AI server.";
-            }
+                loadAIProblem(mockData);
+                setTimeout(() => feedbackMsg.classList.add('hidden'), 1500);
+            }, 300);
         };
 
         function loadAIProblem(data) {
@@ -2125,8 +2420,10 @@
                     window.learningSession.correctAnswers++;
                     window.learningSession.currentStreak++;
                     window.learningSession.showAchievement();
+                    window.learningSession.playSound('correct');
                 } else {
                     window.learningSession.currentStreak = 0;
+                    window.learningSession.playSound('wrong');
                 }
                 window.learningSession.problemsSolved++;
                 window.learningSession.updateProgress();
@@ -2153,17 +2450,141 @@
 
             // Override Next Button OnClick to call generateAIQuestion again if we are in AI mode
             nextBtn.onclick = function () {
-                if (window.learningSession && window.learningSession.problemsSolved >= 5) {
-                    alert(`Session Complete! You scored ${window.learningSession.correctAnswers}/5.`);
-                    window.learningSession.endSession();
-                } else {
-                    window.generateAIQuestion();
-                    // Reset UI for next question
-                    document.getElementById('feedbackMessage').classList.add('hidden');
-                    nextBtn.classList.add('hidden');
-                }
+                window.generateAIQuestion();
+                // Reset UI for next question
+                document.getElementById('feedbackMessage').classList.add('hidden');
+                nextBtn.classList.add('hidden');
             };
         }
+    </script>
+
+    <!-- Tour Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if tour has been seen
+            if (!localStorage.getItem('tourSeen')) {
+                startTour();
+            }
+        });
+
+        function startTour() {
+            const tourSteps = [
+                {
+                    element: '#subjectTitle',
+                    title: 'Welcome to GyanNova!',
+                    text: 'This is your personalized learning dashboard. We have tailored this path just for you.'
+                },
+                {
+                    element: '.mode-switcher',
+                    title: 'Choose Your Mode',
+                    text: 'Switch between taking Quizzes, reading Concept Notes, or asking the GyanNova AI Tutor a doubt.'
+                },
+                {
+                    element: '#quiz-section',
+                    title: 'Quiz Zone',
+                    text: 'Practice problems here. The AI adapts the difficulty based on your answers!'
+                },
+                {
+                    element: '#ai-tutor-web',
+                    title: 'Ask GyanNova',
+                    text: 'Stuck? Switch to "Ask GyanNova" to get instant help on any topic.'
+                }
+            ];
+
+            let header = document.createElement('div');
+            header.id = 'tour-overlay';
+            header.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:center;transition:all 0.3s;';
+
+            let card = document.createElement('div');
+            card.className = 'bg-white p-8 rounded-2xl max-w-md text-center shadow-2xl transform transition-all scale-100 border-4 border-sage-green/20';
+            card.innerHTML = `
+                <div class="text-5xl mb-4 animate-bounce">👋</div>
+                <h3 class="text-2xl font-bold mb-3 text-sage-green">Welcome to GyanNova!</h3>
+                <p class="text-gray-600 mb-8 leading-relaxed">Let's take a quick interactive tour of your new AI-powered learning environment.</p>
+                <div class="flex gap-4 justify-center">
+                    <button onclick="endTour()" class="px-6 py-2 rounded-full font-semibold text-gray-500 hover:bg-gray-100 transition">Skip</button>
+                    <button onclick="nextTourStep()" class="bg-sage-green text-white px-8 py-2 rounded-full font-bold hover:bg-green-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1">Start Tour 🚀</button>
+                </div>
+            `;
+
+            header.appendChild(card);
+            document.body.appendChild(header);
+
+            window.currentTourStep = -1;
+            window.tourSteps = tourSteps;
+            window.lastHighlightedElement = null; // Track highlighted element
+        }
+
+        window.endTour = function () {
+            const overlay = document.getElementById('tour-overlay');
+            if (overlay) overlay.remove();
+
+            // Cleanup highlight
+            if (window.lastHighlightedElement) {
+                window.lastHighlightedElement.style.boxShadow = '';
+                window.lastHighlightedElement.style.zIndex = '';
+                window.lastHighlightedElement.style.position = '';
+                window.lastHighlightedElement.style.background = '';
+            }
+
+            localStorage.setItem('tourSeen', 'true');
+        }
+
+        window.nextTourStep = function () {
+            // Cleanup previous highlight
+            if (window.lastHighlightedElement) {
+                window.lastHighlightedElement.style.boxShadow = '';
+                window.lastHighlightedElement.style.zIndex = '';
+                window.lastHighlightedElement.style.position = '';
+                window.lastHighlightedElement.style.background = '';
+            }
+
+            window.currentTourStep++;
+            const overlay = document.getElementById('tour-overlay');
+            const step = window.tourSteps[window.currentTourStep];
+
+            if (!step) {
+                endTour();
+                return;
+            }
+
+            // Update card content
+            const card = overlay.querySelector('div.bg-white');
+            const isLast = window.currentTourStep === window.tourSteps.length - 1;
+
+            card.innerHTML = `
+                <div class="text-left relative">
+                    <span class="absolute -top-4 -right-4 text-xs font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded-full">Step ${window.currentTourStep + 1}/${window.tourSteps.length}</span>
+                    <h3 class="text-xl font-bold mb-3 text-sage-green flex items-center gap-2">
+                        <span>✨</span> ${step.title}
+                    </h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">${step.text}</p>
+                    <div class="flex justify-between items-center mt-4 border-t pt-4 border-gray-100">
+                        <button onclick="endTour()" class="text-xs font-semibold text-gray-400 hover:text-gray-600 transition">Skip Tour</button>
+                        <button onclick="nextTourStep()" class="bg-sage-green text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition shadow-md flex items-center gap-2">
+                            ${isLast ? 'Finish' : 'Next'} 
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Highlight element logic
+            const target = document.querySelector(step.element);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Add highlight
+                target.style.transition = 'all 0.3s';
+                target.style.position = 'relative'; // Ensure z-index works
+                target.style.zIndex = '10000'; // Bring above overlay masking if needed, or just high enough
+                target.style.boxShadow = '0 0 0 4px #2D5A3D, 0 0 50px rgba(45,90,61,0.4)';
+                target.style.background = 'white'; // Default bg for legibility if needed
+                target.style.borderRadius = '12px'; // Soften edges
+
+                window.lastHighlightedElement = target;
+            }
+        };
     </script>
 </body>
 
