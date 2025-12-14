@@ -8,6 +8,7 @@ import json
 import random
 import math
 import time
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, field
@@ -473,100 +474,213 @@ class AdaptiveLearningEngine:
 
 
 class EduAIModel:
-    def __init__(self, model_id="Qwen2-0.5B-Instruct-q4f16_1-MLC"):
+    """
+    Lightweight AI Model using Hugging Face FLAN-T5
+    - Open Source (Apache 2.0)
+    - 77M parameters (lightweight!)
+    - No GPU required
+    - Free tier available
+    """
+    
+    def __init__(self, model_id="google/flan-t5-small"):
         self.model_id = model_id
+        self.api_key = os.environ.get('HUGGINGFACE_API_KEY', '')
+        self.api_url = f"https://api-inference.huggingface.co/models/{model_id}"
         self.engine = None
         self.is_loading = False
+        
+        # Alternative lightweight models:
+        # - "google/flan-t5-base" (250M params - better quality)
+        # - "distilgpt2" (82M params - conversational)
+        # - "facebook/opt-125m" (125M params - very fast)
     
     def init_engine(self):
         """
-        Simulates engine initialization.
-        In a real Python implementation, you would load the model here
-        using mlc_llm, transformers, or an API client.
+        Initialize the AI engine.
+        Uses Hugging Face API - no local model download needed!
         """
         if self.engine:
             return self.engine
+        
+        if not self.api_key:
+            print("⚠️  No Hugging Face API key found.")
+            print("💡 Get free API key at: https://huggingface.co/settings/tokens")
+            print("🔄 Using fallback mode (template responses)")
+            self.engine = "FALLBACK_MODE"
+            return self.engine
             
-        print("Initializing Edu AI Engine... (approx 300MB, one time)")
+        print(f"🤖 Initializing Edu AI Engine ({self.model_id})...")
         self.is_loading = True
         
-        # Simulate loading delay
-        time.sleep(1) 
+        try:
+            # Test API connection
+            import requests
+            headers = {"Authorization": f"Bearer {self.api_key}"}
+            response = requests.get(
+                f"https://api-inference.huggingface.co/models/{self.model_id}",
+                headers=headers,
+                timeout=5
+            )
+            
+            if response.status_code == 200:
+                self.engine = "HUGGINGFACE_API_READY"
+                self.is_loading = False
+                print("✅ Edu AI Ready! (Hugging Face)")
+                return self.engine
+            else:
+                print(f"⚠️  API Error: {response.status_code}")
+                self.engine = "FALLBACK_MODE"
+                self.is_loading = False
+                return self.engine
+                
+        except Exception as e:
+            print(f"❌ AI Init Error: {e}")
+            print("🔄 Falling back to offline mode")
+            self.engine = "FALLBACK_MODE"
+            self.is_loading = False
+            return self.engine
+
+    def _call_huggingface_api(self, prompt: str, max_length: int = 200) -> str:
+        """
+        Call Hugging Face API with the prompt.
+        Returns AI-generated text or fallback response.
+        """
+        if not self.api_key or self.engine == "FALLBACK_MODE":
+            return None  # Will trigger fallback
         
         try:
-            # Placeholder for actual model loading
-            # self.engine = mlc_llm.MLCEngine(self.model_id) 
-            self.engine = "MOCK_ENGINE_READY" 
-            self.is_loading = False
-            print("Edu AI Ready!")
-            return self.engine
+            import requests
+            
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            payload = {
+                "inputs": prompt,
+                "parameters": {
+                    "max_length": max_length,
+                    "temperature": 0.7,
+                    "top_p": 0.9,
+                    "do_sample": True
+                }
+            }
+            
+            response = requests.post(
+                self.api_url,
+                headers=headers,
+                json=payload,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                
+                # Handle different response formats
+                if isinstance(result, list) and len(result) > 0:
+                    return result[0].get('generated_text', '')
+                elif isinstance(result, dict):
+                    return result.get('generated_text', '')
+                
+                return None
+            
+            elif response.status_code == 503:
+                print("⏳ Model is loading, please wait...")
+                return None
+            
+            else:
+                print(f"⚠️  API Error: {response.status_code}")
+                return None
+                
         except Exception as e:
-            print(f"AI Init Error: {e}")
-            print("Error loading Edu AI. Falling back to offline mode.")
-            self.is_loading = False
+            print(f"❌ API Call Error: {e}")
             return None
 
     def generate_ai_question(self, topic, problems_solved=0):
         """
-        Generates a 5-question limit check and then attempts to generate a question via AI.
-        Returns a dict with question data or None if limit reached.
+        Generates AI-powered questions using Hugging Face.
+        Falls back to mock questions if AI unavailable.
         """
         if problems_solved >= 5:
             return {"status": "complete", "message": "Quiz Complete! You have finished 5 questions."}
 
         engine = self.init_engine()
         
-        # Fallback if engine fails
-        if not engine:
-            print("Using fallback (Mock) AI")
-            return self.generate_mock_question(topic)
-
         print(f"🤖 Edu AI is generating a question for {topic}...")
 
-        prompt = f"""
-        Generate 1 MCQ about "{topic}" (Class 9).
-        Strict JSON format:
-        {{
-            "question": "Question text?",
-            "options": ["A", "B", "C", "D"],
-            "answer": "Correct Option",
-            "hint": "Hint",
-            "explanation": "Short info"
-        }}
+        # Prepare prompt for FLAN-T5
+        prompt = f"""Generate a multiple choice question about {topic} for Class 9 students.
+Include 4 options and indicate the correct answer.
+Format: Question: [question text]
+Options: A) [option1], B) [option2], C) [option3], D) [option4]
+Correct Answer: [correct option]
+Hint: [helpful hint]"""
+
+        # Try AI generation
+        ai_response = self._call_huggingface_api(prompt, max_length=300)
+        
+        if ai_response:
+            try:
+                # Parse AI response into structured format
+                question_data = self._parse_ai_question_response(ai_response, topic)
+                if question_data:
+                    return question_data
+            except Exception as e:
+                print(f"⚠️  Parsing Error: {e}")
+        
+        # Fallback to mock question
+        print("🔄 Using fallback question generator")
+        return self.generate_mock_question(topic)
+
+    def _parse_ai_question_response(self, response: str, topic: str) -> dict:
         """
-
+        Parse AI-generated text into structured question format.
+        """
         try:
-            # In a real scenario, this would be:
-            # response = self.engine.chat.completions.create(...)
+            lines = response.strip().split('\n')
+            question = ""
+            options = []
+            answer = ""
+            hint = ""
             
-            # Simulating AI response for demonstration purposes
-            # (In a real migration, connect this to your Python LLM backend)
-            raw_content = self._mock_llm_response(prompt, topic)
+            for line in lines:
+                line = line.strip()
+                if line.startswith("Question:"):
+                    question = line.replace("Question:", "").strip()
+                elif line.startswith("Options:"):
+                    opts_text = line.replace("Options:", "").strip()
+                    # Parse options like "A) opt1, B) opt2, C) opt3, D) opt4"
+                    import re
+                    opts = re.findall(r'[A-D]\)\s*([^,]+)', opts_text)
+                    options = [opt.strip() for opt in opts]
+                elif line.startswith("Correct Answer:"):
+                    answer = line.replace("Correct Answer:", "").strip()
+                    # Extract just the option text
+                    if ')' in answer:
+                        answer = answer.split(')')[1].strip()
+                elif line.startswith("Hint:"):
+                    hint = line.replace("Hint:", "").strip()
             
-            # JSON Extraction Logic
-            json_str = raw_content.replace('```json', '').replace('```', '').strip()
-            start = json_str.find('{')
-            end = json_str.rfind('}')
+            # Validate we have all required fields
+            if question and len(options) >= 4 and answer:
+                return {
+                    "question": question,
+                    "options": options[:4],  # Take first 4 options
+                    "answer": answer,
+                    "hint": hint or "Think carefully about the concept.",
+                    "explanation": f"This question tests your understanding of {topic}."
+                }
             
-            if start != -1 and end != -1:
-                json_str = json_str[start:end+1]
-                
-            quiz_data = json.loads(json_str)
+            return None
             
-            # Validation
-            if not all(key in quiz_data for key in ["question", "options", "answer"]):
-                raise ValueError("Incomplete JSON data")
-                
-            return quiz_data
-
         except Exception as e:
-            print(f"Generation Error: {e}")
-            print("AI failed, switching to fallback.")
-            return self.generate_mock_question(topic)
+            print(f"Parse error: {e}")
+            return None
 
     def generate_mock_question(self, topic):
         """
         Fallback mock question generator.
+        Used when AI is unavailable.
         """
         topic_lower = topic.lower()
         data = {}
@@ -587,13 +701,29 @@ class EduAIModel:
                 "hint": "It generates ATP.",
                 "explanation": "Mitochondria release energy in the form of ATP."
             }
+        elif 'photosynthesis' in topic_lower:
+            data = {
+                "question": "What gas do plants release during photosynthesis?",
+                "options": ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+                "answer": "Oxygen",
+                "hint": "Think about what we breathe.",
+                "explanation": "Plants release oxygen as a byproduct of photosynthesis."
+            }
+        elif 'algebra' in topic_lower or 'equation' in topic_lower:
+            data = {
+                "question": "Solve for x: 2x + 5 = 13",
+                "options": ["x = 4", "x = 9", "x = 3", "x = 6"],
+                "answer": "x = 4",
+                "hint": "Subtract 5 from both sides first.",
+                "explanation": "2x + 5 = 13 → 2x = 8 → x = 4"
+            }
         else:
             templates = [
                 {
                     "q": f"Which of the following is true about {topic}?",
-                    "options": ["It is related to physics", "It is related to music", "It involves cooking", "None of the above"],
-                    "a": "It is related to physics",
-                    "why": "Because we are studying science!"
+                    "options": ["It is a fundamental concept", "It is rarely used", "It involves cooking", "None of the above"],
+                    "a": "It is a fundamental concept",
+                    "why": f"{topic} is an important concept in the curriculum."
                 },
                 {
                     "q": f"What is the primary characteristic of {topic}?",
@@ -607,7 +737,7 @@ class EduAIModel:
                 "question": t["q"],
                 "options": t["options"],
                 "answer": t["a"],
-                "hint": "Think logically.",
+                "hint": "Think logically about the concept.",
                 "explanation": t["why"]
             }
 
@@ -616,43 +746,47 @@ class EduAIModel:
 
     def solve_doubt(self, doubt_text):
         """
-        Generates an answer for a doubt.
+        Generates an AI-powered answer for student doubts.
+        Uses Hugging Face FLAN-T5 for intelligent responses.
         """
         if not doubt_text:
             return None
 
         engine = self.init_engine()
         
-        if not engine:
-             return (f"<strong>Auto-Response (AI Unavailable):</strong><br>"
-                     f"That's a great question about \"{doubt_text}\". <br><br>"
-                     f"Since I'm currently running in offline mode, I'd suggest checking your textbook for keywords related to this topic.")
+        print(f"🤖 Edu AI is solving doubt: {doubt_text}")
 
-        prompt = f"""
-        You are a helpful, encouraging teacher for school students (Class 6-10).
-        The student has asked: "{doubt_text}"
+        # Prepare educational prompt
+        prompt = f"""You are a helpful teacher for school students (Class 6-10).
+A student asked: "{doubt_text}"
+
+Provide a clear, simple, and accurate explanation suitable for a school student.
+Keep it concise and educational."""
+
+        # Try AI generation
+        ai_response = self._call_huggingface_api(prompt, max_length=250)
         
-        Explain the answer clearly, simply, and accurately. 
-        Use bullet points if needed. Keep it under 100 words.
-        """
+        if ai_response and len(ai_response.strip()) > 20:
+            # Format the response nicely
+            formatted_response = f"""<strong>📚 Edu AI Explanation:</strong><br><br>
+{ai_response.strip()}<br><br>
+<em>💡 Tip: Review your textbook for more details on this topic!</em>"""
+            return formatted_response
         
-        try:
-            # Simulate streaming or full response
-            # response = self.engine.chat...
-            
-            # Mock success response
-            return f"Here is an explanation for '{doubt_text}': [AI generated content would appear here based on '{prompt}']"
-            
-        except Exception as e:
-            print(f"Doubt Error: {e}")
-            return "Sorry, I couldn't process that doubt. Try again."
+        # Fallback response
+        return (f"<strong>📚 About '{doubt_text}':</strong><br><br>"
+                f"This is an important concept in your curriculum. "
+                f"To understand it better:<br>"
+                f"• Start with the basic principles<br>"
+                f"• See how it applies in real scenarios<br>"
+                f"• Practice related problems<br><br>"
+                f"<em>💡 Tip: Check your textbook chapter on this topic for detailed explanations!</em>")
 
     def _mock_llm_response(self, prompt, topic):
         """
-        Internal helper to simulate LLM JSON return for the 'generate_ai_question' method
-        if the actual engine isn't connected.
+        Internal helper for backward compatibility.
+        Not used with Hugging Face API.
         """
-        # This purely exists to make the 'try' block in generate_ai_question succeed during testing/porting
         mock_json = {
             "question": f"What is a key feature of {topic}?",
             "options": ["Feature A", "Feature B", "Feature C", "Feature D"],
@@ -661,6 +795,7 @@ class EduAIModel:
             "explanation": "Feature A is the correct answer because of reasons."
         }
         return "```json\n" + json.dumps(mock_json) + "\n```"
+
 
 
 # Example usage and testing
